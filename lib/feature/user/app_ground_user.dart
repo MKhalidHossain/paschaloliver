@@ -22,7 +22,7 @@ class UserAppGround extends StatelessWidget {
               () => IndexedStack(
             index: c.index.value,
             children: const [
-              UserHomeCluster(),
+              UserHomeScreen(),
               // _SearchPage(),
               // _FavoritesPage(),
               FavoritesScreen(),

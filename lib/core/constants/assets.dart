@@ -1,5 +1,5 @@
 class Images {
-  static const String appLogo = 'assets/images/appLogo.png';
+  static const String appLogo = 'assets/message/logo.png';
   static const String wellcomeappLogo = 'assets/images/image_133.png';
 
 
@@ -30,6 +30,22 @@ class Images {
   static const String pestIcon = 'assets/calender/pest.png';
   static const String kitchenIcon = 'assets/calender/kitchen_icon.png';
   static const String cleaningAndhandymanIcon = 'assets/calender/image _01.png';
+
+
+  //haircut
+  static const String salonIcon = 'assets/icons/salon.png';
+  static const String manicureIcon = 'assets/icons/manicure.png';
+  static const String haircutIcon = 'assets/icons/haircut.png';
+
+
+  //
+  static const String photoIcon = 'assets/icons/photo.png';
+  static const String birthdayIcon = 'assets/icons/birthday.png';
+  static const String djIcon = 'assets/icons/dj.png';
+  static const String mcIcon = 'assets/icons/mc.png';
+  static const String comedianIcon = 'assets/icons/comedian.png';
+  static const String comedianIcon1 = 'assets/icons/comedian1.png';
+
 
 
 

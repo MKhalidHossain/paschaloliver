@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/assets.dart';
-import 'list_home_category_screen.dart';
+import 'list_home_category_screen.dart'; // ✅ update path if needed
 
-/// ✅ CreateListingScreen (PRO + matches 2nd screenshot)
-/// - Top progress bar (small green start + long grey track)
-/// - Back arrow
-/// - Title + subtitle
-/// - Search field
-/// - Center "N" background + 7 circular category bubbles (exact layout)
+/// ✅ FULL REPLACEABLE: CreateListingScreen
+/// ✅ Fixes your mismatch:
+/// - Uses SAME coordinate system as your PNG (342x432 + 100 circle)
+/// - Uses your PNG as background (contains circles)
+/// - DOES NOT draw new white circles (only icon+text on top)
 class CreateListingScreen extends StatefulWidget {
   const CreateListingScreen({super.key});
 
@@ -24,7 +23,7 @@ class CreateListingScreen extends StatefulWidget {
 
 class _CreateListingScreenState extends State<CreateListingScreen> {
   final _searchCtrl = TextEditingController();
-  final double _progress = 0.06; // small green start (like screenshot)
+  final double _progress = 0.06;
 
   @override
   void dispose() {
@@ -33,6 +32,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
   }
 
   void _openCategory(String category) {
+    // ✅ You can pass category if you want
     Get.to(() => const ListingHomeCategoryScreen());
   }
 
@@ -58,8 +58,11 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                 borderRadius: BorderRadius.circular(10),
                 child: const Padding(
                   padding: EdgeInsets.all(6),
-                  child: Icon(Icons.arrow_back_ios_new_rounded,
-                      size: 18, color: CreateListingScreen.green),
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 18,
+                    color: CreateListingScreen.green,
+                  ),
                 ),
               ),
 
@@ -95,15 +98,15 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
 
               const SizedBox(height: 18),
 
-              // Category cluster area
+              // ✅ Cluster area (MUST be 342x432)
               Expanded(
                 child: Center(
                   child: FittedBox(
                     fit: BoxFit.contain,
                     alignment: Alignment.topCenter,
                     child: SizedBox(
-                      width: 340,
-                      height: 430,
+                      width: 342,
+                      height: 432,
                       child: _CategoryCluster(
                         onTap: _openCategory,
                       ),
@@ -201,218 +204,116 @@ class _SearchField extends StatelessWidget {
   }
 }
 
-/* ------------------------ Cluster ------------------------ */
+/* ------------------------ Cluster (PNG + exact overlay) ------------------------ */
 
 class _CategoryCluster extends StatelessWidget {
   const _CategoryCluster({required this.onTap});
   final void Function(String category) onTap;
 
+  static const double _w = 342;
+  static const double _h = 432;
+
+  // ✅ exact circle diameter from your PNG
+  static const double _d = 100;
+  static const double _r = _d / 2;
+
+  Positioned _pos(double cx, double cy, Widget child) {
+    return Positioned(
+      left: cx - _r,
+      top: cy - _r,
+      width: _d,
+      height: _d,
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Base frame for positions (fixed like screenshot)
-    const double w = 340;
-    const double h = 430;
-
-    // Bubble size (close to screenshot)
-    const double d = 96;
-    const double r = d / 2;
-
-    // Column centers
-    const double leftX = 78;
-    const double midX = w / 2;
-    const double rightX = w - 78;
-
-    // Row centers (spacing like screenshot)
-    const double topY = 95;
-    const double midY = 230;
-    const double botY = 365;
-
-    Positioned pos(double cx, double cy, Widget child) {
-      return Positioned(
-        left: cx - r,
-        top: cy - r,
-        width: d,
-        height: d,
-        child: child,
-      );
-    }
-
-    return Stack(
-      children: [
-        // N background
-        Positioned.fill(
-          child: CustomPaint(
-            painter: _NPainter(
-              bubble: d,
-              leftX: leftX,
-              rightX: rightX,
-              topY: topY,
-              botY: botY,
+    return SizedBox(
+      width: _w,
+      height: _h,
+      child: Stack(
+        children: [
+          // ✅ Your PNG background (contains circles)
+          Positioned.fill(
+            child: Image.asset(
+              Images.homeNBg, // assets/calender/Frame 2147230306.png
+              fit: BoxFit.fill,
             ),
           ),
-        ),
 
-        // TOP
-        pos(
-          leftX,
-          topY,
-          _Bubble(
-            iconPath: Images.homeIcon,
-            label: "Home",
-            onTap: () => onTap("Home"),
+          _pos(
+            59.4,
+            59.4,
+            _BubbleContent(
+              iconPath: Images.homeIcon,
+              label: "Home",
+              onTap: () => onTap("Home"),
+            ),
           ),
-        ),
-        pos(
-          rightX,
-          topY,
-          _Bubble(
-            iconPath: Images.techItIcon,
-            label: "Tech & IT\nSupport",
-            onTap: () => onTap("Tech & IT Support"),
+          _pos(
+            282.3,
+            59.4,
+            _BubbleContent(
+              iconPath: Images.techItIcon,
+              label: "Tech & IT\nSupport",
+              onTap: () => onTap("Tech & IT Support"),
+            ),
           ),
-        ),
-
-        // MID
-        pos(
-          leftX,
-          midY,
-          _Bubble(
-            iconPath: Images.beautyIcon,
-            label: "Beauty",
-            onTap: () => onTap("Beauty"),
+          _pos(
+            59.4,
+            216.6,
+            _BubbleContent(
+              iconPath: Images.beautyIcon,
+              label: "Beauty",
+              onTap: () => onTap("Beauty"),
+            ),
           ),
-        ),
-        pos(
-          midX,
-          midY,
-          _Bubble(
-            iconPath: Images.maintanceIcon,
-            label: "Repair &\nMaintenance",
-            onTap: () => onTap("Repair & Maintenance"),
+          _pos(
+            170.9,
+            216.6,
+            _BubbleContent(
+              iconPath: Images.maintanceIcon,
+              label: "Repair &\nMaintenance",
+              onTap: () => onTap("Repair & Maintenance"),
+            ),
           ),
-        ),
-        pos(
-          rightX,
-          midY,
-          _Bubble(
-            iconPath: Images.automactionIcon,
-            label: "Automobile",
-            onTap: () => onTap("Automobile"),
+          _pos(
+            282.3,
+            216.6,
+            _BubbleContent(
+              iconPath: Images.automactionIcon,
+              label: "Automobile",
+              onTap: () => onTap("Automobile"),
+            ),
           ),
-        ),
-
-        // BOTTOM
-        pos(
-          leftX,
-          botY,
-          _Bubble(
-            iconPath: Images.mediaIcon,
-            label: "Media &\nEvents",
-            onTap: () => onTap("Media & Events"),
+          _pos(
+            59.4,
+            373.8,
+            _BubbleContent(
+              iconPath: Images.mediaIcon,
+              label: "Media &\nEvents",
+              onTap: () => onTap("Media & Events"),
+            ),
           ),
-        ),
-        pos(
-          rightX,
-          botY,
-          _Bubble(
-            iconPath: Images.othersIcon,
-            label: "Others",
-            onTap: () => onTap("Others"),
+          _pos(
+            282.3,
+            373.8,
+            _BubbleContent(
+              iconPath: Images.othersIcon,
+              label: "Others",
+              onTap: () => onTap("Others"),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-/* ------------------------ N Painter ------------------------ */
-
-class _NPainter extends CustomPainter {
-  _NPainter({
-    required this.bubble,
-    required this.leftX,
-    required this.rightX,
-    required this.topY,
-    required this.botY,
-  });
-
-  final double bubble;
-  final double leftX;
-  final double rightX;
-  final double topY;
-  final double botY;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const nColor = Color(0xFFE6E6E6);
-
-    // thickness tuned to look like screenshot behind circles
-    final double thickness = bubble * 0.58; // ~56
-    final double barW = thickness * 0.88;
-    final Radius rad = Radius.circular(barW * 0.46);
-
-    final fill = Paint()
-      ..color = nColor
-      ..style = PaintingStyle.fill;
-
-    // Left vertical bar
-    final leftBar = RRect.fromRectAndRadius(
-      Rect.fromLTRB(
-        leftX - barW / 2,
-        topY - bubble * 0.36,
-        leftX + barW / 2,
-        botY + bubble * 0.36,
-      ),
-      rad,
-    );
-
-    // Right vertical bar
-    final rightBar = RRect.fromRectAndRadius(
-      Rect.fromLTRB(
-        rightX - barW / 2,
-        topY - bubble * 0.30,
-        rightX + barW / 2,
-        botY + bubble * 0.30,
-      ),
-      rad,
-    );
-
-    canvas.drawRRect(leftBar, fill);
-    canvas.drawRRect(rightBar, fill);
-
-    // Diagonal stroke
-    final stroke = Paint()
-      ..color = nColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = thickness
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawLine(
-      Offset(leftX, topY + bubble * 0.10),
-      Offset(rightX, botY - bubble * 0.10),
-      stroke,
-    );
-
-    // Soft blend behind middle bubble
-    final midBlend = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(size.width / 2, (topY + botY) / 2),
-        width: bubble * 0.95,
-        height: bubble * 0.95,
-      ),
-      Radius.circular(bubble * 0.30),
-    );
-    canvas.drawRRect(midBlend, fill);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-/* ------------------------ Bubble ------------------------ */
-
-class _Bubble extends StatelessWidget {
-  const _Bubble({
+/// ✅ ONLY content overlay (NO new white circle!)
+class _BubbleContent extends StatelessWidget {
+  const _BubbleContent({
     required this.iconPath,
     required this.label,
     required this.onTap,
@@ -429,36 +330,19 @@ class _Bubble extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
         onTap: onTap,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              // cleaner shadow (like screenshot)
-              BoxShadow(
-                color: Colors.black.withOpacity(0.10),
-                blurRadius: 14,
-                spreadRadius: 0,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+        child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(
-                  iconPath,
-                  width: 34,
-                  height: 34,
-                  fit: BoxFit.contain,
-                ),
+                Image.asset(iconPath, width: 34, height: 34, fit: BoxFit.contain),
                 const SizedBox(height: 6),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 12.2,
                     fontWeight: FontWeight.w800,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app_ground.dart';
 import '../../../core/constants/assets.dart';
+import '../../user/app_ground_user.dart';
 import 'forget_password.dart';
 
 class HandyEmailLoginScreen extends StatefulWidget {
@@ -30,17 +32,42 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
     super.dispose();
   }
 
+  // void _submit() {
+  //   if (!_formKey.currentState!.validate()) return;
+  //
+  //   final email = _emailCtrl.text.trim();
+  //   final password = _passwordCtrl.text.trim();
+  //   final remember = _rememberMe;
+  //
+  //   debugPrint('Login -> email: $email | remember: $remember');
+  //
+  //   Get.offAll(() => const AppGround()); // removes login screen from stack
+  // }
+
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final email = _emailCtrl.text.trim();
+    final email = _emailCtrl.text.trim().toLowerCase();
     final password = _passwordCtrl.text.trim();
     final remember = _rememberMe;
 
     debugPrint('Login -> email: $email | remember: $remember');
 
-    Get.offAll(() => const AppGround()); // removes login screen from stack
+    // ✅ route by email
+    if (email == "professional@gmail.com") {
+      Get.offAll(() => const AppGround());
+    } else if (email == "user@gmail.com") {
+      Get.offAll(() => const UserAppGround());
+    } else {
+      // ✅ fallback (choose what you want)
+      Get.snackbar(
+        "Login",
+        "Unknown user type for: $email",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -128,14 +155,24 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
             // header row
             Row(
               children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
+                SizedBox(
+                  width: 57,
+                  height: 26,
+                  child: Align(
+                    alignment: Alignment.centerRight, // ✅ Figma: Right
+                    child: Text(
+                      'Login',
+                      style: GoogleFonts.urbanist(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500, // ✅ Medium (500)
+                        height: 1.1,                 // ✅ 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFF181919), // ✅ #181919
+                      ),
+                    ),
                   ),
                 ),
+
                 const Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
@@ -295,14 +332,20 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  textStyle: const TextStyle(
+                ),
+                child: Text(
+                  'Log in',
+                  style: GoogleFonts.urbanist(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500, // ✅ Figma 500
+                    height: 1.1,                 // ✅ 110%
+                    letterSpacing: 0,            // ✅ 0%
+                    color: Colors.white,         // ✅ #FFFFFF
                   ),
                 ),
-                child: const Text('Log in'),
               ),
             ),
+
           ],
         ),
       ),

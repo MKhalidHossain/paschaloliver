@@ -18,6 +18,10 @@ class TokenManager {
     await _storage.write(key: _accessTokenKey, value: token);
   }
 
+  static Future<String?> getEmail() async {
+    return _storage.read(key: "email"); // ✅ must be saved at login time
+  }
+
   static Future<void> saveRole(String token) async {
     await _storage.write(key: _role, value: token);
   }

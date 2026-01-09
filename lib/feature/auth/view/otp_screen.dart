@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/reset_password_screen.dart';
 
 import '../../../core/constants/assets.dart';
@@ -78,14 +79,24 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
               const SizedBox(height: 24),
 
               // ---------------- TITLE & SUBTITLE ----------------
-              Text(
-                'OTP',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: _textColor,
+              SizedBox(
+                width: 343,
+                height: 31,
+                child: Center(
+                  child: Text(
+                    'OTP',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600, // ✅ SemiBold
+                      height: 1.1,                 // ✅ 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFF123055), // ✅ #123055
+                    ),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 6),
               Text(
                 'We have sent the verification code to your email\naddress',

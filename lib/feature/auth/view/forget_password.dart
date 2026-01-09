@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 
 import '../../../core/constants/assets.dart';
@@ -56,24 +57,44 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
               const SizedBox(height: 24),
 
               // ---------------- TITLE & SUBTITLE ----------------
-              Text(
-                'Forgot Password',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: _textColor,
+              SizedBox(
+                width: 343,
+                height: 31,
+                child: Center(
+                  child: Text(
+                    'Forgot Password',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600, // ✅ SemiBold
+                      height: 1.1,                 // ✅ 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFF123055), // ✅ #123055
+                    ),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 6),
-              Text(
-                'Select which contact details should we used to\nreset your password',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
-                  height: 1.4,
+              SizedBox(
+                width: 343,
+                height: 36,
+                child: Center(
+                  child: Text(
+                    'Select which contact details should we used to reset\n'
+                        'your password',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      height: 1.1,
+                      letterSpacing: 0,
+                      color: const Color(0xFF181919),
+                    ),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 24),
 
               // ---------------- EMAIL OPTION CARD ----------------
@@ -121,24 +142,38 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'Via Email:',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
+                          children: [
+                            SizedBox(
+                              width: 239,
+                              height: 15,
+                              child: Text(
+                                'Via Email:',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400, // ✅ Regular
+                                  height: 1.1,                 // ✅ 110%
+                                  letterSpacing: 0,
+                                  color: const Color(0xFF727272), // ✅ #727272
+                                ),
                               ),
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              'gdg***fsf@azlotv.com',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+
+                            const SizedBox(height: 4),
+                            SizedBox(
+                              width: 239,
+                              height: 22,
+                              child: Text(
+                                'gdg***fsf@azlotv.com',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500, // ✅ 500 Medium
+                                  height: 1.1,                 // ✅ 110%
+                                  letterSpacing: 0,
+                                  color: const Color(0xFF181919), // ✅ Black Text
+                                ),
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -168,19 +203,28 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: () {                       // 👈 change here
+                  onPressed: () {
                     Get.to(() => const HandyOtpScreen());
                   },
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                  child: SizedBox(
+                    width: 63,
+                    height: 18,
+                    child: Center(
+                      child: Text(
+                        'Continue',
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500, // ✅ Medium 500
+                          height: 1.1,                 // ✅ 110%
+                          letterSpacing: 0,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
 
               // ---------------- REMEMBER PASSWORD ----------------

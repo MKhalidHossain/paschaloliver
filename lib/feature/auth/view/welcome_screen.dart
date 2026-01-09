@@ -82,23 +82,21 @@ class WelcomeScreenView extends StatelessWidget {
                     const SizedBox(height: 4),
 
                     // subtitle
-                    SizedBox(
-                      width: 335,
-                      height: 58, // ✅ Figma height
-                      child: Center(
-                        child: Text(
-                          'Doorstep convenience, for\nany service',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            height: 1.2,         // 120%
-                            letterSpacing: 0,    // 0%
-                            color: Colors.white, // #FFFFFF
-                          ),
-                        ),
+                    Text(
+                      'Doorstep convenience,\nfor any service',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.schoolbell(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        height: 1.2,
+                        letterSpacing: 0,
+                        color: Colors.white,
                       ),
                     ),
+
+
+
+
 
                   ],
                 ),
