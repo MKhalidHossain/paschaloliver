@@ -45,15 +45,15 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                'HandyNaija',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: _brandGreen,
-                  letterSpacing: 0.3,
-                ),
-              ),
+              // Text(
+              //   'HandyNaija',
+              //   style: TextStyle(
+              //     fontSize: 28,
+              //     fontWeight: FontWeight.w700,
+              //     color: _brandGreen,
+              //     letterSpacing: 0.3,
+              //   ),
+              // ),
               const SizedBox(height: 24),
 
               // ---------------- TITLE & SUBTITLE ----------------

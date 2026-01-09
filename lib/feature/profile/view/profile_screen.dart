@@ -7,6 +7,7 @@ import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.da
 
 import '../../auth/view/sign_in_view.dart';
 import 'about_screen.dart';
+import 'change_password_screen.dart';
 import 'choose_language_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -132,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
             _TileRow(
               leading: const _LeadingIcon(child: Icon(Icons.lock_outline_rounded, size: 18, color: _C.green)),
               title: "Change password",
-              onTap: () {},
+              onTap: () => Get.to(() => const ChangePasswordScreen()),
             ),
             const _ThinDivider(),
             _TileRow(

@@ -53,7 +53,7 @@ class Images {
 
 
   //create account
-  static const String men = 'assets/images/image_130.png';
+  static const String men = 'assets/images/image 162.png';
   static const String onboarding2 = 'assets/images/image_127.png';
   static const String onboarding3 = 'assets/images/image_128.png';
   static const String onboarding4 = 'assets/images/image_129.png';

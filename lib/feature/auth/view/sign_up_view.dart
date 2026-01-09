@@ -52,20 +52,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 8),
 
-              Text(
-                'HandyNaija',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: _brandGreen,
-                  letterSpacing: 0.3,
-                ),
-              ),
+              // Text(
+              //   'HandyNaija',
+              //   style: TextStyle(
+              //     fontSize: 28,
+              //     fontWeight: FontWeight.w700,
+              //     color: _brandGreen,
+              //     letterSpacing: 0.3,
+              //   ),
+              // ),
               const SizedBox(height: 24),
 
               // ------------------ Title & subtitle ------------------
               Text(
-                'Create Account',
+                'Create New Account',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -74,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                'Please Sign up  to your Account',
+                'Sign up  to get started',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
