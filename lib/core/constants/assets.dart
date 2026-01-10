@@ -18,6 +18,7 @@ class Images {
   static const String mediaIcon = 'assets/calender/media.png';
   static const String othersIcon = 'assets/calender/Layer_1.png';
   static const String backbonIcon = 'assets/calender/backbon.png';
+  static const String servicesIcon = 'assets/icons/services.png';
 
 
 

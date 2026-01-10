@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/user/home/view/search/search_services_find_screen.dart';
+import 'package:paschaloliver/feature/user/home/view/subcateogry/available_schedule_screen.dart';
 
 import '../../../../core/constants/assets.dart';
 
@@ -117,7 +119,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           iconPath: e.icon,
                           onTap: () {
                             // ✅ navigate to service list/details
-                            // Get.to(() => ServiceListScreen(subCategory: e));
+                            Get.to(() => SearchTimeLoadingScreen());
                           },
                         );
                       }).toList(),

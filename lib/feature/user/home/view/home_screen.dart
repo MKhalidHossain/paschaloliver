@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/user/home/view/search/search_screen.dart';
 
 import '../../../../core/constants/assets.dart';
 import 'address/address_flow_screens.dart';
@@ -17,20 +18,7 @@ class UserHomeScreen extends StatefulWidget {
 class _UserHomeScreenState extends State<UserHomeScreen> {
   static const Color _green = Color(0xFF3AAE6E);
 
-  int _navIndex = 0;
 
-  void _onBottomTap(int i) {
-    setState(() => _navIndex = i);
-
-    // ✅ Optional GetX navigation for bottom tabs (add your screens)
-    // switch (i) {
-    //   case 0: break; // Search (current)
-    //   case 1: Get.to(() => const FavoritesScreen()); break;
-    //   case 2: Get.to(() => const ServicesScreen()); break;
-    //   case 3: Get.to(() => const InboxScreen()); break;
-    //   case 4: Get.to(() => const ProfileScreen()); break;
-    // }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +53,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         ),
                       ),
                     ),
-                    _WhiteCircleIcon(icon: Icons.search, onTap: () {}),
+                    _WhiteCircleIcon(
+                      icon: Icons.search,
+                      onTap: () async {
+                        final result = await Get.to<String>(() => const HandySearchPage());
+                        if (result != null) {
+                          // use your selected value here
+                          debugPrint("Selected: $result");
+                          // example: controller.searchCtrl.text = result;
+                        }
+                      },
+                    ),
+
                     const SizedBox(width: 10),
                     _WhiteCircleIcon(
                       icon: Icons.notifications_none_rounded,
@@ -348,48 +347,4 @@ class _WhiteCircleIcon extends StatelessWidget {
   }
 }
 
-/// ✅ Bottom nav like screenshot
-class _BottomNav extends StatelessWidget {
-  const _BottomNav({
-    required this.currentIndex,
-    required this.onTap,
-    required this.activeColor,
-  });
 
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-  final Color activeColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 12,
-            offset: const Offset(0, -2),
-            color: Colors.black.withOpacity(.08),
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: activeColor,
-        unselectedItemColor: const Color(0xFF8B8B8B),
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: "Search"),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border_rounded), label: "Favorites"),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month_outlined), label: "Services"),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline_rounded), label: "Inbox"),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: "Profile"),
-        ],
-      ),
-    );
-  }
-}

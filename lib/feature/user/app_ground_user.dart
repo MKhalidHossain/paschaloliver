@@ -171,7 +171,7 @@ class _NavIcon extends StatelessWidget {
 
     final String asset = switch (tab) {
       0 => Images.searchIcon,
-      2 => Images.calenderIcon,
+      2 => Images.servicesIcon,
       3 => Images.messageIcon,
       4 => Images.userIcon,
       _ => Images.searchIcon,
@@ -193,81 +193,10 @@ class _NavIcon extends StatelessWidget {
       width: 24,
       height: 24,
       fit: BoxFit.contain,
-      color: color,
+      // color: color,
       colorBlendMode: BlendMode.srcIn,
     );
   }
 }
 
 
-/* ============================ PLACEHOLDER PAGES ============================ */
-
-class _SearchPage extends StatelessWidget {
-  const _SearchPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Search",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-      ),
-    );
-  }
-}
-
-class _FavoritesPage extends StatelessWidget {
-  const _FavoritesPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Favorites",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-      ),
-    );
-  }
-}
-
-class _ServicesPage extends StatelessWidget {
-  const _ServicesPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Services",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-      ),
-    );
-  }
-}
-
-class _InboxPage extends StatelessWidget {
-  const _InboxPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Inbox",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-      ),
-    );
-  }
-}
-
-class _ProfilePage extends StatelessWidget {
-  const _ProfilePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        "Profile",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-      ),
-    );
-  }
-}

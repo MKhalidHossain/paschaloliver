@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+
 /// ---------------------------------------------------------------------------
-/// ADDRESS FLOW (UI LIKE YOUR SCREENSHOTS) - GetX
+/// FULL ADDRESS FLOW (REAL GOOGLE MAP) - GetX
 /// Screens:
 /// 1) MyAddressesScreen
 /// 2) ServiceAddressMapScreen
@@ -13,18 +16,155 @@ import 'package:get/get.dart';
 /// - FloorDoorSheet
 /// ---------------------------------------------------------------------------
 
+/// ✅ Run directly if you want to test this file alone
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const MyAddressesScreen(),
+    );
+  }
+}
+
 class AddressFlowController extends GetxController {
+  // text controllers
   final searchCtrl = TextEditingController();
   final detailsCtrl = TextEditingController();
   final streetNumberCtrl = TextEditingController(text: "20");
 
+  // selected address
   final selectedAddress = "Ungwan Kifi, Nigeria".obs;
   final selectedSub = "080006, Ungwan".obs;
 
   final suggestions = <String>[
     "Ungwan Kifi, Nigeria",
-    "Ungwan Kifi, Nigeria",
+    "Abuja, Nigeria",
+    "Lagos, Nigeria",
+    "Kano, Nigeria",
   ].obs;
+
+  // ✅ Map state
+  final selectedLatLng = const LatLng(9.0765, 7.3986).obs; // Abuja default
+  final hasLocationPermission = false.obs;
+
+  GoogleMapController? _mapCtrl;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _checkPermissionSilently();
+  }
+
+  // Used by GoogleMap
+  void onMapCreated(GoogleMapController c) {
+    _mapCtrl = c;
+  }
+
+  Set<Marker> get markers => {
+    Marker(
+      markerId: const MarkerId("selected"),
+      position: selectedLatLng.value,
+    ),
+  };
+
+  Future<void> _checkPermissionSilently() async {
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        hasLocationPermission.value = false;
+        return;
+      }
+
+      final perm = await Geolocator.checkPermission();
+      hasLocationPermission.value =
+      (perm == LocationPermission.always || perm == LocationPermission.whileInUse);
+    } catch (_) {
+      hasLocationPermission.value = false;
+    }
+  }
+
+  Future<bool> ensureLocationPermission() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await Geolocator.openLocationSettings();
+      return false;
+    }
+
+    var perm = await Geolocator.checkPermission();
+    if (perm == LocationPermission.denied) {
+      perm = await Geolocator.requestPermission();
+    }
+
+    final ok = (perm == LocationPermission.always || perm == LocationPermission.whileInUse);
+    hasLocationPermission.value = ok;
+    return ok;
+  }
+
+  Future<void> moveCamera(LatLng target, {double zoom = 16}) async {
+    selectedLatLng.value = target;
+    if (_mapCtrl != null) {
+      await _mapCtrl!.animateCamera(CameraUpdate.newLatLngZoom(target, zoom));
+    }
+  }
+
+  Future<void> zoomBy(double delta) async {
+    if (_mapCtrl == null) return;
+    final z = await _mapCtrl!.getZoomLevel();
+    await _mapCtrl!.animateCamera(CameraUpdate.zoomTo(z + delta));
+  }
+
+  /// ✅ Tap on map to pick location
+  Future<void> pickOnMap(LatLng latLng) async {
+    await moveCamera(latLng, zoom: 16);
+    // await fillAddressFromLatLng(latLng);
+  }
+
+  /// ✅ Use current device location
+  Future<void> useCurrentLocation() async {
+    final ok = await ensureLocationPermission();
+    if (!ok) return;
+
+    final pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    final latLng = LatLng(pos.latitude, pos.longitude);
+    await moveCamera(latLng, zoom: 16);
+    // await fillAddressFromLatLng(latLng);
+  }
+
+  /// ✅ Reverse geocode: LatLng -> Address strings
+  // Future<void> fillAddressFromLatLng(LatLng latLng) async {
+  //   try {
+  //     final list = await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
+  //     if (list.isEmpty) return;
+  //
+  //     final p = list.first;
+  //
+  //     final line1 = [
+  //       p.street,
+  //       p.subLocality,
+  //       p.locality,
+  //     ].whereType<String>().where((e) => e.trim().isNotEmpty).join(", ");
+  //
+  //     final line2 = [
+  //       p.postalCode,
+  //       p.administrativeArea,
+  //       p.country,
+  //     ].whereType<String>().where((e) => e.trim().isNotEmpty).join(", ");
+  //
+  //     if (line1.isNotEmpty) selectedAddress.value = line1;
+  //     if (line2.isNotEmpty) selectedSub.value = line2;
+  //   } catch (_) {
+  //     // ignore (no internet / no result / rate limit)
+  //   }
+  // }
 
   @override
   void onClose() {
@@ -43,6 +183,9 @@ class AddressUI {
   static const Color fill = Color(0xFFF1F1F1);
 }
 
+/// ------------------------------
+/// Screen 1: My addresses
+/// ------------------------------
 class MyAddressesScreen extends StatelessWidget {
   const MyAddressesScreen({super.key});
 
@@ -83,19 +226,17 @@ class MyAddressesScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
 
-            // Search field (opens search page)
             _SearchField(
               hint: "Street name and number…",
               onTap: () => Get.to(() => const AddressSearchScreen()),
             ),
             const SizedBox(height: 14),
 
-            // Use current location button
             _PrimaryOutlineButton(
               icon: Icons.my_location_rounded,
               label: "Use Current Location",
-              onTap: () {
-                // show street number bottom sheet like screenshot
+              onTap: () async {
+                // ✅ show your street number sheet first (like your screenshot)
                 Get.bottomSheet(
                   const StreetNumberSheet(
                     placeTitle: "Maddalena plaza",
@@ -106,6 +247,45 @@ class MyAddressesScreen extends StatelessWidget {
                 );
               },
             ),
+
+            const SizedBox(height: 16),
+
+            Obx(() {
+              return Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AddressUI.fill,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AddressUI.line),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.location_on_outlined, color: AddressUI.green),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            c.selectedAddress.value,
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            c.selectedSub.value,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AddressUI.muted,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -113,7 +293,9 @@ class MyAddressesScreen extends StatelessWidget {
   }
 }
 
+/// ------------------------------
 /// Bottom sheet: Street number
+/// ------------------------------
 class StreetNumberSheet extends StatelessWidget {
   const StreetNumberSheet({
     super.key,
@@ -134,7 +316,6 @@ class StreetNumberSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // top row: title + close
             Row(
               children: [
                 const Expanded(
@@ -155,7 +336,11 @@ class StreetNumberSheet extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               placeSub,
-              style: const TextStyle(fontSize: 12, color: AddressUI.muted, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontSize: 12,
+                color: AddressUI.muted,
+                fontWeight: FontWeight.w600,
+              ),
             ),
 
             const SizedBox(height: 14),
@@ -188,7 +373,9 @@ class StreetNumberSheet extends StatelessWidget {
   }
 }
 
-/// Screen: Service address map (UI like screenshot)
+/// ------------------------------
+/// Screen 2: Map picker
+/// ------------------------------
 class ServiceAddressMapScreen extends StatelessWidget {
   const ServiceAddressMapScreen({super.key});
 
@@ -202,7 +389,6 @@ class ServiceAddressMapScreen extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            // Top bar with title + close
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
               child: Row(
@@ -221,7 +407,6 @@ class ServiceAddressMapScreen extends StatelessWidget {
               ),
             ),
 
-            // Search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: _SearchBarInline(
@@ -231,35 +416,34 @@ class ServiceAddressMapScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Map placeholder (replace with GoogleMap later)
             Expanded(
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Container(
-                      color: const Color(0xFFF4F0E6),
-                      child: const Center(
-                        child: Text(
-                          "MAP (placeholder)\nReplace with google_maps_flutter",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: AddressUI.muted, fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
+                    child: Obx(() {
+                      final target = c.selectedLatLng.value;
+                      return GoogleMap(
+                        initialCameraPosition: CameraPosition(target: target, zoom: 15),
+                        onMapCreated: c.onMapCreated,
+                        markers: c.markers,
+                        myLocationEnabled: c.hasLocationPermission.value,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
+                        onTap: c.pickOnMap,
+                      );
+                    }),
                   ),
 
-                  // Use location chip
                   Positioned(
                     right: 14,
                     bottom: 78,
                     child: _MapPillButton(
                       icon: Icons.near_me_outlined,
                       label: "Use location",
-                      onTap: () {},
+                      onTap: () async => c.useCurrentLocation(),
                     ),
                   ),
 
-                  // Bottom confirm button
                   Positioned(
                     left: 18,
                     right: 18,
@@ -279,7 +463,9 @@ class ServiceAddressMapScreen extends StatelessWidget {
   }
 }
 
-/// Screen: Address search results
+/// ------------------------------
+/// Screen 3: Address search (UI only list)
+/// ------------------------------
 class AddressSearchScreen extends StatelessWidget {
   const AddressSearchScreen({super.key});
 
@@ -295,11 +481,23 @@ class AddressSearchScreen extends StatelessWidget {
           child: Column(
             children: [
               _SearchBarInline(
-                hint: "Ungwan Kifi, Nigeria",
+                hint: "Search address",
                 controller: c.searchCtrl,
                 autofocus: true,
                 onChanged: (v) {
-                  // UI-only: keep same list for now
+                  // Optional: filter your static list
+                  final all = <String>[
+                    "Ungwan Kifi, Nigeria",
+                    "Abuja, Nigeria",
+                    "Lagos, Nigeria",
+                    "Kano, Nigeria",
+                  ];
+                  final q = v.trim().toLowerCase();
+                  if (q.isEmpty) {
+                    c.suggestions.assignAll(all);
+                  } else {
+                    c.suggestions.assignAll(all.where((e) => e.toLowerCase().contains(q)));
+                  }
                 },
               ),
               const SizedBox(height: 14),
@@ -313,12 +511,18 @@ class AddressSearchScreen extends StatelessWidget {
                       final s = c.suggestions[i];
                       return InkWell(
                         onTap: () {
+                          // For now: only set text; map not changed here.
                           c.selectedAddress.value = s;
-                          Get.back(); // return to previous screen
+                          c.selectedSub.value = "";
+                          Get.back();
                         },
                         child: Text(
                           s,
-                          style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: AddressUI.text),
+                          style: const TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w600,
+                            color: AddressUI.text,
+                          ),
                         ),
                       );
                     },
@@ -333,7 +537,9 @@ class AddressSearchScreen extends StatelessWidget {
   }
 }
 
-/// Screen: Address details with map on top + confirm
+/// ------------------------------
+/// Screen 4: Details + Map header
+/// ------------------------------
 class AddressDetailsScreen extends StatelessWidget {
   const AddressDetailsScreen({super.key});
 
@@ -347,7 +553,6 @@ class AddressDetailsScreen extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            // App bar style: Back + centered title + close
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               child: Row(
@@ -371,34 +576,35 @@ class AddressDetailsScreen extends StatelessWidget {
               ),
             ),
 
-            // Map header (placeholder)
             SizedBox(
               height: 220,
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Container(
-                      color: const Color(0xFFF4F0E6),
-                      child: const Center(
-                        child: Text(
-                          "MAP (placeholder)",
-                          style: TextStyle(color: AddressUI.muted, fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
+                    child: Obx(() {
+                      final target = c.selectedLatLng.value;
+                      return GoogleMap(
+                        initialCameraPosition: CameraPosition(target: target, zoom: 15),
+                        onMapCreated: c.onMapCreated,
+                        markers: c.markers,
+                        myLocationEnabled: c.hasLocationPermission.value,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
+                        onTap: c.pickOnMap,
+                      );
+                    }),
                   ),
 
-                  // floating controls
                   Positioned(
                     right: 12,
                     top: 54,
                     child: Column(
                       children: [
-                        _MapFloatingBtn(icon: Icons.near_me_outlined, onTap: () {}),
+                        _MapFloatingBtn(icon: Icons.near_me_outlined, onTap: () async => c.useCurrentLocation()),
                         const SizedBox(height: 10),
-                        _MapFloatingBtn(icon: Icons.add, onTap: () {}),
+                        _MapFloatingBtn(icon: Icons.add, onTap: () async => c.zoomBy(1)),
                         const SizedBox(height: 10),
-                        _MapFloatingBtn(icon: Icons.remove, onTap: () {}),
+                        _MapFloatingBtn(icon: Icons.remove, onTap: () async => c.zoomBy(-1)),
                       ],
                     ),
                   ),
@@ -412,7 +618,6 @@ class AddressDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Selected address card
                     Obx(() {
                       return Container(
                         padding: const EdgeInsets.all(12),
@@ -436,7 +641,11 @@ class AddressDetailsScreen extends StatelessWidget {
                                   const SizedBox(height: 2),
                                   Text(
                                     c.selectedSub.value,
-                                    style: const TextStyle(fontSize: 12, color: AddressUI.muted, fontWeight: FontWeight.w600),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AddressUI.muted,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -449,9 +658,8 @@ class AddressDetailsScreen extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-                    // Address details label
-                    Row(
-                      children: const [
+                    const Row(
+                      children: [
                         Icon(Icons.receipt_long_outlined, color: AddressUI.muted),
                         SizedBox(width: 8),
                         Text(
@@ -462,7 +670,6 @@ class AddressDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
 
-                    // Details field
                     TextField(
                       controller: c.detailsCtrl,
                       maxLines: 4,
@@ -480,7 +687,6 @@ class AddressDetailsScreen extends StatelessWidget {
 
                     const Spacer(),
 
-                    // Confirm address button
                     _GreenButton(
                       label: "Confirm address",
                       onTap: () {
@@ -502,7 +708,9 @@ class AddressDetailsScreen extends StatelessWidget {
   }
 }
 
-/// Bottom sheet: Floor and door
+/// ------------------------------
+/// Bottom sheet: Floor/door
+/// ------------------------------
 class FloorDoorSheet extends StatelessWidget {
   const FloorDoorSheet({super.key});
 
@@ -514,7 +722,6 @@ class FloorDoorSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // grab handle
             Container(
               width: 44,
               height: 5,
@@ -531,7 +738,6 @@ class FloorDoorSheet extends StatelessWidget {
             ),
             const SizedBox(height: 6),
 
-            // Illustration placeholder
             Container(
               height: 90,
               width: double.infinity,
@@ -586,7 +792,6 @@ class FloorDoorSheet extends StatelessWidget {
                   child: _GreenButton(
                     label: "Add details",
                     onTap: () {
-                      // Here you can focus details field or open details editor
                       Get.back();
                     },
                   ),
@@ -601,7 +806,7 @@ class FloorDoorSheet extends StatelessWidget {
 }
 
 /// ---------------------------------------------------------------------------
-/// UI Components (match your style)
+/// UI Components
 /// ---------------------------------------------------------------------------
 
 class _SearchField extends StatelessWidget {
@@ -795,7 +1000,6 @@ class _WhiteOutlineBtn extends StatelessWidget {
 
 class _BottomSheetCard extends StatelessWidget {
   const _BottomSheetCard({required this.child});
-
   final Widget child;
 
   @override

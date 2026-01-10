@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../core/constants/assets.dart';
 
 /// ✅ USER SERVICE VIEW DETAILS (PRO UI + Payment Details Bottom Sheet)
-///
-/// Required assets in assets.dart:
-/// - Images.mapPreview          // map placeholder image (you will replace with GoogleMap later)
-/// - Images.paymentHero         // (optional) top illustration like your 3rd screenshot
-/// - Images.men                 // avatar image
-///
-/// Example:
-/// class Images {
-///   static const men = "assets/images/men.png";
-///   static const mapPreview = "assets/images/map_preview.png";
-///   static const paymentHero = "assets/images/payment_hero.png";
-/// }
 class UserServiceViewDetailsScreen extends StatelessWidget {
   const UserServiceViewDetailsScreen({super.key});
 
@@ -37,8 +26,7 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
           children: [
-            // Back
-            // ✅ PERFECTLY PLACED BACK ARROW (fixed header)
+            // ✅ Back Arrow
             SizedBox(
               height: 48,
               child: Align(
@@ -46,10 +34,7 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                 child: IconButton(
                   onPressed: () => Get.back(),
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 44,
-                    minHeight: 44,
-                  ),
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                   icon: const Icon(
                     Icons.arrow_back_ios_new_rounded,
                     size: 18,
@@ -59,20 +44,15 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
               ),
             ),
 
-            // TOP: either Hero illustration OR Map preview (you can keep both if you want)
-
-
+            // ✅ TOP MAP (no gestures so ListView scroll stays smooth)
             _TopMediaCard(
               height: 140,
-              child: Image.asset(
-                Images.men, // ✅ later replace this widget with GoogleMap
-                fit: BoxFit.cover,
-              ),
+              child: const _TopMapPreview(),
             ),
 
             const SizedBox(height: 12),
 
-            // Provider row (matches screenshot)
+            // Provider row
             _ProviderStrip(
               avatar: Images.men,
               name: "Mr. Hamid",
@@ -235,6 +215,7 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
     );
   }
 
+  /// ✅ FIXED: No left/right/bottom gaps (sheet attaches to screen edges)
   static void _openPaymentDetails(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -263,6 +244,31 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
           TextButton(onPressed: () => Get.back(), child: const Text("Yes")),
         ],
       ),
+    );
+  }
+}
+
+/* ========================= GOOGLE MAP PREVIEW (TOP) ========================= */
+
+class _TopMapPreview extends StatelessWidget {
+  const _TopMapPreview();
+
+  // ✅ Change to your real booking/service location
+  static const LatLng _center = LatLng(33.5731, -7.5898); // Casablanca
+
+  @override
+  Widget build(BuildContext context) {
+    return GoogleMap(
+      initialCameraPosition: const CameraPosition(target: _center, zoom: 15),
+      // markers: const {Marker(markerId: MarkerId("service_location"), position: _center)},
+      scrollGesturesEnabled: false,
+      zoomGesturesEnabled: false,
+      rotateGesturesEnabled: false,
+      tiltGesturesEnabled: false,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      compassEnabled: false,
+      mapToolbarEnabled: false,
     );
   }
 }
@@ -377,7 +383,6 @@ class _PaymentChevronRow extends StatelessWidget {
 
   static const _green = Color(0xFF2FA86A);
   static const _text = Color(0xFF1F1F1F);
-  static const _line = Color(0xFFEDEDED);
 
   @override
   Widget build(BuildContext context) {
@@ -545,6 +550,7 @@ class _SmallStatCard extends StatelessWidget {
 }
 
 /* ============================ SERVICE PRICE SHEET ============================ */
+/* ✅ FIXED: no outer margin/gap. Sheet attaches to left/right/bottom edges. */
 
 class _ServicePriceSheet extends StatelessWidget {
   const _ServicePriceSheet({
@@ -573,157 +579,193 @@ class _ServicePriceSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subtotal = hourlyRate * bookedHours;
-    final price = subtotal + minCharge + managementFee + vatFee;
+    final total = subtotal + minCharge + managementFee + vatFee;
 
-    return SafeArea(
-      top: false,
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.18),
-              blurRadius: 22,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle
-            Container(
-              width: 46,
-              height: 4,
-              decoration: BoxDecoration(
-                color: const Color(0xFFDADADA),
-                borderRadius: BorderRadius.circular(999),
+    final bottomSafe = MediaQuery.of(context).padding.bottom;
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: double.infinity,
+
+          // ✅ NO MARGIN => removes the red gaps (left/right/bottom)
+          margin: EdgeInsets.zero,
+
+          // ✅ keep safe-area space INSIDE the sheet (not outside)
+          padding: EdgeInsets.fromLTRB(16, 10, 16, 16 + bottomSafe),
+
+          decoration: BoxDecoration(
+            color: Colors.white,
+
+            // ✅ only top corners rounded (looks like your screenshot + no side gaps)
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(.18),
+                blurRadius: 22,
+                offset: const Offset(0, -2),
               ),
-            ),
-            const SizedBox(height: 10),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Top handle
+              Container(
+                width: 44,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD6D6D6),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              const SizedBox(height: 12),
 
-            // Header
-            Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    "Service price",
+              // Header
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      "Service price",
+                      style: TextStyle(
+                        fontFamily: "Urbanist",
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        color: _green,
+                        height: 1.1,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => Get.back(),
+                    borderRadius: BorderRadius.circular(999),
+                    child: Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: _line),
+                      ),
+                      child: const Icon(Icons.close_rounded, size: 18, color: _muted),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+              const Divider(height: 1, thickness: 1, color: _line),
+              const SizedBox(height: 10),
+
+              _PriceRow(left: serviceName, right: "${_money(hourlyRate)}/h"),
+              const SizedBox(height: 10),
+              _PriceRow(left: "Booked hours", right: "${bookedHours}h"),
+              const SizedBox(height: 10),
+              _PriceRow(left: "Subtotal", right: _money(subtotal)),
+
+              const SizedBox(height: 12),
+              const Divider(height: 1, thickness: 1, color: _line),
+              const SizedBox(height: 12),
+
+              _PriceRow(left: "Professional's minimum charge", right: "+ ${_money(minCharge)}", showInfo: true),
+              const SizedBox(height: 10),
+              _PriceRow(left: "Management fees", right: "+ ${_money(managementFee)}", showInfo: true),
+              const SizedBox(height: 10),
+              _PriceRow(left: "VAT ( heading fee )", right: "+ ${_money(vatFee)}", showInfo: true),
+
+              const SizedBox(height: 12),
+              const Divider(height: 1, thickness: 1, color: _line),
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  const Text(
+                    "Price:",
                     style: TextStyle(
                       fontFamily: "Urbanist",
-                      fontSize: 18,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: _text,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    _money(total),
+                    style: const TextStyle(
+                      fontFamily: "Urbanist",
+                      fontSize: 13.5,
                       fontWeight: FontWeight.w900,
-                      color: _green,
-                      height: 1.1,
+                      color: _text,
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () => Get.back(),
-                  borderRadius: BorderRadius.circular(16),
-                  child: const Padding(
-                    padding: EdgeInsets.all(6),
-                    child: Icon(Icons.close, size: 18, color: Color(0xFF8B8B8B)),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
+                ],
+              ),
 
-            _PriceRow(left: serviceName, right: "${_money(hourlyRate)}/h"),
-            const SizedBox(height: 10),
-            _PriceRow(left: "Booked hours", right: "${bookedHours}h"),
-            const SizedBox(height: 10),
-            _PriceRow(left: "Subtotal", right: _money(subtotal)),
-            const SizedBox(height: 12),
+              const SizedBox(height: 14),
 
-            _PriceRow(left: "Professional's minimum charge", right: "+ ${_money(minCharge)}", showInfo: true),
-            const SizedBox(height: 10),
-            _PriceRow(left: "Management fees", right: "+ ${_money(managementFee)}", showInfo: true),
-            const SizedBox(height: 10),
-            _PriceRow(left: "VAT ( heading fee )", right: "+ ${_money(vatFee)}", showInfo: true),
-
-            const SizedBox(height: 12),
-            const Divider(height: 1, thickness: 1, color: _line),
-            const SizedBox(height: 10),
-
-            Row(
-              children: [
-                const Text(
-                  "Price:",
-                  style: TextStyle(
-                    fontFamily: "Urbanist",
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: _text,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  _money(price),
-                  style: const TextStyle(
-                    fontFamily: "Urbanist",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                    color: _text,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 14),
-
-            Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 44,
-                    child: OutlinedButton(
-                      onPressed: () => Get.back(),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: _green, width: 1),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                      child: const Text(
-                        "Exit",
-                        style: TextStyle(
-                          fontFamily: "Urbanist",
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          color: _green,
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 44,
+                      child: OutlinedButton(
+                        onPressed: () => Get.back(),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: _green, width: 1.2),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: const Text(
+                          "Exit",
+                          style: TextStyle(
+                            fontFamily: "Urbanist",
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            color: _green,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SizedBox(
-                    height: 44,
-                    child: ElevatedButton(
-                      onPressed: () => Get.back(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _green,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                      child: const Text(
-                        "Remain",
-                        style: TextStyle(
-                          fontFamily: "Urbanist",
-                          fontSize: 13,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 44,
+                      child: ElevatedButton(
+                        onPressed: () => Get.back(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _green,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        child: const Text(
+                          "Remain",
+                          style: TextStyle(
+                            fontFamily: "Urbanist",
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+              // Bottom small indicator (inside)
+              Container(
+                width: 44,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE0E0E0),
+                  borderRadius: BorderRadius.circular(999),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -731,7 +773,11 @@ class _ServicePriceSheet extends StatelessWidget {
 }
 
 class _PriceRow extends StatelessWidget {
-  const _PriceRow({required this.left, required this.right, this.showInfo = false});
+  const _PriceRow({
+    required this.left,
+    required this.right,
+    this.showInfo = false,
+  });
 
   final String left;
   final String right;
@@ -743,6 +789,7 @@ class _PriceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Row(
@@ -766,7 +813,7 @@ class _PriceRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Text(
           right,
           style: const TextStyle(
