@@ -344,7 +344,7 @@ class ConfirmAndPayScreen extends StatelessWidget {
                       if (isApple) ...[
                         const SizedBox(width: 6),
                         const Text(
-                          "Pay",
+                          "Pay",
                           style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white),
                         ),
                       ],
@@ -757,7 +757,7 @@ class _PaymentMethodCard extends StatelessWidget {
         children: [
           _PaymentRow(
             title: "Apple Pay",
-            leading: const _LogoBox(text: "Pay"),
+            leading: const _LogoBox(text: "Pay"),
             selected: selected == "apple",
             onTap: () => onSelect("apple"),
           ),
