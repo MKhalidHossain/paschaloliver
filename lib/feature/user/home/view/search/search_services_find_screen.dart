@@ -665,19 +665,41 @@ class _MiniPill extends StatelessWidget {
 /// 3) SERVICE FILTER (your “Service filter” screen) ✅ FIXED (no overflow)
 /// ---------------------------------------------------------------------------
 
-class ServiceFilterScreen extends StatelessWidget {
+class ServiceFilterScreen extends StatefulWidget {
   const ServiceFilterScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<ServiceFilterScreen> createState() => _ServiceFilterScreenState();
+}
+
+class _ServiceFilterScreenState extends State<ServiceFilterScreen> {
+  late String top;
+  late Set<String> items;
+
+  final listItems = const ["Lamp", "TV", "Picture", "Mirror", "Coat Rack"];
+
+  @override
+  void initState() {
+    super.initState();
     final c = Get.find<HandyServicesController>();
 
-    // local copies (so user can cancel)
-    final RxString top = c.selectedTopCategory.value.obs;
-    final RxSet<String> items = c.selectedServiceItems.toSet().obs;
+    // ✅ local copies (so user can cancel)
+    top = c.selectedTopCategory.value;
+    items = {...c.selectedServiceItems};
+  }
 
-    final listItems = const ["Lamp", "TV", "Picture", "Mirror", "Coat Rack"];
+  void _toggleItem(String label) {
+    setState(() {
+      if (items.contains(label)) {
+        items.remove(label);
+      } else {
+        items.add(label);
+      }
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -686,8 +708,10 @@ class ServiceFilterScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // title (small)
-              const Text("Service filter", style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted)),
+              const Text(
+                "Service filter",
+                style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted),
+              ),
               const SizedBox(height: 6),
 
               Row(
@@ -695,15 +719,21 @@ class ServiceFilterScreen extends StatelessWidget {
                   _CircleIcon(icon: Icons.close_rounded, onTap: () => Get.back()),
                   const Spacer(),
                   InkWell(
-                    onTap: () => items.clear(),
-                    child: const Text("Delete all", style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted)),
+                    onTap: () => setState(() => items.clear()),
+                    child: const Text(
+                      "Delete all",
+                      style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted),
+                    ),
                   ),
                 ],
               ),
 
               const SizedBox(height: 14),
 
-              const Text("What service do you need?", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: _C.text)),
+              const Text(
+                "What service do you need?",
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: _C.text),
+              ),
               const SizedBox(height: 6),
               const Text(
                 "Select the service you need to find professionals\nwho offer it.",
@@ -711,107 +741,104 @@ class ServiceFilterScreen extends StatelessWidget {
               ),
               const SizedBox(height: 14),
 
-              // ✅ horizontal cards like screenshot (only 2-3 visible)
-              Obx(() {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _TopServiceCard(
-                        width: 96,
-                        title: "Hanging",
-                        icon: Icons.hardware_rounded,
-                        selected: top.value == "Hanging",
-                        onTap: () => top.value = "Hanging",
-                      ),
-                      const SizedBox(width: 10),
-                      _TopServiceCard(
-                        width: 96,
-                        title: "Small repairs",
-                        icon: Icons.build_circle_outlined,
-                        selected: top.value == "Small repairs",
-                        onTap: () => top.value = "Small repairs",
-                      ),
-                      const SizedBox(width: 10),
-                      _TopServiceCard(
-                        width: 96,
-                        title: "Furniture\nassembly",
-                        icon: Icons.handyman_outlined,
-                        selected: top.value == "Furniture assembly",
-                        onTap: () => top.value = "Furniture assembly",
-                      ),
-                      const SizedBox(width: 10),
-                      _TopServiceCard(
-                        width: 96,
-                        title: "Installation",
-                        icon: Icons.power_outlined,
-                        selected: top.value == "Installation",
-                        onTap: () => top.value = "Installation",
-                      ),
-                    ],
-                  ),
-                );
-              }),
+              // ✅ horizontal cards
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _TopServiceCard(
+                      width: 96,
+                      title: "Hanging",
+                      icon: Icons.hardware_rounded,
+                      selected: top == "Hanging",
+                      onTap: () => setState(() => top = "Hanging"),
+                    ),
+                    const SizedBox(width: 10),
+                    _TopServiceCard(
+                      width: 96,
+                      title: "Small repairs",
+                      icon: Icons.build_circle_outlined,
+                      selected: top == "Small repairs",
+                      onTap: () => setState(() => top = "Small repairs"),
+                    ),
+                    const SizedBox(width: 10),
+                    _TopServiceCard(
+                      width: 96,
+                      title: "Furniture\nassembly",
+                      icon: Icons.handyman_outlined,
+                      selected: top == "Furniture assembly",
+                      onTap: () => setState(() => top = "Furniture assembly"),
+                    ),
+                    const SizedBox(width: 10),
+                    _TopServiceCard(
+                      width: 96,
+                      title: "Installation",
+                      icon: Icons.power_outlined,
+                      selected: top == "Installation",
+                      onTap: () => setState(() => top = "Installation"),
+                    ),
+                  ],
+                ),
+              ),
 
               const SizedBox(height: 10),
               const Divider(height: 1, thickness: 1, color: _C.line),
 
-              // list
+              // ✅ list
               Expanded(
-                child: Obx(() {
-                  return ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemCount: listItems.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _C.line),
-                    itemBuilder: (_, i) {
-                      final label = listItems[i];
-                      final checked = items.contains(label);
+                child: ListView.separated(
+                  padding: EdgeInsets.zero,
+                  itemCount: listItems.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _C.line),
+                  itemBuilder: (_, i) {
+                    final label = listItems[i];
+                    final checked = items.contains(label);
 
-                      IconData icon = Icons.lightbulb_outline_rounded;
-                      if (label == "TV") icon = Icons.tv_rounded;
-                      if (label == "Picture") icon = Icons.image_outlined;
-                      if (label == "Mirror") icon = Icons.crop_square_rounded;
-                      if (label == "Coat Rack") icon = Icons.checkroom_outlined;
+                    IconData icon = Icons.lightbulb_outline_rounded;
+                    if (label == "TV") icon = Icons.tv_rounded;
+                    if (label == "Picture") icon = Icons.image_outlined;
+                    if (label == "Mirror") icon = Icons.crop_square_rounded;
+                    if (label == "Coat Rack") icon = Icons.checkroom_outlined;
 
-                      return InkWell(
-                        onTap: () => checked ? items.remove(label) : items.add(label),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Row(
-                            children: [
-                              // left icon inside square (like screenshot)
-                              Container(
-                                width: 34,
-                                height: 34,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: _C.line),
-                                  color: Colors.white,
-                                ),
-                                child: Icon(icon, size: 18, color: _C.muted),
+                    return InkWell(
+                      onTap: () => _toggleItem(label),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 34,
+                              height: 34,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: _C.line),
+                                color: Colors.white,
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(label, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _C.muted)),
+                              child: Icon(icon, size: 18, color: _C.muted),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                label,
+                                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _C.muted),
                               ),
-                              // right checkbox
-                              Container(
-                                width: 20,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  border: Border.all(color: _C.muted.withOpacity(.55), width: 1.2),
-                                  color: checked ? _C.green : Colors.transparent,
-                                ),
-                                child: checked ? const Icon(Icons.check_rounded, size: 14, color: Colors.white) : null,
+                            ),
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                border: Border.all(color: _C.muted.withOpacity(.55), width: 1.2),
+                                color: checked ? _C.green : Colors.transparent,
                               ),
-                            ],
-                          ),
+                              child: checked ? const Icon(Icons.check_rounded, size: 14, color: Colors.white) : null,
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  );
-                }),
+                      ),
+                    );
+                  },
+                ),
               ),
 
               const SizedBox(height: 12),
@@ -821,14 +848,18 @@ class ServiceFilterScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.back(result: {"top": top.value, "items": items.toSet()});
+                    // ✅ return to previous screen with selected values
+                    Get.back(result: {"top": top, "items": items});
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _C.green,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: const Text("Show professionals", style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white)),
+                  child: const Text(
+                    "Show professionals",
+                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white),
+                  ),
                 ),
               ),
             ],
@@ -838,6 +869,7 @@ class ServiceFilterScreen extends StatelessWidget {
     );
   }
 }
+
 
 class _TopServiceCard extends StatelessWidget {
   const _TopServiceCard({
