@@ -1,12 +1,26 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-/// ✅ Pro Chat Details Screen (matches your screenshot layout)
-/// - Header: back + avatar + name(green) + job title
-/// - Service completed block
-/// - 2 action chips (Service / Share profile)
-/// - Messages (image bubble + left/right bubbles + time)
-/// - Input bar ( + , field, green send circle )
-/// - Tap + => attachment bottom sheet (Camera / Photos / Files)
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+/// ✅ Pro Chat Details Screen (same UI)
+/// ✅ Now Camera / Photos / Files are WORKING:
+/// - Tap + => bottom sheet
+/// - Tap Camera => opens camera, adds image message
+/// - Tap Photos => opens gallery, adds image message
+/// - Tap Files  => opens file picker, adds file message (name)
+///
+/// NOTE:
+/// 1) Add packages:
+///    image_picker: ^1.1.2
+///    file_picker: ^8.0.6
+///
+/// 2) AndroidManifest.xml (above <application>):
+///    <uses-permission android:name="android.permission.CAMERA" />
+///
+/// 3) iOS Info.plist:
+///    NSCameraUsageDescription, NSPhotoLibraryUsageDescription
 class ChatDetailsScreen extends StatefulWidget {
   const ChatDetailsScreen({
     super.key,
@@ -25,13 +39,14 @@ class ChatDetailsScreen extends StatefulWidget {
 
 class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   final _msgCtrl = TextEditingController();
+  final _picker = ImagePicker();
 
   // demo messages (replace with your API data)
   final List<_Msg> _messages = [
     _Msg.image(
       who: _Who.other,
       time: "12:44",
-      // replace with real image url/asset if needed
+      // demo placeholder (no path)
     ),
     _Msg.text(who: _Who.other, text: "Need a service", time: "12:44"),
     _Msg.text(who: _Who.me, text: "Need a service", time: "12:44"),
@@ -39,12 +54,16 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     _Msg.text(who: _Who.me, text: "Need a service", time: "12:44"),
   ];
 
+  final _listCtrl = ScrollController();
+
   @override
   void dispose() {
     _msgCtrl.dispose();
+    _listCtrl.dispose();
     super.dispose();
   }
 
+  // ✅ OPEN SHEET (same UI, just callbacks)
   void _openAttachments() {
     showModalBottomSheet(
       context: context,
@@ -52,7 +71,20 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       backgroundColor: Colors.transparent,
       barrierColor: Colors.black.withOpacity(.25),
       isScrollControlled: false,
-      builder: (_) => const _AttachmentSheet(),
+      builder: (_) => _AttachmentSheet(
+        onCamera: () {
+          Navigator.pop(context);
+          _pickCamera();
+        },
+        onPhotos: () {
+          Navigator.pop(context);
+          _pickGallery();
+        },
+        onFiles: () {
+          Navigator.pop(context);
+          _pickFiles();
+        },
+      ),
     );
   }
 
@@ -63,8 +95,22 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     setState(() {
       _messages.add(_Msg.text(who: _Who.me, text: text, time: _nowLabel()));
     });
+
     _msgCtrl.clear();
     FocusScope.of(context).unfocus();
+    _scrollToBottom();
+  }
+
+  void _scrollToBottom() {
+    // safe post-frame scroll
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_listCtrl.hasClients) return;
+      _listCtrl.animateTo(
+        _listCtrl.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   String _nowLabel() {
@@ -73,6 +119,87 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     final m = t.minute.toString().padLeft(2, '0');
     return "$h:$m";
   }
+
+  // =============================================================================
+  // ✅ FUNCTIONAL: Camera / Photos / Files
+  // =============================================================================
+
+  Future<void> _pickCamera() async {
+    try {
+      final XFile? x = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+      );
+      if (x == null) return;
+
+      setState(() {
+        _messages.add(_Msg.image(
+          who: _Who.me,
+          time: _nowLabel(),
+          path: x.path,
+        ));
+      });
+      _scrollToBottom();
+    } catch (e) {
+      _toast("Camera error: $e");
+    }
+  }
+
+  Future<void> _pickGallery() async {
+    try {
+      final XFile? x = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (x == null) return;
+
+      setState(() {
+        _messages.add(_Msg.image(
+          who: _Who.me,
+          time: _nowLabel(),
+          path: x.path,
+        ));
+      });
+      _scrollToBottom();
+    } catch (e) {
+      _toast("Photos error: $e");
+    }
+  }
+
+  Future<void> _pickFiles() async {
+    try {
+      final res = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.any,
+      );
+      if (res == null || res.files.isEmpty) return;
+
+      final f = res.files.first;
+      final path = f.path;
+      if (path == null) return;
+
+      setState(() {
+        _messages.add(_Msg.file(
+          who: _Who.me,
+          time: _nowLabel(),
+          fileName: f.name,
+          path: path,
+        ));
+      });
+      _scrollToBottom();
+    } catch (e) {
+      _toast("Files error: $e");
+    }
+  }
+
+  void _toast(String msg) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
+
+  // =============================================================================
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +273,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
-            // ✅ Service completed block (your red box top)
+            // ✅ Service completed block
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
               child: Column(
@@ -175,7 +302,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ),
             ),
 
-            // ✅ Action chips row (your red box chips)
+            // ✅ Action chips row
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Row(
@@ -205,16 +332,22 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             // ✅ Messages
             Expanded(
               child: ListView.builder(
+                controller: _listCtrl,
                 padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
                 itemCount: _messages.length,
                 itemBuilder: (context, i) {
                   final m = _messages[i];
+
                   if (m.kind == _MsgKind.image) {
                     return _ImageBubble(
                       isMe: m.who == _Who.me,
                       time: m.time,
+                      // ✅ show actual selected image if path exists
+                      path: m.path,
                     );
                   }
+
+                  // file message uses text bubble (keeps same UI)
                   return _TextBubble(
                     isMe: m.who == _Who.me,
                     text: m.text ?? "",
@@ -224,7 +357,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ),
             ),
 
-            // ✅ Input bar (your red box bottom right send)
+            // ✅ Input bar
             Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -245,7 +378,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-
                       Expanded(
                         child: Container(
                           height: 40,
@@ -277,9 +409,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                           ),
                         ),
                       ),
-
                       const SizedBox(width: 10),
-
                       SizedBox(
                         width: 40,
                         height: 40,
@@ -310,11 +440,19 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 }
 
 /// ===========================================================================
-/// Attachment bottom sheet (matches your screenshot)
+/// Attachment bottom sheet (same UI, now clickable)
 /// ===========================================================================
 
 class _AttachmentSheet extends StatelessWidget {
-  const _AttachmentSheet();
+  const _AttachmentSheet({
+    required this.onCamera,
+    required this.onPhotos,
+    required this.onFiles,
+  });
+
+  final VoidCallback onCamera;
+  final VoidCallback onPhotos;
+  final VoidCallback onFiles;
 
   @override
   Widget build(BuildContext context) {
@@ -322,8 +460,6 @@ class _AttachmentSheet extends StatelessWidget {
 
     return Align(
       alignment: Alignment.bottomCenter,
-
-      // ✅ Paint WHITE behind safe-area so there is no “gap”
       child: Container(
         width: double.infinity,
         color: Colors.white,
@@ -334,24 +470,32 @@ class _AttachmentSheet extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // small green +
                 Icon(Icons.add, color: _C.green),
-
                 const SizedBox(height: 10),
-
-                // card
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
                     color: const Color(0xFFEDEDED),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _AttachItem(icon: Icons.photo_camera_outlined, label: "Camera"),
-                      _AttachItem(icon: Icons.photo_outlined, label: "Photos"),
-                      _AttachItem(icon: Icons.insert_drive_file_outlined, label: "Files"),
+                      _AttachItem(
+                        icon: Icons.photo_camera_outlined,
+                        label: "Camera",
+                        onTap: onCamera,
+                      ),
+                      _AttachItem(
+                        icon: Icons.photo_outlined,
+                        label: "Photos",
+                        onTap: onPhotos,
+                      ),
+                      _AttachItem(
+                        icon: Icons.insert_drive_file_outlined,
+                        label: "Files",
+                        onTap: onFiles,
+                      ),
                     ],
                   ),
                 ),
@@ -365,26 +509,40 @@ class _AttachmentSheet extends StatelessWidget {
 }
 
 class _AttachItem extends StatelessWidget {
-  const _AttachItem({required this.icon, required this.label});
+  const _AttachItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
   final IconData icon;
   final String label;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 22, color: _C.text),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: _C.text,
-          ),
+    // ✅ UI unchanged (same Column), just clickable
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 22, color: _C.text),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: _C.text,
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -451,7 +609,6 @@ class _TextBubble extends StatelessWidget {
     final align = isMe ? Alignment.centerRight : Alignment.centerLeft;
     final cross = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
 
-    // slightly different radius like modern chat apps
     final radius = BorderRadius.only(
       topLeft: const Radius.circular(18),
       topRight: const Radius.circular(18),
@@ -497,13 +654,19 @@ class _ImageBubble extends StatelessWidget {
   const _ImageBubble({
     required this.isMe,
     required this.time,
+    this.path,
   });
 
   final bool isMe;
   final String time;
 
+  // ✅ picked image local path
+  final String? path;
+
   @override
   Widget build(BuildContext context) {
+    final file = (path != null && path!.isNotEmpty) ? File(path!) : null;
+
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
@@ -516,7 +679,18 @@ class _ImageBubble extends StatelessWidget {
               height: 140,
               color: const Color(0xFFEDEDED),
               alignment: Alignment.center,
-              child: const Icon(Icons.image_outlined, size: 40, color: Color(0xFF9A9A9A)),
+              child: (file != null && file.existsSync())
+                  ? Image.file(
+                file,
+                width: 220,
+                height: 140,
+                fit: BoxFit.cover,
+              )
+                  : const Icon(
+                Icons.image_outlined,
+                size: 40,
+                color: Color(0xFF9A9A9A),
+              ),
             ),
           ),
           const SizedBox(height: 4),
@@ -541,11 +715,15 @@ class _Msg {
   final String? text;
   final String time;
 
+  // ✅ for image/file path (no UI change needed)
+  final String? path;
+
   const _Msg._({
     required this.who,
     required this.kind,
     this.text,
     required this.time,
+    this.path,
   });
 
   factory _Msg.text({
@@ -558,8 +736,23 @@ class _Msg {
   factory _Msg.image({
     required _Who who,
     required String time,
+    String? path,
   }) =>
-      _Msg._(who: who, kind: _MsgKind.image, time: time);
+      _Msg._(who: who, kind: _MsgKind.image, time: time, path: path);
+
+  factory _Msg.file({
+    required _Who who,
+    required String time,
+    required String fileName,
+    required String path,
+  }) =>
+      _Msg._(
+        who: who,
+        kind: _MsgKind.text,
+        time: time,
+        text: fileName, // shows file name in normal bubble
+        path: path,
+      );
 }
 
 /// ===========================================================================

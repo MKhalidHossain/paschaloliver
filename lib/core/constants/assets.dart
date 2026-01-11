@@ -28,6 +28,10 @@ class Images {
   static const String sendMessageIcon = 'assets/icons/Icon_3.png';
   static const String locationMessageIcon = 'assets/icons/location_icon2.png';
   static const String viewPaymenIcon = 'assets/icons/Frame_2147230372.png';
+  static const String giftIcon = 'assets/icons/GIFT.png';
+  static const String couponIcon = 'assets/icons/tag-01.png';
+  static const String starIcon = 'assets/icons/star.png';
+  static const String keyIcon = 'assets/icons/key.png';
 
 
 

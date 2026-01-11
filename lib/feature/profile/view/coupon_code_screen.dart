@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/constants/assets.dart';
+
 /// ---------------------------------------------------------------------------
 /// ✅ MY CODES (PROMO CODE) – like your screenshot (GetX)
 /// - Top back + title
@@ -162,13 +164,18 @@ class MyCodesScreen extends StatelessWidget {
                   Container(
                     width: 28,
                     height: 28,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: _green.withOpacity(.20)),
+
+                    child: Center(
+                      child: Image.asset(
+                        Images.giftIcon,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                    child: const Icon(Icons.card_giftcard_rounded, size: 18, color: _green),
+
                   ),
+
                   const SizedBox(width: 10),
 
                   const Expanded(
@@ -205,7 +212,14 @@ class MyCodesScreen extends StatelessWidget {
                       color: const Color(0xFFF4F4F4),
                       borderRadius: BorderRadius.circular(18),
                     ),
-                    child: Icon(Icons.local_offer_outlined, size: 78, color: Colors.grey.shade400),
+                    child: Center(
+                      child: Image.asset(
+                        Images.keyIcon,
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 22),
                   const Text(

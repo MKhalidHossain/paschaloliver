@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:paschaloliver/feature/inbox/view/inbox_screen.dart';
 import '../../../../core/constants/assets.dart';
 
 /// ✅ USER SERVICE VIEW DETAILS (PRO UI + Payment Details Bottom Sheet)
@@ -175,7 +176,9 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                     height: 46,
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(()=>const InboxScreen());
+                      },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Color(0xFFBDBDBD)),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

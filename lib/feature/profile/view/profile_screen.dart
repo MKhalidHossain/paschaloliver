@@ -7,6 +7,7 @@ import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart'
 import 'package:paschaloliver/feature/profile/view/privacy_policy_screen.dart';
 import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.dart';
 
+import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
 import '../../user/home/view/address/address_flow_screens.dart';
 import 'about_screen.dart';
@@ -99,8 +100,14 @@ class ProfileScreen extends StatelessWidget {
             const _SectionTitle("SHARE AND EARN MONEY!"),
             _TileRow(
               leading: _LeadingIcon(
-                child: Icon(Icons.card_giftcard_rounded, size: 18, color: _C.green),
+                child: Image.asset(
+                  Images.giftIcon,
+                  width: 23.25,
+                  height: 23.25,
+                  fit: BoxFit.contain,
+                ),
               ),
+
               title: "# 10 for every friend you bring",
               onTap: () {
                 Get.to(()=>const ShareAndEarnMoneyScreen());
@@ -123,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const _ThinDivider(),
             _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.attach_money_rounded, size: 18, color: _C.green)),
+              leading: const _LeadingIcon(child: Icon(Icons.location_on_outlined, size: 18, color: _C.green)),
               title: "My addresses",
               onTap: () {
                 Get.to(()=>const MyAddressesScreen());
@@ -169,7 +176,14 @@ class ProfileScreen extends StatelessWidget {
 
             const _SectionTitle("Codes and Promotions"),
             _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.swap_horiz_rounded, size: 18, color: _C.green)),
+              leading: _LeadingIcon(
+                child: Image.asset(
+                  Images.couponIcon,
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                ),
+              ),
               title: "My Coupon codes",
               onTap: () {
                 Get.to(()=>const MyCodesScreen());
@@ -181,7 +195,7 @@ class ProfileScreen extends StatelessWidget {
             // =========================
             const _SectionTitle("So you want to offer services?"),
             _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.swap_horiz_rounded, size: 18, color: _C.green)),
+              leading: const _LeadingIcon(child: Icon(Icons.swap_horiz_rounded, size: 23, color: _C.green)),
               title: "Switch to Client version",
               onTap: () {},
             ),
@@ -192,9 +206,15 @@ class ProfileScreen extends StatelessWidget {
             // =========================
             const _SectionTitle("Do you like the app?"),
             _TileRow(
-              leading: const _LeadingIcon(
-                child: Icon(Icons.star_border_rounded, size: 18, color: _C.green),
+              leading: _LeadingIcon(
+                child: Image.asset(
+                  Images.starIcon,
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                ),
               ),
+
               title: "Will you give us 5 stars?😊",
               onTap: () {
                 Get.dialog(
@@ -230,7 +250,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const _ThinDivider(),
             _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.emoji_objects_outlined, size: 18, color: _C.green)),
+              leading: const _LeadingIcon(child: Icon(Icons.lightbulb_outline, size: 18, color: _C.green)),
               title: "How can we improve?",
               onTap: () {},
             ),
@@ -242,7 +262,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const _ThinDivider(),
             _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.emoji_objects_outlined, size: 18, color: _C.green)),
+              leading: const _LeadingIcon(child: Icon(Icons.indeterminate_check_box_outlined, size: 18, color: _C.green)),
               title: "Terms And Condition",
               onTap: () => Get.to(() => const TermsConditionsScreen()),
             ),
