@@ -22,6 +22,17 @@ class Images {
 
 
 
+  static const String floorDoorIcon = 'assets/images/image_161.png';
+  static const String addressIcon = 'assets/images/address_2021.png';
+  static const String noFavIcon = 'assets/icons/Frame_no_favourite.png';
+  static const String sendMessageIcon = 'assets/icons/Icon_3.png';
+  static const String locationMessageIcon = 'assets/icons/location_icon2.png';
+  static const String viewPaymenIcon = 'assets/icons/Frame_2147230372.png';
+
+
+
+
+
   //listing
   static const String cleaningIcon = 'assets/calender/cleaning.png';
   static const String ironingIcon = 'assets/calender/ironing.png';

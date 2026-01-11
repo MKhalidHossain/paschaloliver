@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../../../core/constants/assets.dart';
+
 /// ---------------------------------------------------------------------------
 /// FULL ADDRESS FLOW (REAL GOOGLE MAP) - GetX
 /// Screens:
@@ -628,7 +630,7 @@ class AddressDetailsScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.location_on_outlined, color: AddressUI.green),
+                            const Icon(Icons.search, color: AddressUI.green),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Column(
@@ -658,16 +660,24 @@ class AddressDetailsScreen extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.receipt_long_outlined, color: AddressUI.muted),
-                        SizedBox(width: 8),
-                        Text(
+                        Image.asset(
+                          Images.addressIcon,
+                          width: 18,
+                          height: 18,
+                          // color: AddressUI.muted,
+                          // colorBlendMode: BlendMode.srcIn,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
                           "Address details:",
                           style: TextStyle(fontWeight: FontWeight.w800, color: AddressUI.text),
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 10),
 
                     TextField(
@@ -745,9 +755,17 @@ class FloorDoorSheet extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Center(
-                child: Icon(Icons.home_work_outlined, size: 44, color: AddressUI.muted),
+              child: Center(
+                child: Image.asset(
+                  Images.floorDoorIcon, // ✅ String asset path
+                  width: 200,
+                  height: 114,
+                  // color: AddressUI.muted,              // optional tint
+                  // colorBlendMode: BlendMode.srcIn,     // ✅ important for tint
+                  fit: BoxFit.contain,
+                ),
               ),
+
             ),
 
             const SizedBox(height: 10),
@@ -1004,22 +1022,29 @@ class _BottomSheetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          width: double.infinity,
-          margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.zero, // ✅ no outer gap
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          // ✅ keep content safe, but container still touches bottom
+          padding: EdgeInsets.only(bottom: bottomInset),
           child: child,
         ),
       ),
     );
   }
 }
+
+
 
 class _SheetCloseButton extends StatelessWidget {
   const _SheetCloseButton({required this.onTap});

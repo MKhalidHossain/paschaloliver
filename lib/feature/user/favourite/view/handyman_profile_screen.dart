@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 
@@ -367,20 +368,22 @@ class FavoritesEmptyScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "No favorites",
-                      style: TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1F1F1F),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        height: 1.2,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF727272),
                       ),
                     ),
+
                     const SizedBox(height: 14),
 
                     // Illustration (use your asset)
                     Image.asset(
-                      Images.men, // ✅ set this in assets.dart
+                      Images.noFavIcon, // ✅ set this in assets.dart
                       width: 160,
                       height: 140,
                       fit: BoxFit.contain,

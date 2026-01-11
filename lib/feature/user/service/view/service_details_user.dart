@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../../../../core/constants/assets.dart';
 
 /// ✅ USER SERVICE VIEW DETAILS (PRO UI + Payment Details Bottom Sheet)
@@ -149,12 +148,25 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
 
                   // Duration / Distance
                   Row(
-                    children: const [
-                      Expanded(child: _SmallStatCard(icon: Icons.access_time_rounded, title: "Duration", value: "2h")),
-                      SizedBox(width: 12),
-                      Expanded(child: _SmallStatCard(icon: Icons.place_outlined, title: "Distance", value: "1.1 Km")),
+                    children: [
+                      const Expanded(
+                        child: _SmallStatCard(
+                          icon: Icons.access_time_rounded,
+                          title: "Duration",
+                          value: "2h",
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _SmallStatCard(
+                          icon: Images.locationMessageIcon,
+                          title: "Distance",
+                          value: "1.1 Km",
+                        ),
+                      ),
                     ],
                   ),
+
 
                   const SizedBox(height: 16),
 
@@ -168,7 +180,14 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                         side: const BorderSide(color: Color(0xFFBDBDBD)),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: _text),
+                      icon:  Image.asset(
+                        Images.sendMessageIcon,
+                        width: 15,
+                        height: 15,
+                        color: const Color(0xFF727272),
+                        colorBlendMode: BlendMode.srcIn,
+                      ),
+
                       label: const Text(
                         "Send massage",
                         style: TextStyle(
@@ -247,6 +266,9 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
     );
   }
 }
+
+
+
 
 /* ========================= GOOGLE MAP PREVIEW (TOP) ========================= */
 
@@ -402,7 +424,7 @@ class _PaymentChevronRow extends StatelessWidget {
                   color: _green.withOpacity(.10),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.payments_outlined, size: 16, color: _green),
+                child: const Icon(Icons.payment, size: 16, color: _green),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -503,44 +525,38 @@ class _MetaRow extends StatelessWidget {
 }
 
 class _SmallStatCard extends StatelessWidget {
-  const _SmallStatCard({required this.icon, required this.title, required this.value});
+  const _SmallStatCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
 
-  final IconData icon;
+  final dynamic icon; // IconData or String
   final String title;
   final String value;
-
-  static const _bg = Color(0xFFF2F2F2);
-  static const _text = Color(0xFF1F1F1F);
-  static const _muted = Color(0xFF8B8B8B);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 54,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(color: _bg, borderRadius: BorderRadius.circular(12)),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFEAEAEA)),
+      ),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: _text),
-          const SizedBox(width: 10),
+          appIcon(icon, size: 16, color: const Color(0xFF727272)),
+          const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontFamily: "Urbanist",
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: _muted,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontFamily: "Urbanist",
-              fontSize: 13,
-              fontWeight: FontWeight.w900,
-              color: _text,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF727272))),
+                const SizedBox(height: 2),
+                Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+              ],
             ),
           ),
         ],
@@ -548,6 +564,32 @@ class _SmallStatCard extends StatelessWidget {
     );
   }
 }
+
+Widget appIcon(dynamic icon, {double size = 18, Color? color}) {
+  // Material icon
+  if (icon is IconData) {
+    return Icon(icon, size: size, color: color);
+  }
+
+  // Asset path
+  if (icon is String) {
+
+    return Image.asset(
+      icon,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      color: color,
+      colorBlendMode: color == null ? null : BlendMode.srcIn,
+    );
+  }
+
+  return SizedBox(width: size, height: size);
+}
+
+
+
+
 
 /* ============================ SERVICE PRICE SHEET ============================ */
 /* ✅ FIXED: no outer margin/gap. Sheet attaches to left/right/bottom edges. */
