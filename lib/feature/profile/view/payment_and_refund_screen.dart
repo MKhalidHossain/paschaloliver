@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/profile/view/payment_method_screen.dart';
 
 import 'invoices_screen.dart';
 import 'mybooking_screen.dart';
@@ -54,7 +55,7 @@ class PaymentsAndRefundsScreen extends StatelessWidget {
                       icon: Icons.payments_outlined,
                       title: "Payments",
                       onTap: () {
-                        // TODO: Get.to(() => const PaymentsScreen());
+                        TODO: Get.to(() => const PaymentMethodsScreen());
                       },
                     ),
                     const _RowDivider(),

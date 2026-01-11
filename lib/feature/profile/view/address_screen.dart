@@ -1,212 +1,148 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// ------------------------------------------------------------
-/// MY ADDRESSES (UI LIKE YOUR SCREENSHOT) - GetX
-/// - Top bar: back, title, +
-/// - List of addresses (2 rows)
-/// - Each row: left green icon in grey square, address text, 3-dots menu
-/// - 3-dots menu: "Edit" + "Delete address" (popup)
-///
-/// Usage:
-/// Get.to(() => const MyAddressesScreen());
-/// ------------------------------------------------------------
-
-class MyAddressesScreen extends StatelessWidget {
-  const MyAddressesScreen({super.key});
+/// ✅ My Addresses screen (UI like your screenshot)
+class MyAddressesLikeScreen extends StatelessWidget {
+  const MyAddressesLikeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.put(MyAddressesController());
+    final c = Get.put(MyAddressesLikeController());
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _TopBar(
-              title: "My Addresses",
-              onBack: () => Get.back(),
-              onAdd: () {
-                // TODO: open add address flow
-                // Get.to(() => const AddAddressScreen());
-              },
-            ),
-            const Divider(height: 1, thickness: 1, color: _C.line),
-
-            Expanded(
-              child: Obx(() {
-                return ListView.separated(
-                  padding: EdgeInsets.zero,
-                  itemCount: c.addresses.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _C.line),
-                  itemBuilder: (_, i) {
-                    final item = c.addresses[i];
-                    return _AddressRow(
-                      text: item,
-                      onEdit: () {
-                        // TODO: edit address
-                        // Get.to(() => EditAddressScreen(initial: item));
-                        Get.snackbar("Edit", item, snackPosition: SnackPosition.BOTTOM);
-                      },
-                      onDelete: () {
-                        c.deleteAt(i);
-                        Get.snackbar("Deleted", "Address removed", snackPosition: SnackPosition.BOTTOM);
-                      },
-                    );
-                  },
-                );
-              }),
-            ),
-          ],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: _A.text,
+        leading: IconButton(
+          onPressed: Get.back,
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
         ),
+        title: const Text(
+          "My Addresses",
+          style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // TODO: navigate to add address/map screen
+              // Get.to(() => const ServiceAddressMapScreen());
+            },
+            icon: const Icon(Icons.add, color: _A.green),
+          ),
+          const SizedBox(width: 6),
+        ],
       ),
+      body: Obx(() {
+        return ListView.separated(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+          itemCount: c.items.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (_, i) {
+            final item = c.items[i];
+            return _AddressTile(
+              title: item.title,
+              onMore: () => _showMoreSheet(context, item),
+              onTap: () {
+                // TODO: select address / open details
+              },
+            );
+          },
+        );
+      }),
+    );
+  }
+
+  void _showMoreSheet(BuildContext context, AddressItem item) {
+    Get.bottomSheet(
+      _MoreSheet(
+        onEdit: () => Get.back(),
+        onDelete: () => Get.back(),
+      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
     );
   }
 }
 
-/// ---------------- CONTROLLER ----------------
-
-class MyAddressesController extends GetxController {
-  final addresses = <String>[
-    "UNRWA Kifi,802149,Kaduna,Nigeria",
-    "Ungwan Kifi,802149,Kaduna,Nigeria",
+class MyAddressesLikeController extends GetxController {
+  final items = <AddressItem>[
+    AddressItem(title: "UNRWA Kifi,802149,Kaduna,Nigeria"),
+    AddressItem(title: "Ungwan Kifi,802149,Kaduna,Nigeria"),
   ].obs;
-
-  void deleteAt(int index) {
-    if (index < 0 || index >= addresses.length) return;
-    addresses.removeAt(index);
-  }
 }
 
-/// ---------------- UI ----------------
+class AddressItem {
+  final String title;
+  AddressItem({required this.title});
+}
 
-class _TopBar extends StatelessWidget {
-  const _TopBar({
+/* -------------------------------- UI -------------------------------- */
+
+class _AddressTile extends StatelessWidget {
+  const _AddressTile({
     required this.title,
-    required this.onBack,
-    required this.onAdd,
+    required this.onMore,
+    required this.onTap,
   });
 
   final String title;
-  final VoidCallback onBack;
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 46,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Row(
-          children: [
-            InkWell(
-              onTap: onBack,
-              borderRadius: BorderRadius.circular(10),
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _C.text),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: _C.text),
-              ),
-            ),
-            InkWell(
-              onTap: onAdd,
-              borderRadius: BorderRadius.circular(10),
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.add, size: 22, color: _C.green),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AddressRow extends StatelessWidget {
-  const _AddressRow({
-    required this.text,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  final String text;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback onMore;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
       child: InkWell(
-        onTap: () {
-          // Optional: select address
-        },
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: Container(
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: _A.line),
+          ),
           child: Row(
             children: [
-              // left icon in grey rounded square
               Container(
                 width: 34,
                 height: 34,
                 decoration: BoxDecoration(
-                  color: _C.iconBg,
-                  borderRadius: BorderRadius.circular(8),
+                  color: _A.soft,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: _A.line),
                 ),
-                child: const Icon(Icons.person_outline_rounded, size: 18, color: _C.green),
+                child: const Icon(
+                  Icons.person_outline_rounded,
+                  color: _A.green,
+                  size: 20,
+                ),
               ),
-              const SizedBox(width: 12),
-
-              // text
+              const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  text,
+                  title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12.2, fontWeight: FontWeight.w600, color: _C.text),
+                  style: const TextStyle(
+                    fontSize: 12.8,
+                    fontWeight: FontWeight.w700,
+                    color: _A.text,
+                  ),
                 ),
               ),
-
-              // 3-dots menu (Edit / Delete address)
-              Theme(
-                data: Theme.of(context).copyWith(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-                child: PopupMenuButton<_MenuAction>(
-                  padding: EdgeInsets.zero,
-                  elevation: 8,
-                  offset: const Offset(0, 36),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                  color: Colors.white,
-                  onSelected: (v) {
-                    if (v == _MenuAction.edit) onEdit();
-                    if (v == _MenuAction.delete) onDelete();
-                  },
-                  itemBuilder: (_) => [
-                    const PopupMenuItem(
-                      value: _MenuAction.edit,
-                      height: 34,
-                      child: Text("Edit", style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
-                    ),
-                    const PopupMenuItem(
-                      value: _MenuAction.delete,
-                      height: 34,
-                      child: Text("Delete address", style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
-                    ),
-                  ],
-                  child: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Icon(Icons.more_horiz_rounded, size: 22, color: _C.text),
-                  ),
+              const SizedBox(width: 8),
+              InkWell(
+                onTap: onMore,
+                borderRadius: BorderRadius.circular(999),
+                child: const Padding(
+                  padding: EdgeInsets.all(6),
+                  child: Icon(Icons.more_horiz_rounded, size: 20, color: _A.muted),
                 ),
               ),
             ],
@@ -217,11 +153,96 @@ class _AddressRow extends StatelessWidget {
   }
 }
 
-enum _MenuAction { edit, delete }
+/* ---------------------------- More BottomSheet ---------------------------- */
 
-class _C {
-  static const green = Color(0xFF27AE60);
-  static const text = Color(0xFF111111);
-  static const line = Color(0xFFEDEDED);
-  static const iconBg = Color(0xFFEFEFEF);
+class _MoreSheet extends StatelessWidget {
+  const _MoreSheet({required this.onEdit, required this.onDelete});
+
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.of(context).padding.bottom;
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(14, 10, 14, 12 + bottom),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 44,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0E0E0),
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _sheetItem(
+              icon: Icons.edit_outlined,
+              label: "Edit address",
+              onTap: onEdit,
+            ),
+            const SizedBox(height: 8),
+            _sheetItem(
+              icon: Icons.delete_outline_rounded,
+              label: "Delete address",
+              onTap: onDelete,
+              danger: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sheetItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    bool danger = false,
+  }) {
+    final c = danger ? const Color(0xFFE53935) : _A.text;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: _A.line),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: c),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(fontWeight: FontWeight.w800, color: c),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/* ------------------------------- Colors ------------------------------- */
+
+class _A {
+  static const Color green = Color(0xFF2FA86A);
+  static const Color text = Color(0xFF1F1F1F);
+  static const Color muted = Color(0xFF8B8B8B);
+  static const Color line = Color(0xFFEDEDED);
+  static const Color soft = Color(0xFFF6F6F6);
 }

@@ -255,7 +255,8 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: enabled
                               ? () {
-                                  Get.to(() => const HandyManServicesScreen());
+                                  // Get.to(() => const HandyManServicesScreen());
+                                  Get.to(() => const SearchTimeLoadingScreen());
                                 }
                               : null,
 

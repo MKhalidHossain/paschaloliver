@@ -18,21 +18,6 @@ import '../../../../../core/constants/assets.dart';
 /// - FloorDoorSheet
 /// ---------------------------------------------------------------------------
 
-/// ✅ Run directly if you want to test this file alone
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const MyAddressesScreen(),
-    );
-  }
-}
 
 class AddressFlowController extends GetxController {
   // text controllers

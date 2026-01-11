@@ -38,6 +38,8 @@ class Images {
   static const String facebookIcon1 = 'assets/icons/Facebook1.png';
   static const String shareIcon = 'assets/icons/share.png';
   static const String share2Icon = 'assets/icons/share-06.png';
+  static const String paymentEmptyIcon = 'assets/icons/payment.png';
+  static const String arrowIcon = 'assets/icons/arrow.png';
 
 
 
@@ -91,6 +93,7 @@ class Images {
   static const String searchIcon = 'assets/message/Frame.png';
   static const String NoFavoIcon = 'assets/message/no_favourite.png';
   static const String homeNBg = 'assets/calender/Frame 2147230306.png';
+  static const String checkBadgeIcon = 'assets/message/Icon.png';
 
 
   // profile ====================

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:paschaloliver/feature/user/home/view/search/user_profile_details_screen.dart';
 
+import '../../../../../core/constants/assets.dart';
+
 /// ---------------------------------------------------------------------------
 /// ✅ EXACT FLOW (GetX) – FULL REPLACEABLE FILE
 /// 1) SearchTimeLoadingScreen  -> auto goes to HandyManServicesScreen
@@ -265,7 +267,7 @@ class HandyManServicesScreen extends StatelessWidget {
           children: [
             Obx(() {
               return _TopSearchBar(
-                value: "${c.serviceLabel.value}  >  ${c.location.value}",
+                value: "${c.serviceLabel.value}    ${c.location.value}",
                 onBack: () => Get.back(),
               );
             }),
@@ -424,14 +426,24 @@ class _GuaranteeCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: _C.green.withOpacity(.14),
-              borderRadius: BorderRadius.circular(12),
+            width: 80,
+            height: 80,
+            // decoration: BoxDecoration(
+            //   color: _C.green.withOpacity(.14),
+            //   borderRadius: BorderRadius.circular(12),
+            // ),
+            child: Center(
+              child: Image.asset(
+                Images.hundredIcon,
+                width: 80,
+                height: 80,
+                color: _C.green, // remove if you don't want tint
+                colorBlendMode: BlendMode.srcIn,
+                fit: BoxFit.contain,
+              ),
             ),
-            child: const Icon(Icons.verified_rounded, color: _C.green, size: 20),
           ),
+
           const SizedBox(width: 10),
           const Expanded(
             child: Column(
@@ -448,7 +460,7 @@ class _GuaranteeCard extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.chevron_right_rounded, color: _C.muted),
+          // const Icon(Icons.chevron_right_rounded, color: _C.muted),
         ],
       ),
     );
@@ -517,7 +529,13 @@ class _ProCard extends StatelessWidget {
                               style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted)),
                           if (model.verified) ...[
                             const SizedBox(width: 6),
-                            Container(width: 8, height: 8, decoration: const BoxDecoration(color: _C.green, shape: BoxShape.circle)),
+                            Image.asset(
+                              Images.checkBadgeIcon, // <-- your asset path
+                              width: 13.33,
+                              height: 13.33,
+                              fit: BoxFit.contain,
+                            )
+
                           ],
                         ],
                       ),

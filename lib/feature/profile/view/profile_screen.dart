@@ -9,12 +9,11 @@ import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.da
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
-import '../../user/home/view/address/address_flow_screens.dart';
 import 'about_screen.dart';
+import 'address_screen.dart';
 import 'change_password_screen.dart';
 import 'choose_language_screen.dart';
 import 'coupon_code_screen.dart';
-import 'edit_profile_screen.dart';
 import 'every_friend_you_bring_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -133,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
               leading: const _LeadingIcon(child: Icon(Icons.location_on_outlined, size: 18, color: _C.green)),
               title: "My addresses",
               onTap: () {
-                Get.to(()=>const MyAddressesScreen());
+                Get.to(()=>const MyAddressesLikeScreen());
               },
             ),
             const _ThinDivider(),

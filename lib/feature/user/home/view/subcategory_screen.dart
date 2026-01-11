@@ -45,11 +45,11 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       ),
       child: Scaffold(
         backgroundColor: _green,
-        bottomNavigationBar: _BottomNav(
-          currentIndex: _navIndex,
-          onTap: _onBottomTap,
-          activeColor: _green,
-        ),
+        // bottomNavigationBar: _BottomNav(
+        //   currentIndex: _navIndex,
+        //   onTap: _onBottomTap,
+        //   activeColor: _green,
+        // ),
         body: SafeArea(
           bottom: false,
           child: Column(
@@ -119,7 +119,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           iconPath: e.icon,
                           onTap: () {
                             // ✅ navigate to service list/details
-                            Get.to(() => SearchTimeLoadingScreen());
+                            // Get.to(() => SearchTimeLoadingScreen());
+                            Get.to(() => AvailabilityScheduleScreen());
                           },
                         );
                       }).toList(),
