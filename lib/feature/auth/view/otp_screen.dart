@@ -66,17 +66,17 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                'HandyNaija',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: _brandGreen,
-                  letterSpacing: 0.3,
-                ),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
+              // Text(
+              //   'HandyNaija',
+              //   style: TextStyle(
+              //     fontSize: 28,
+              //     fontWeight: FontWeight.w700,
+              //     color: _brandGreen,
+              //     letterSpacing: 0.3,
+              //   ),
+              // ),
+              // const SizedBox(height: 24),
 
               // ---------------- TITLE & SUBTITLE ----------------
               SizedBox(
