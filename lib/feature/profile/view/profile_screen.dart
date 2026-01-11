@@ -477,8 +477,16 @@ class ShareAppDialog extends StatelessWidget {
                   color: const Color(0xFFEFF6FF),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.ios_share_rounded, size: 30, color: Color(0xFF2F80ED)),
+                child: Center(
+                  child: Image.asset(
+                    Images.shareIcon,
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
+
 
               const SizedBox(height: 12),
 
@@ -521,16 +529,17 @@ class ShareAppDialog extends StatelessWidget {
                   Expanded(
                     child: _GreenBtn(
                       label: "Share",
-                      icon: Icons.share_rounded,
+                      leading: ImageIcon(
+                        AssetImage(Images.shareIcon),
+                        size: 16,
+                        color: Colors.white,
+                      ),
                       onTap: () async {
-                        // Close dialog first (optional)
                         Get.back();
-
-                        // ✅ Put your share action here
-                        // Example (recommended): use share_plus package
-                        // Share.share("Download HandyNaija App: https://your-link.com");
                       },
                     ),
+
+
                   ),
                 ],
               ),
@@ -574,10 +583,14 @@ class _OutlineBtn extends StatelessWidget {
 }
 
 class _GreenBtn extends StatelessWidget {
-  const _GreenBtn({required this.label, required this.icon, required this.onTap});
+  const _GreenBtn({
+    required this.label,
+    required this.leading, // ✅ icon or image
+    required this.onTap,
+  });
 
   final String label;
-  final IconData icon;
+  final Widget leading;
   final VoidCallback onTap;
 
   @override
@@ -586,10 +599,14 @@ class _GreenBtn extends StatelessWidget {
       height: 42,
       child: ElevatedButton.icon(
         onPressed: onTap,
-        icon: Icon(icon, size: 16, color: Colors.white),
+        icon: leading,
         label: Text(
           label,
-          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Colors.white),
+          style: const TextStyle(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF27AE60),
@@ -600,6 +617,7 @@ class _GreenBtn extends StatelessWidget {
     );
   }
 }
+
 
 
 class _LogoutConfirmDialog extends StatelessWidget {

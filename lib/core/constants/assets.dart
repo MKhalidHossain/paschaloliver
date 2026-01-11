@@ -32,6 +32,12 @@ class Images {
   static const String couponIcon = 'assets/icons/tag-01.png';
   static const String starIcon = 'assets/icons/star.png';
   static const String keyIcon = 'assets/icons/key.png';
+  static const String receiverIcon = 'assets/icons/Frame_2147230353.png';
+  static const String whatsappIcon = 'assets/icons/WhatsApp.png';
+  static const String instagramIcon = 'assets/icons/Instagram.png';
+  static const String facebookIcon1 = 'assets/icons/Facebook1.png';
+  static const String shareIcon = 'assets/icons/share.png';
+  static const String share2Icon = 'assets/icons/share-06.png';
 
 
 

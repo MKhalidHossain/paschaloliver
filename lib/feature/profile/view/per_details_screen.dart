@@ -1,16 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// ------------------------------------------------------------
-/// Personal Details (UI like your screenshot) - GetX
-/// - Top bar: back + title
-/// - Avatar center with small green camera button
-/// - 3 input fields (Name with 0/50 counter, Email, Phone)
-/// - Green Save button
-/// - "Delete account permanently" link
-///
-/// Usage:
-/// Get.to(() => const PersonalDetailsScreen());
+/// Personal Details (UI SAME) + ✅ Working Camera/Gallery
+/// - Tap camera button -> bottom sheet (Camera / Photos)
+/// - Pick image -> shows in avatar (local preview)
 /// ------------------------------------------------------------
 
 class PersonalDetailsController extends GetxController {
@@ -20,11 +17,59 @@ class PersonalDetailsController extends GetxController {
 
   final nameLen = 0.obs;
 
+  // ✅ selected avatar image path
+  final avatarPath = "".obs;
+
+  final ImagePicker _picker = ImagePicker();
+
   @override
   void onInit() {
     super.onInit();
     nameLen.value = nameCtrl.text.length;
     nameCtrl.addListener(() => nameLen.value = nameCtrl.text.length);
+  }
+
+  Future<void> pickFromCamera() async {
+    try {
+      final XFile? x = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+      );
+      if (x == null) return;
+      avatarPath.value = x.path;
+    } catch (e) {
+      Get.snackbar("Camera", "Camera error: $e", snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<void> pickFromGallery() async {
+    try {
+      final XFile? x = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      if (x == null) return;
+      avatarPath.value = x.path;
+    } catch (e) {
+      Get.snackbar("Photos", "Gallery error: $e", snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  void openPhotoSheet() {
+    Get.bottomSheet(
+      _PhotoPickerSheet(
+        onCamera: () async {
+          Get.back();
+          await pickFromCamera();
+        },
+        onGallery: () async {
+          Get.back();
+          await pickFromGallery();
+        },
+      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: false,
+    );
   }
 
   @override
@@ -55,7 +100,7 @@ class PerDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 22),
 
-            // Avatar + camera button
+            // Avatar + camera button (UI SAME, only logic changed)
             Center(
               child: Stack(
                 clipBehavior: Clip.none,
@@ -68,21 +113,32 @@ class PerDetailsScreen extends StatelessWidget {
                       color: Color(0xFFE9E9E9),
                     ),
                     child: ClipOval(
-                      child: Image.network(
-                        "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=300&q=60",
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.person, size: 40, color: Color(0xFF777777)),
-                      ),
+                      child: Obx(() {
+                        final path = c.avatarPath.value;
+
+                        // ✅ show picked image if exists, otherwise show network fallback
+                        if (path.isNotEmpty && File(path).existsSync()) {
+                          return Image.file(
+                            File(path),
+                            fit: BoxFit.cover,
+                          );
+                        }
+
+                        return Image.network(
+                          "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=300&q=60",
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.person, size: 40, color: Color(0xFF777777)),
+                        );
+                      }),
                     ),
                   ),
+
                   Positioned(
                     right: -2,
                     bottom: -2,
                     child: InkWell(
-                      onTap: () {
-                        // TODO: pick image
-                        Get.snackbar("Photo", "Open camera/gallery", snackPosition: SnackPosition.BOTTOM);
-                      },
+                      onTap: c.openPhotoSheet, // ✅ working
                       borderRadius: BorderRadius.circular(999),
                       child: Container(
                         width: 34,
@@ -183,6 +239,99 @@ class PerDetailsScreen extends StatelessWidget {
   }
 }
 
+/// ---------------- Photo Picker Bottom Sheet (functional only) ----------------
+class _PhotoPickerSheet extends StatelessWidget {
+  const _PhotoPickerSheet({
+    required this.onCamera,
+    required this.onGallery,
+  });
+
+  final VoidCallback onCamera;
+  final VoidCallback onGallery;
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.of(context).padding.bottom;
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(18, 12, 18, 12 + bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFDDDDDD),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _SheetItem(
+                      icon: Icons.photo_camera_outlined,
+                      label: "Camera",
+                      onTap: onCamera,
+                    ),
+                    _SheetItem(
+                      icon: Icons.photo_outlined,
+                      label: "Photos",
+                      onTap: onGallery,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetItem extends StatelessWidget {
+  const _SheetItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 28, color: _C.text),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _C.text),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// ---------------- UI WIDGETS ----------------
 
 class _TopBar extends StatelessWidget {
@@ -245,7 +394,7 @@ class _Field extends StatelessWidget {
           hintText: hint,
           hintStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w500, color: _C.hint),
           border: InputBorder.none,
-          counterText: "", // we show custom counter
+          counterText: "",
           contentPadding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
           suffixIcon: suffixText == null
               ? null

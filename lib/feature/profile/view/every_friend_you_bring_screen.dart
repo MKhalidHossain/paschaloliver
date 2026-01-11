@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../core/constants/assets.dart';
 
 /// ------------------------------------------------------------
 /// SHARE & EARN MONEY (UI LIKE YOUR SCREENSHOT) - GetX
@@ -82,7 +85,14 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                             ),
                           ),
                           // Placeholder icon (swap with Image.asset)
-                          const Icon(Icons.card_giftcard_rounded, size: 90, color: _C.green),
+                          Image.asset(
+                            Images.receiverIcon,
+                            width: 375,
+                            height: 300,
+                            fit: BoxFit.contain,
+                          ),
+
+
 
                           // small round avatars around (like screenshot)
                           Positioned(
@@ -158,48 +168,62 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  const Text(
+                  Text(
                     "Share code:",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: _C.text),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      height: 1.2,
+                      color: const Color(0xFF181919),
+                    ),
                   ),
+
                   const SizedBox(height: 10),
 
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       _ShareIcon(
                         bg: const Color(0xFF25D366),
-                        icon: Icons.eighteen_mp,
-                        onTap: () {
-                          // TODO: share via WhatsApp
-                        },
+                        child: Image.asset(
+                          Images.whatsappIcon,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.contain,
+                        ),
+                        onTap: () {},
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       _ShareIcon(
                         bg: const Color(0xFF1877F2),
-                        icon: Icons.facebook,
-                        onTap: () {
-                          // TODO: share via Facebook
-                        },
+                        child: Image.asset(
+                          Images.facebookIcon1, // use your asset if you have
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.contain,
+                        ),
+                        onTap: () {},
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       _ShareIcon(
-                        bg: const Color(0xFFD62976),
-                        icon: Icons.camera_alt_rounded, // instagram placeholder
-                        onTap: () {
-                          // TODO: share via Instagram
-                        },
+                        bg: Colors.white,
+                        child: Image.asset(
+                          Images.instagramIcon,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.contain,
+                        ),
+                        onTap: () {},
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       _ShareIcon(
                         bg: const Color(0xFFE5E5E5),
-                        icon: Icons.more_horiz_rounded,
-                        iconColor: _C.text,
-                        onTap: () {
-                          // TODO: system share sheet
-                        },
+                        child: const Icon(Icons.more_horiz_rounded, color: _C.text, size: 24),
+                        onTap: () {},
                       ),
                     ],
-                  ),
+                  )
+
                 ],
               ),
             ),
@@ -241,14 +265,12 @@ class _BulletRow extends StatelessWidget {
 class _ShareIcon extends StatelessWidget {
   const _ShareIcon({
     required this.bg,
-    required this.icon,
+    required this.child,
     required this.onTap,
-    this.iconColor = Colors.white,
   });
 
   final Color bg;
-  final IconData icon;
-  final Color iconColor;
+  final Widget child; // ✅ icon OR image
   final VoidCallback onTap;
 
   @override
@@ -263,11 +285,13 @@ class _ShareIcon extends StatelessWidget {
           color: bg,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: iconColor, size: 22),
+        alignment: Alignment.center,
+        child: child,
       ),
     );
   }
 }
+
 
 class _MiniUserBubble extends StatelessWidget {
   const _MiniUserBubble({this.isMasked = false});
