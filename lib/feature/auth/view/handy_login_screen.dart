@@ -264,41 +264,36 @@ class _SocialLoginButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: borderColor, width: 1),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // LEFT ICON
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Center(child: icon),
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min, // ✅ icon+text stay together
+              children: [
+                SizedBox(width: 24, height: 24, child: Center(child: icon)),
+                const SizedBox(width: 10), // ✅ gap between icon & text
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
                 ),
-              ),
-
-              // CENTER TEXT (perfect center like screenshot)
-              Text(
-                label,
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 
 class _DividerLine extends StatelessWidget {
