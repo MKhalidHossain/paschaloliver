@@ -1,18 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'AboutMeDescriptionScreen.dart';
 
-/// ------------------------------------------------------------
-/// GalleryScreen (EXACT like screenshot)
-/// - Top: small label "Portfolio"
-/// - Long progress bar
-/// - Back arrow (green) + "Save and exit"
-/// - Title "Gallery" (green) + subtitle
-/// - Row: photo tile + "Add more" tile
-/// - Card: "What's makes a good gallery?" with ✓ and ✕
-/// - Bottom fixed "Continue" button
-/// ------------------------------------------------------------
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
 
@@ -26,18 +19,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
   static const Color _text = Color(0xFF2B2B2B);
   static const Color _track = Color(0xFFEAEAEA);
 
-  final double _progress = 0.55; // adjust to match your flow
+  final double _progress = 0.55;
 
-  // demo: 1 image shown like screenshot
-  final List<String> _images = [
-    "https://images.unsplash.com/photo-1520975958225-03dceb6a4931?auto=format&fit=crop&w=400&q=60",
-  ];
+  final ImagePicker _picker = ImagePicker();
 
-  void _onAddMore() {
-    // TODO: open image picker
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Add more tapped")),
+  // ✅ real picked images
+  final List<File> _images = [];
+
+  Future<void> _onAddMore() async {
+    final XFile? x = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
     );
+
+    if (x == null) return;
+
+    setState(() {
+      _images.add(File(x.path)); // ✅ add new image
+    });
   }
 
   void _onContinue() {
@@ -67,16 +66,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Small top label (Portfolio)
-                      Center(
-                        child: Text(
-                          "Portfolio",
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(.45),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                      // Center(
+                      //   child: Text(
+                      //     "Portfolio",
+                      //     style: TextStyle(
+                      //       color: Colors.black.withOpacity(.45),
+                      //       fontSize: 12,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(height: 8),
 
                       _TopProgressBar(value: _progress, track: _track, fill: _green),
@@ -99,10 +98,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             style: TextButton.styleFrom(
                               foregroundColor: _muted,
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                              textStyle: const TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              textStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500),
                             ),
                             child: const Text("Save and exit"),
                           ),
@@ -133,18 +129,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
                       const SizedBox(height: 16),
 
-                      // Photo + Add more tiles
-                      Row(
-                        children: [
-                          _PhotoTile(imageUrl: _images.isNotEmpty ? _images.first : null),
-                          const SizedBox(width: 14),
-                          _AddMoreTile(onTap: _onAddMore),
-                        ],
+                      // ✅ RED PORTION behavior:
+                      // - if no images => only Add more
+                      // - if images exist => show images + Add more at end
+                      _GalleryTilesRow(
+                        images: _images,
+                        onAddMore: _onAddMore,
                       ),
 
                       const SizedBox(height: 18),
 
-                      // Info card
                       _TipsCard(
                         title: "What’s makes a good gallery?",
                         items: const [
@@ -155,9 +149,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         ],
                       ),
 
-                      const SizedBox(height: 24),
-
-                      // big white space like screenshot
                       const SizedBox(height: 160),
                     ],
                   ),
@@ -202,6 +193,42 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
 /* --------------------------- Widgets --------------------------- */
 
+class _GalleryTilesRow extends StatelessWidget {
+  const _GalleryTilesRow({
+    required this.images,
+    required this.onAddMore,
+  });
+
+  final List<File> images;
+  final VoidCallback onAddMore;
+
+  @override
+  Widget build(BuildContext context) {
+    // ✅ First time: ONLY Add more
+    if (images.isEmpty) {
+      return Row(
+        children: [
+          _AddMoreTile(onTap: onAddMore),
+        ],
+      );
+    }
+
+    // ✅ After adding: show images + Add more at end
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (int i = 0; i < images.length; i++) ...[
+            _PhotoTile(file: images[i]),
+            const SizedBox(width: 14),
+          ],
+          _AddMoreTile(onTap: onAddMore), // ✅ always last
+        ],
+      ),
+    );
+  }
+}
+
 class _TopProgressBar extends StatelessWidget {
   const _TopProgressBar({
     required this.value,
@@ -216,26 +243,38 @@ class _TopProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = value.clamp(0.0, 1.0);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        height: 10,
+
+    // same style as your other screens (grey track + green pill)
+    return Container(
+      height: 14,
+      decoration: BoxDecoration(
         color: track,
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(
-            widthFactor: v,
-            child: Container(color: fill),
-          ),
-        ),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      padding: const EdgeInsets.all(2),
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final w = c.maxWidth * v;
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              width: w < 50 ? 50 : w,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: fill,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class _PhotoTile extends StatelessWidget {
-  const _PhotoTile({this.imageUrl});
-  final String? imageUrl;
+  const _PhotoTile({required this.file});
+  final File file;
 
   @override
   Widget build(BuildContext context) {
@@ -247,9 +286,7 @@ class _PhotoTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       clipBehavior: Clip.antiAlias,
-      child: imageUrl == null
-          ? const Icon(Icons.image_outlined, color: Color(0xFF9E9E9E))
-          : Image.network(imageUrl!, fit: BoxFit.cover),
+      child: Image.file(file, fit: BoxFit.cover),
     );
   }
 }
