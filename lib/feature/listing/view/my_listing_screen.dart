@@ -499,7 +499,7 @@ class _InProgressCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(999),
                   child: Container(
-                    height: 10,
+                    height: 12,
                     color: const Color(0xFFEAEAEA),
                     child: Align(
                       alignment: Alignment.centerLeft,
