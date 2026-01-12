@@ -9,6 +9,7 @@ import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.da
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
+import '../../user/app_ground_user.dart';
 import 'about_screen.dart';
 import 'address_screen.dart';
 import 'change_password_screen.dart';
@@ -196,7 +197,9 @@ class ProfileScreen extends StatelessWidget {
             _TileRow(
               leading: const _LeadingIcon(child: Icon(Icons.swap_horiz_rounded, size: 23, color: _C.green)),
               title: "Switch to Client version",
-              onTap: () {},
+              onTap: () {
+                // Get.to(()=>const UserAppGround());
+              },
             ),
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
