@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:paschaloliver/feature/inbox/view/inbox_screen.dart';
+
+import '../../../core/constants/assets.dart';
+import '../../user/home/view/address/address_flow_screens.dart';
 import '../models/requests_model.dart';
 
+// ✅ CHANGE THIS IMPORT PATH to your actual file location
+// Example: import '../../address_flow/address_flow.dart';
+
 /// ---------------------------------------------------------------------------
-/// VIEW DETAILS (PIXEL-CLOSE TO YOUR SCREENSHOT)
-/// - "View payment details" => Bottom Sheet
-/// - "Accept" => Center Dialog
+/// VIEW DETAILS (REAL GOOGLE MAP INTEGRATION)
+/// - Map uses AddressFlowController (selectedLatLng, markers, permissions)
+/// - Tap on map to pick location
+/// - Buttons: use location, zoom in/out
+/// - Address lines come from controller (selectedAddress, selectedSub)
 /// ---------------------------------------------------------------------------
 class ViewDetails extends StatefulWidget {
   const ViewDetails({super.key, required this.item});
@@ -16,6 +27,18 @@ class ViewDetails extends StatefulWidget {
 
 class _ViewDetailsState extends State<ViewDetails> {
   final _msgCtrl = TextEditingController();
+
+  late final AddressFlowController addrC;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ✅ Use existing controller if already created, otherwise create it.
+    addrC = Get.isRegistered<AddressFlowController>()
+        ? Get.find<AddressFlowController>()
+        : Get.put(AddressFlowController());
+  }
 
   @override
   void dispose() {
@@ -67,7 +90,7 @@ class _ViewDetailsState extends State<ViewDetails> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top bar (back only like screenshot)
+            // Top bar (back only)
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
               child: Row(
@@ -92,10 +115,11 @@ class _ViewDetailsState extends State<ViewDetails> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
                 children: [
-                  const _MapPreview(height: 178),
+                  // ✅ REAL GOOGLE MAP (replaces _MapPreview)
+                  _LiveMapHeader(height: 178, c: addrC),
                   const SizedBox(height: 12),
 
-                  // Single clean card (flat like screenshot)
+                  // Main card
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -152,7 +176,6 @@ class _ViewDetailsState extends State<ViewDetails> {
 
                         const Divider(height: 1, thickness: 1, color: _C.divider),
 
-                        // Content block
                         Padding(
                           padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
                           child: Column(
@@ -168,7 +191,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                               ),
                               const SizedBox(height: 10),
 
-                              // View payment details row
+                              // View payment details
                               InkWell(
                                 onTap: _openPaymentDetails,
                                 borderRadius: BorderRadius.circular(10),
@@ -194,36 +217,56 @@ class _ViewDetailsState extends State<ViewDetails> {
                                 ),
                               ),
 
-                              const SizedBox(height: 4),
-
-                              // bullets like screenshot
-                              Row(
-                                children: const [
-                                  _Dot(color: Color(0xFF2E86DE)),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      "Road No. 6 Avenue - 05",
-                                      style: TextStyle(fontSize: 12, color: _C.text, fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
                               const SizedBox(height: 6),
-                              Row(
-                                children: const [
-                                  _Dot(color: _C.green),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      "Moroccan university road",
-                                      style: TextStyle(fontSize: 12, color: _C.text, fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
+
+                              // ✅ LIVE ADDRESS (from AddressFlowController)
+                              InkWell(
+                                onTap: () => Get.to(() => const ServiceAddressMapScreen()),
+                                borderRadius: BorderRadius.circular(10),
+                                child: Obx(() {
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const _Dot(color: Color(0xFF2E86DE)),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              addrC.selectedAddress.value,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: _C.text,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          const Icon(Icons.edit_location_alt_outlined, size: 18, color: _C.subtext),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 6),
+                                      if (addrC.selectedSub.value.trim().isNotEmpty)
+                                        Row(
+                                          children: [
+                                            const _Dot(color: _C.green),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                addrC.selectedSub.value,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: _C.text,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  );
+                                }),
                               ),
 
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 12),
 
                               _InfoRow(icon: Icons.calendar_today_outlined, label: "Date:", value: item.date),
                               _InfoRow(icon: Icons.access_time_rounded, label: "Time:", value: item.time),
@@ -256,36 +299,52 @@ class _ViewDetailsState extends State<ViewDetails> {
                               const SizedBox(height: 12),
 
                               // Send message
-                              Container(
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: _C.border),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: _C.subtext),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _msgCtrl,
-                                        textAlign: TextAlign.center,
-                                        decoration: const InputDecoration(
-                                          hintText: "Send massage",
-                                          hintStyle: TextStyle(
+                              // Send message (center icon + text as one group)
+                              InkWell(
+                                onTap: () {
+                                  // TODO: open chat / message screen
+                                  Get.to(() => InboxScreen());
+                                },
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  height: 44,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: _C.border),
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min, // ✅ icon + text stick together
+                                      children: [
+                                        // ✅ If Images.sendMessageIcon is a PNG/JPG asset path:
+                                        Image.asset(
+                                          Images.sendMessageIcon,
+                                          width: 18,
+                                          height: 18,
+                                          color: _C.subtext,       // remove if you don't want tint
+                                          fit: BoxFit.contain,
+                                        ),
+
+                                        // ✅ If Images.sendMessageIcon is IconData instead, use this:
+                                        // Icon(Images.sendMessageIcon, size: 18, color: _C.subtext),
+
+                                        const SizedBox(width: 10),
+                                        const Text(
+                                          "Send message",
+                                          style: TextStyle(
                                             color: _C.subtext,
                                             fontWeight: FontWeight.w600,
+                                            fontSize: 14,
                                           ),
-                                          border: InputBorder.none,
-                                          isCollapsed: true,
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
+
                             ],
                           ),
                         ),
@@ -334,11 +393,12 @@ class _ViewDetailsState extends State<ViewDetails> {
 }
 
 /// ---------------------------------------------------------------------------
-/// MAP PREVIEW (fixed like screenshot: no grid + route shadow + ring markers)
+/// ✅ REAL GOOGLE MAP HEADER (uses AddressFlowController)
 /// ---------------------------------------------------------------------------
-class _MapPreview extends StatelessWidget {
-  const _MapPreview({this.height = 180});
+class _LiveMapHeader extends StatelessWidget {
+  const _LiveMapHeader({required this.height, required this.c});
   final double height;
+  final AddressFlowController c;
 
   @override
   Widget build(BuildContext context) {
@@ -348,27 +408,44 @@ class _MapPreview extends StatelessWidget {
         height: height,
         width: double.infinity,
         child: Stack(
-          fit: StackFit.expand,
           children: [
-            // Map-like background (roads/blocks) — no grid
-            CustomPaint(painter: _PrettyMapPainter()),
-
-            // slight haze like screenshot
-            Container(color: Colors.white.withOpacity(.06)),
-
-            // green route with shadow
-            CustomPaint(painter: _RoutePainterPretty()),
-
-            // markers
-            const Positioned(
-              left: 22,
-              top: 56,
-              child: _Marker(label: "A", color: Color(0xFF2E86DE)),
+            Positioned.fill(
+              child: Obx(() {
+                final target = c.selectedLatLng.value;
+                return GoogleMap(
+                  initialCameraPosition: CameraPosition(target: target, zoom: 15),
+                  onMapCreated: c.onMapCreated,
+                  markers: c.markers,
+                  myLocationEnabled: c.hasLocationPermission.value,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
+                  onTap: c.pickOnMap,
+                );
+              }),
             ),
-            const Positioned(
-              right: 18,
-              bottom: 30,
-              child: _Marker(label: "B", color: Color(0xFFF39C12)),
+
+            // right floating buttons
+            Positioned(
+              right: 10,
+              top: 10,
+              child: Column(
+                children: [
+                  _MapFloatBtn(
+                    icon: Icons.near_me_outlined,
+                    onTap: () async => c.useCurrentLocation(),
+                  ),
+                  const SizedBox(height: 8),
+                  _MapFloatBtn(
+                    icon: Icons.add,
+                    onTap: () async => c.zoomBy(1),
+                  ),
+                  const SizedBox(height: 8),
+                  _MapFloatBtn(
+                    icon: Icons.remove,
+                    onTap: () async => c.zoomBy(-1),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -377,141 +454,29 @@ class _MapPreview extends StatelessWidget {
   }
 }
 
-class _Marker extends StatelessWidget {
-  const _Marker({required this.label, required this.color});
-  final String label;
-  final Color color;
+class _MapFloatBtn extends StatelessWidget {
+  const _MapFloatBtn({required this.icon, required this.onTap});
+  final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 26,
-      height: 26,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-        border: Border.all(color: Colors.white, width: 2.2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.15),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-            fontSize: 12,
-            height: 1,
-          ),
+    return Material(
+      color: Colors.white,
+      shape: const CircleBorder(),
+      elevation: 2,
+      shadowColor: Colors.black.withOpacity(.12),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: SizedBox(
+          width: 36,
+          height: 36,
+          child: Center(child: Icon(icon, color: _C.text, size: 20)),
         ),
       ),
     );
   }
-}
-
-class _PrettyMapPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    // base
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFFF2F4F6));
-
-    // light park/area
-    final park = Paint()..color = const Color(0xFFE7F2EA);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(size.width * .10, size.height * .18, size.width * .36, size.height * .28),
-        const Radius.circular(12),
-      ),
-      park,
-    );
-
-    // blocks
-    final block = Paint()..color = const Color(0xFFE9EDF1);
-    for (int i = 0; i < 12; i++) {
-      final dx = (i * 36.0) % (size.width - 60);
-      final dy = (i * 18.0) % (size.height - 26);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(dx + 10, dy + 10, 56, 24),
-          const Radius.circular(6),
-        ),
-        block,
-      );
-    }
-
-    // roads
-    final roadThin = Paint()
-      ..color = const Color(0xFFD4DBE2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round;
-
-    final roadMain = Paint()
-      ..color = const Color(0xFFC7D0D9)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawPath(
-      Path()
-        ..moveTo(0, size.height * .36)
-        ..quadraticBezierTo(size.width * .26, size.height * .18, size.width * .55, size.height * .28)
-        ..quadraticBezierTo(size.width * .82, size.height * .38, size.width, size.height * .26),
-      roadMain,
-    );
-
-    canvas.drawPath(
-      Path()
-        ..moveTo(size.width * .12, 0)
-        ..quadraticBezierTo(size.width * .22, size.height * .18, size.width * .12, size.height * .46)
-        ..quadraticBezierTo(size.width * .04, size.height * .64, size.width * .18, size.height),
-      roadThin,
-    );
-
-    canvas.drawPath(
-      Path()
-        ..moveTo(size.width * .36, size.height)
-        ..quadraticBezierTo(size.width * .48, size.height * .70, size.width * .66, size.height * .72)
-        ..quadraticBezierTo(size.width * .90, size.height * .75, size.width, size.height * .60),
-      roadThin,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _RoutePainterPretty extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path()
-      ..moveTo(34, size.height * 0.58)
-      ..quadraticBezierTo(size.width * 0.52, size.height * 0.18, size.width * 0.78, size.height * 0.30)
-      ..quadraticBezierTo(size.width * 0.92, size.height * 0.42, size.width * 0.90, size.height * 0.70);
-
-    final shadow = Paint()
-      ..color = Colors.black.withOpacity(.12)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.5
-      ..strokeCap = StrokeCap.round;
-
-    final route = Paint()
-      ..color = _C.green
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.2
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawPath(path, shadow);
-    canvas.drawPath(path, route);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// ---------------------------------------------------------------------------
@@ -601,7 +566,7 @@ class _DialogButton extends StatelessWidget {
 }
 
 /// ---------------------------------------------------------------------------
-/// BOTTOM SHEET: Payment Details (matches screenshot)
+/// BOTTOM SHEET: Payment Details
 /// ---------------------------------------------------------------------------
 class PaymentDetailsSheet extends StatelessWidget {
   const PaymentDetailsSheet({
@@ -630,8 +595,12 @@ class PaymentDetailsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final bottomSafe = MediaQuery.of(context).viewPadding.bottom;
+
     return SafeArea(
       top: false,
+      bottom: false,
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Container(
@@ -641,7 +610,7 @@ class PaymentDetailsSheet extends StatelessWidget {
             borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16, 10, 16, 16 + MediaQuery.of(context).padding.bottom),
+            padding: EdgeInsets.fromLTRB(16, 10, 16, 16 + bottomSafe),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

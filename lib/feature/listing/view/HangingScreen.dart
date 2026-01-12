@@ -85,7 +85,7 @@ class _HangingScreenState extends State<HangingScreen> {
                     borderRadius: BorderRadius.circular(999),
                     child: LinearProgressIndicator(
                       value: 0.18,
-                      minHeight: 8,
+                      minHeight: 12,
                       backgroundColor: const Color(0xFFE9E9E9),
                       valueColor: const AlwaysStoppedAnimation(_brand),
                     ),

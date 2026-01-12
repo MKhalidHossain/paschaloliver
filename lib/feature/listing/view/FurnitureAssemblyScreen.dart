@@ -26,9 +26,7 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
     _RowItem("Table"),
   ];
 
-  // progress like screenshot (small green part on left)
   final double _progress = 0.16;
-
   bool _navigating = false;
 
   void _goNext() {
@@ -38,15 +36,11 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const InstallationScreen()),
-    ).then((_) {
-      _navigating = false;
-    });
+    ).then((_) => _navigating = false);
   }
 
   void _toggleAndMaybeGo(int i, bool nextValue) {
     setState(() => _items[i].checked = nextValue);
-
-    // ✅ only go next when turning ON
     if (nextValue) _goNext();
   }
 
@@ -60,11 +54,11 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // top progress bar (long)
+              // ✅ top progress
               _TopProgressBar(value: _progress, track: _track, fill: _green),
               const SizedBox(height: 12),
 
-              // back + save
+              // ✅ back + save and exit
               Row(
                 children: [
                   InkWell(
@@ -90,12 +84,12 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
 
               const SizedBox(height: 6),
 
-              // title
+              // ✅ title
               const Text(
                 "Furniture assembly",
                 style: TextStyle(
                   color: _green,
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.w600,
                   height: 1.15,
                 ),
@@ -103,53 +97,54 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
 
               const SizedBox(height: 10),
 
-              // list box with border
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: _divider, width: 1),
-                ),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _items.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _divider),
-                  itemBuilder: (context, i) {
-                    final item = _items[i];
+              // ✅ list area like screenshot (top border line + row dividers)
+              const Divider(height: 1, thickness: 1, color: _divider),
 
-                    return InkWell(
-                      onTap: () => _toggleAndMaybeGo(i, !item.checked),
-                      child: Container(
-                        height: 44,
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        alignment: Alignment.center,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item.title,
-                                style: const TextStyle(
-                                  color: Color(0xFF2B2B2B),
-                                  fontSize: 14.5,
-                                  fontWeight: FontWeight.w400,
+              Column(
+                children: List.generate(_items.length, (i) {
+                  final item = _items[i];
+
+                  return Column(
+                    children: [
+                      InkWell(
+                        onTap: () => _toggleAndMaybeGo(i, !item.checked),
+                        child: SizedBox(
+                          height: 46,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    item.title,
+                                    style: const TextStyle(
+                                      color: Color(0xFF2B2B2B),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                _GreySquareCheck(
+                                  value: item.checked,
+                                  onTap: () => _toggleAndMaybeGo(i, !item.checked),
+                                  borderColor: _boxBorder,
+                                  fillColor: _boxFill,
+                                  checkColor: _green,
+                                ),
+                              ],
                             ),
-                            _GreySquareCheck(
-                              value: item.checked,
-                              onTap: () => _toggleAndMaybeGo(i, !item.checked),
-                              borderColor: _boxBorder,
-                              fillColor: _boxFill,
-                              checkColor: _green,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    );
-                  },
-                ),
+
+                      // ✅ divider after every row (including last)
+                      const Divider(height: 1, thickness: 1, color: _divider),
+                    ],
+                  );
+                }),
               ),
 
-              // keep space like screenshot (big empty area)
+              // ✅ big empty area
               const Expanded(child: SizedBox()),
             ],
           ),
@@ -165,7 +160,7 @@ class _RowItem {
   _RowItem(this.title, {this.checked = false});
 }
 
-/// Long progress bar at the top (exact screenshot vibe)
+/// ✅ progress bar like screenshot (grey track + small green pill)
 class _TopProgressBar extends StatelessWidget {
   const _TopProgressBar({
     required this.value,
@@ -181,24 +176,34 @@ class _TopProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final v = value.clamp(0.0, 1.0);
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        height: 10,
+    return Container(
+      height: 12,
+      decoration: BoxDecoration(
         color: track,
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(
-            widthFactor: v,
-            child: Container(color: fill),
-          ),
-        ),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      padding: const EdgeInsets.all(2), // ✅ inner gap like screenshot
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final w = c.maxWidth * v;
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              width: w < 50 ? 50 : w, // ✅ small pill visible like screenshot
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: fill,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-/// Grey square checkbox like screenshot (always light grey box)
+/// ✅ grey square checkbox like screenshot
 class _GreySquareCheck extends StatelessWidget {
   const _GreySquareCheck({
     required this.value,
@@ -218,18 +223,16 @@ class _GreySquareCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(2),
+      borderRadius: BorderRadius.circular(3),
       child: Container(
-        width: 22,
-        height: 22,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
           color: fillColor,
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: BorderRadius.circular(3),
           border: Border.all(color: borderColor, width: 1.2),
         ),
-        child: value
-            ? Icon(Icons.check_rounded, size: 16, color: checkColor)
-            : null,
+        child: value ? Icon(Icons.check_rounded, size: 18, color: checkColor) : null,
       ),
     );
   }

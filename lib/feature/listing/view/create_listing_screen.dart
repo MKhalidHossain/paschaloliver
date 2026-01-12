@@ -133,25 +133,37 @@ class _TopProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = value.clamp(0.0, 1.0);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(999),
-      child: SizedBox(
-        height: 10,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Container(color: CreateListingScreen.track),
+
+    return Container(
+      height: 16, // ✅ thicker track like screenshot
+      decoration: BoxDecoration(
+        color: CreateListingScreen.track, // light grey
+        borderRadius: BorderRadius.circular(999),
+      ),
+      padding: const EdgeInsets.all(2), // ✅ inner gap (pill smaller)
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final w = c.maxWidth * v;
+
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+              width: w < 8 ? 8 : w, // ✅ always show a small pill at start
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: CreateListingScreen.green,
+                borderRadius: BorderRadius.circular(999),
+              ),
             ),
-            FractionallySizedBox(
-              widthFactor: v,
-              child: Container(color: CreateListingScreen.green),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
+
 
 /* ------------------------ Search field ------------------------ */
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/assets.dart';
 import 'PriceOfServiceScreen.dart';
+import 'create_listing_screen.dart';
 
 /// ✅ Home category details screen (matches your screenshot)
 /// - Top progress bar
@@ -21,6 +22,8 @@ class ListingHomeCategoryScreen extends StatelessWidget {
   static const Color _muted = Color(0xFF6F6F6F);
   static const Color _fieldBorder = Color(0xFFBDBDBD);
 
+  final double _progress = 0.06;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,28 +37,8 @@ class ListingHomeCategoryScreen extends StatelessWidget {
               const SizedBox(height: 6),
 
               // Progress bar
-              Row(
-                children: [
-                  Container(
-                    width: 26,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: _green,
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE7E7E7),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Progress bar
+              _TopProgress(value: _progress),
 
               const SizedBox(height: 16),
 
@@ -189,6 +172,46 @@ class ListingHomeCategoryScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+//======================PROGRESS BAR=================
+
+class _TopProgress extends StatelessWidget {
+  const _TopProgress({required this.value});
+  final double value;
+
+  @override
+  Widget build(BuildContext context) {
+    final v = value.clamp(0.0, 1.0);
+
+    return Container(
+      height: 16, // ✅ thicker track like screenshot
+      decoration: BoxDecoration(
+        color: CreateListingScreen.track, // light grey
+        borderRadius: BorderRadius.circular(999),
+      ),
+      padding: const EdgeInsets.all(2), // ✅ inner gap (pill smaller)
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final w = c.maxWidth * v;
+
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+              width: w < 8 ? 8 : w, // ✅ always show a small pill at start
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: CreateListingScreen.green,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

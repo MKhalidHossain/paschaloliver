@@ -51,7 +51,7 @@ class _SmallRepairScreenState extends State<SmallRepairScreen> {
               // Progress bar
               _ProgressBar(
                 value: progress,
-                height: 8,
+                height: 12,
                 bg: _C.progressBg,
                 fg: _Colors.green,
               ),
