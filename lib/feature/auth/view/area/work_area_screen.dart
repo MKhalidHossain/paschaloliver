@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 
 import '../work/work_schedule_screen.dart';
 
@@ -23,16 +26,75 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
     WorkArea(id: 'alimosho', name: 'Alimosho'),
     WorkArea(id: 'kosofe', name: 'Kosofe'),
     WorkArea(id: 'mushin', name: 'Mushin'),
-    WorkArea(id: 'oshodi', name: 'Oshodi-Isola'),
+    WorkArea(id: 'oshodi', name: 'Oshodi-Isolo'),
     WorkArea(id: 'ojo', name: 'Ojo'),
     WorkArea(id: 'ikorodu', name: 'Ikorodu'),
     WorkArea(id: 'surulere', name: 'Surulere'),
   ];
 
-  final Set<String> _selectedIds = {}; // store selected area ids
+  final Set<String> _selectedIds = {};
   bool _hasChanges = false;
 
   bool get _hasSelection => _selectedIds.isNotEmpty;
+
+  // ---------------- MAP STATE ----------------
+  GoogleMapController? _mapCtrl;
+  CameraPosition _initialCamera = const CameraPosition(
+    target: LatLng(6.5244, 3.3792), // default Lagos
+    zoom: 10.5,
+  );
+
+  bool _mapLoading = true;
+
+  /// IMPORTANT: you must provide center points for each WorkArea id
+  /// Replace these with correct lat/lng for your areas.
+  final Map<String, LatLng> _areaCenters = const {
+    'ajeromi': LatLng(6.4550, 3.3190),
+    'alimosho': LatLng(6.6040, 3.2580),
+    'kosofe': LatLng(6.5970, 3.3870),
+    'mushin': LatLng(6.5350, 3.3480),
+    'oshodi': LatLng(6.5560, 3.3450),
+    'ojo': LatLng(6.4620, 3.1660),
+    'ikorodu': LatLng(6.6194, 3.5105),
+    'surulere': LatLng(6.4967, 3.3566),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _tryCenterFromPreviousCity();
+  }
+
+  /// Optional: if you pass {country,state,city} from previous screen, it will auto-center map
+  Future<void> _tryCenterFromPreviousCity() async {
+    try {
+      // If previous screen sends: Get.to(() => WorkAreaScreen(), arguments: {'city': 'Abuja', ...})
+      final args = Get.arguments;
+      final city = (args is Map && args['city'] != null) ? "${args['city']}" : null;
+      final country = (args is Map && args['country'] != null) ? "${args['country']}" : null;
+
+      if (city == null) {
+        setState(() => _mapLoading = false);
+        return;
+      }
+
+      // Geocode "City, Country" if possible
+      final query = country == null ? city : "$city, $country";
+      final results = await locationFromAddress(query);
+
+      if (results.isNotEmpty) {
+        final loc = results.first;
+        _initialCamera = CameraPosition(
+          target: LatLng(loc.latitude, loc.longitude),
+          zoom: 11.0,
+        );
+      }
+    } catch (_) {
+      // ignore geocoding errors, fallback to default camera
+    } finally {
+      if (mounted) setState(() => _mapLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +148,8 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(99),
             child: LinearProgressIndicator(
-              value: 0.6, // step in the flow
-              minHeight: 6,
+              value: 0.6,
+              minHeight: 10,
               backgroundColor: Colors.grey.shade300,
               valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
             ),
@@ -128,49 +190,99 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
     );
   }
 
-  // ---------------- MAP VIEW ----------------
+  // ---------------- MAP VIEW (REAL GOOGLE MAP) ----------------
 
   Widget _buildMapView() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
-      child: Stack(
-        children: [
-          // placeholder map – replace with GoogleMap or similar
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(0),
-              child: Image.asset(
-                'assets/images/sample_map.png', // TODO: your map asset
-                fit: BoxFit.cover,
-              ),
+    if (_mapLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final markers = _buildMarkers();
+
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: GoogleMap(
+            initialCameraPosition: _initialCamera,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            mapToolbarEnabled: false,
+            onMapCreated: (c) => _mapCtrl = c,
+            markers: markers,
+          ),
+        ),
+
+        // Small helper card (optional)
+        Positioned(
+          left: 16,
+          right: 16,
+          top: 12,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade200),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.06),
+                  blurRadius: 14,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, size: 18, color: Colors.grey.shade700),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Tap markers to select/unselect work areas',
+                    style: TextStyle(fontSize: 12.5, color: Colors.grey.shade700),
+                  ),
+                ),
+                Text(
+                  '${_selectedIds.length} selected',
+                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: _brandGreen),
+                ),
+              ],
             ),
           ),
-          if (_selectedIds.isNotEmpty) ...[
-            _mapPin(const Offset(0.25, 0.3)),
-            _mapPin(const Offset(0.5, 0.6)),
-            _mapPin(const Offset(0.7, 0.35)),
-          ],
-        ],
-      ),
+        ),
+
+        // Recenter button
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+            heroTag: "recenter",
+            backgroundColor: Colors.white,
+            elevation: 2,
+            onPressed: () {
+              _mapCtrl?.animateCamera(CameraUpdate.newCameraPosition(_initialCamera));
+            },
+            child: Icon(Icons.my_location, color: Colors.grey.shade800),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _mapPin(Offset fractionalPosition) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final dx = constraints.maxWidth * fractionalPosition.dx;
-        final dy = constraints.maxHeight * fractionalPosition.dy;
-        return Positioned(
-          left: dx - 16,
-          top: dy - 32,
-          child: const Icon(
-            Icons.location_on,
-            size: 32,
-            color: Colors.redAccent,
-          ),
-        );
-      },
-    );
+  Set<Marker> _buildMarkers() {
+    return _areas.map((area) {
+      final pos = _areaCenters[area.id] ?? _initialCamera.target;
+      final selected = _selectedIds.contains(area.id);
+
+      return Marker(
+        markerId: MarkerId(area.id),
+        position: pos,
+        infoWindow: InfoWindow(title: area.name),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          selected ? BitmapDescriptor.hueGreen : BitmapDescriptor.hueRed,
+        ),
+        onTap: () => _toggleArea(area.id, moveCamera: true),
+      );
+    }).toSet();
   }
 
   // ---------------- LIST VIEW ----------------
@@ -189,14 +301,10 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
               final isSelected = _selectedIds.contains(area.id);
 
               return InkWell(
-                onTap: () => _toggleArea(area.id),
+                onTap: () => _toggleArea(area.id, moveCamera: false),
                 child: Container(
-                  color:
-                  isSelected ? const Color(0xFFF2FFF7) : Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
+                  color: isSelected ? const Color(0xFFF2FFF7) : Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                   child: Row(
                     children: [
                       _buildCheckBox(isSelected),
@@ -239,7 +347,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
     );
   }
 
-  void _toggleArea(String id) {
+  void _toggleArea(String id, {required bool moveCamera}) {
     setState(() {
       _hasChanges = true;
       if (_selectedIds.contains(id)) {
@@ -248,6 +356,14 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
         _selectedIds.add(id);
       }
     });
+
+    // If user tapped marker/list, optionally move camera to that area
+    if (moveCamera) {
+      final pos = _areaCenters[id];
+      if (pos != null) {
+        _mapCtrl?.animateCamera(CameraUpdate.newLatLngZoom(pos, 12.5));
+      }
+    }
   }
 
   // ---------------- VIEW TOGGLE (MAP / LIST) ----------------
@@ -267,18 +383,14 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
               child: _buildToggleButton(
                 label: 'Map',
                 isActive: _viewMode == _WorkAreaViewMode.map,
-                onTap: () {
-                  setState(() => _viewMode = _WorkAreaViewMode.map);
-                },
+                onTap: () => setState(() => _viewMode = _WorkAreaViewMode.map),
               ),
             ),
             Expanded(
               child: _buildToggleButton(
                 label: 'List',
                 isActive: _viewMode == _WorkAreaViewMode.list,
-                onTap: () {
-                  setState(() => _viewMode = _WorkAreaViewMode.list);
-                },
+                onTap: () => setState(() => _viewMode = _WorkAreaViewMode.list),
               ),
             ),
           ],
@@ -327,8 +439,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
         height: 50,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-            enabled ? _brandGreen : Colors.grey.shade300,
+            backgroundColor: enabled ? _brandGreen : Colors.grey.shade300,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -352,7 +463,6 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
     if (_selectedIds.isEmpty) return;
 
     if (_selectedIds.length == 1) {
-      // show "few selected areas"
       _showFewAreasSheet();
     } else {
       _goToSchedule();
@@ -363,7 +473,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
     _hasChanges = false;
     Get.to(
           () => const WorkScheduleScreen(),
-      arguments: _selectedIds.toList(), // pass ids if needed
+      arguments: _selectedIds.toList(),
     );
   }
 
@@ -377,8 +487,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
       ),
       builder: (context) {
         return Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -396,10 +505,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                   const Expanded(
                     child: Text(
                       'Few selected areas',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                   ),
                   IconButton(
@@ -413,11 +519,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                 'You have selected very few available work areas. '
                     'Remember that your profile will only be visible to clients '
                     'searching in the areas you have marked as available.',
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: Colors.grey.shade700,
-                ),
+                style: TextStyle(fontSize: 13, height: 1.4, color: Colors.grey.shade700),
               ),
               const SizedBox(height: 16),
               SizedBox(
@@ -427,9 +529,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _brandGreen,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -437,11 +537,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                   },
                   child: const Text(
                     'Continue',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
                   ),
                 ),
               ),
@@ -471,8 +567,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
       ),
       builder: (context) {
         return Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -490,10 +585,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                   const Expanded(
                     child: Text(
                       'Do you want to leave without saving?',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                   ),
                   IconButton(
@@ -506,11 +598,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
               Text(
                 'If you leave without saving, you will lose all the '
                     'information completed in this section.',
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: Colors.grey.shade700,
-                ),
+                style: TextStyle(fontSize: 13, height: 1.4, color: Colors.grey.shade700),
               ),
               const SizedBox(height: 18),
               Row(
@@ -519,18 +607,12 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: _brandGreen),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      onPressed: () =>
-                          Navigator.pop<bool>(context, true),
+                      onPressed: () => Navigator.pop<bool>(context, true),
                       child: Text(
                         'Leave anyway',
-                        style: TextStyle(
-                          color: _brandGreen,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(color: _brandGreen, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -540,19 +622,12 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _brandGreen,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      onPressed: () =>
-                          Navigator.pop<bool>(context, false),
+                      onPressed: () => Navigator.pop<bool>(context, false),
                       child: const Text(
                         'Stay',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
                       ),
                     ),
                   ),
@@ -570,7 +645,6 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
 }
 
 // ---------------- MODEL ----------------
-
 class WorkArea {
   final String id;
   final String name;

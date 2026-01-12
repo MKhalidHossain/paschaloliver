@@ -15,13 +15,11 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
   Color get _brandGreen => const Color(0xFF27AE60);
 
   late List<DaySchedule> _days;
-  bool _hasChanges = false; // for "leave without saving?" sheet
+  bool _hasChanges = false;
 
   @override
   void initState() {
     super.initState();
-    // you can read selected areas here if needed:
-    // final selectedAreas = Get.arguments as List<String>?;
     _days = [
       DaySchedule(label: 'Monday'),
       DaySchedule(label: 'Tuesday'),
@@ -42,13 +40,10 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
   int get _activeSlotsCount =>
       _days.fold(0, (sum, d) => sum + (d.isActive ? d.ranges.length : 0));
 
-  // ---------------------------------------------------------------------------
-  // BUILD
-  // ---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop, // handle system back
+      onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -80,9 +75,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // TOP BAR + TITLE
-  // ---------------------------------------------------------------------------
+  // ---------------- TOP BAR ----------------
 
   Widget _buildTopBar() {
     return Padding(
@@ -102,8 +95,8 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(99),
             child: LinearProgressIndicator(
-              value: 0.7, // adjust step
-              minHeight: 6,
+              value: 0.7,
+              minHeight: 10,
               backgroundColor: Colors.grey.shade300,
               valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
             ),
@@ -112,6 +105,8 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
       ),
     );
   }
+
+  // ---------------- TITLE ----------------
 
   Widget _buildTitle() {
     return Padding(
@@ -141,9 +136,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // DAY ROW
-  // ---------------------------------------------------------------------------
+  // ---------------- DAY ROW ----------------
 
   Widget _buildDayRow(DaySchedule day, int index) {
     final isActive = day.isActive;
@@ -153,6 +146,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // top line
           Row(
             children: [
               Expanded(
@@ -164,9 +158,15 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                   ),
                 ),
               ),
-              Switch(
-                activeColor: _brandGreen,
+
+              // ✅ toggle (figma size: 60x30)
+              AppToggle(
                 value: isActive,
+                activeColor: _brandGreen,
+                inactiveColor: const Color(0xFF727272),
+                padding: 2,
+                width: 60,
+                height: 30,
                 onChanged: (value) {
                   _hasChanges = true;
                   setState(() {
@@ -174,13 +174,14 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                     if (!value) {
                       day.ranges.clear();
                     } else {
-                      // just turned ON → immediately open sheet
                       _openScheduleBottomSheet(index);
                     }
                   });
                 },
               ),
-              const SizedBox(width: 4),
+
+              const SizedBox(width: 8),
+
               Text(
                 isActive ? 'Available' : 'Not Activate',
                 style: TextStyle(
@@ -191,24 +192,76 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
               ),
             ],
           ),
-          if (isActive) const SizedBox(height: 6),
 
+          // ✅ red portion fix (From – Until + X + Add hours)
           if (isActive) ...[
-            for (int i = 0; i < day.ranges.length; i++)
-              _buildTimeRangeRow(day, index, i),
-            const SizedBox(height: 4),
-            GestureDetector(
-              onTap: () {
-                _hasChanges = true;
-                _openScheduleBottomSheet(index);
-              },
-              child: Text(
-                'Add hours',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: _brandGreen,
-                  fontWeight: FontWeight.w600,
-                ),
+            const SizedBox(height: 10),
+
+            // 🔥 Adjust this left padding to match your Figma (60~90)
+            Padding(
+              padding: const EdgeInsets.only(left: 70),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (day.ranges.isEmpty)
+                    _ScheduleLine(
+                      fromText: "From",
+                      untilText: "Until",
+                      isPlaceholder: true,
+                      onTap: () {
+                        _hasChanges = true;
+                        _openScheduleBottomSheet(index);
+                      },
+                      onClear: () {
+                        _hasChanges = true;
+                        setState(() {
+                          day.isActive = false;
+                          day.ranges.clear();
+                        });
+                      },
+                    )
+                  else
+                    ...List.generate(day.ranges.length, (i) {
+                      final r = day.ranges[i];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _ScheduleLine(
+                          fromText: r.formatStart(),
+                          untilText: r.formatEnd(),
+                          onTap: () {
+                            _hasChanges = true;
+                            _openScheduleBottomSheet(index);
+                          },
+                          onClear: () {
+                            _hasChanges = true;
+                            setState(() {
+                              day.ranges.removeAt(i);
+                              if (day.ranges.isEmpty) {
+                                day.isActive = false;
+                              }
+                            });
+                          },
+                        ),
+                      );
+                    }),
+
+                  const SizedBox(height: 6),
+
+                  InkWell(
+                    onTap: () {
+                      _hasChanges = true;
+                      _openScheduleBottomSheet(index);
+                    },
+                    child: Text(
+                      'Add hours',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: _brandGreen,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -217,45 +270,11 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     );
   }
 
-  Widget _buildTimeRangeRow(DaySchedule day, int dayIndex, int rangeIndex) {
-    final range = day.ranges[rangeIndex];
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              'From   ${range.formatStart()}   -   Until   ${range.formatEnd()}',
-              style: const TextStyle(fontSize: 13),
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              _hasChanges = true;
-              setState(() {
-                day.ranges.removeAt(rangeIndex);
-                if (day.ranges.isEmpty) {
-                  day.isActive = false;
-                }
-              });
-            },
-            icon: const Icon(Icons.close, size: 18),
-            splashRadius: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // BOTTOM SHEET: EDIT DAY SCHEDULE
-  // ---------------------------------------------------------------------------
+  // ---------------- BOTTOM SHEET ----------------
 
   Future<void> _openScheduleBottomSheet(int dayIndex) async {
     final day = _days[dayIndex];
 
-    // default values
     TimeOfDay start = const TimeOfDay(hour: 8, minute: 0);
     TimeOfDay end = const TimeOfDay(hour: 18, minute: 0);
 
@@ -294,9 +313,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // CONFIRM BUTTON + FLOW SHEETS
-  // ---------------------------------------------------------------------------
+  // ---------------- CONFIRM ----------------
 
   Widget _buildConfirmButton() {
     final enabled = _isFormValid && _hasActiveDay;
@@ -334,7 +351,6 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     }
 
     _hasChanges = false;
-    // TODO: send schedule to backend here
     Get.back(result: _days);
   }
 
@@ -365,10 +381,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                   const Expanded(
                     child: Text(
                       'Is your schedule correct?',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                   ),
                   IconButton(
@@ -381,8 +394,8 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
               const SizedBox(height: 6),
               Text(
                 'You have selected very few hours as Available. '
-                'Remember, the more hours available, the more options '
-                'the client will have when booking your service.',
+                    'Remember, the more hours available, the more options '
+                    'the client will have when booking your service.',
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.4,
@@ -421,12 +434,10 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pop(context); // close bottom sheet
+                        Navigator.pop(context);
                         _hasChanges = false;
-
                         Get.to(() => const ProfilePictureScreen());
                       },
-
                       child: const Text(
                         'Continue',
                         style: TextStyle(
@@ -447,9 +458,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // LEAVE WITHOUT SAVING?
-  // ---------------------------------------------------------------------------
+  // ---------------- LEAVE WITHOUT SAVING ----------------
 
   void _handleBackPressed() async {
     if (!await _onWillPop()) return;
@@ -485,10 +494,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                   const Expanded(
                     child: Text(
                       'Do you want to leave without saving?',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                   ),
                   IconButton(
@@ -501,7 +507,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
               const SizedBox(height: 6),
               Text(
                 'If you leave without saving, you will lose all the '
-                'information completed in this section.',
+                    'information completed in this section.',
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.4,
@@ -575,10 +581,9 @@ class TimeRange {
 
   bool get isValid =>
       start.hour < end.hour ||
-      (start.hour == end.hour && start.minute < end.minute);
+          (start.hour == end.hour && start.minute < end.minute);
 
   String formatStart() => _formatTimeOfDay(start);
-
   String formatEnd() => _formatTimeOfDay(end);
 
   static String _formatTimeOfDay(TimeOfDay t) {
@@ -629,24 +634,20 @@ class _ScheduleBottomSheetContentState
   late int _endHourIndex;
   late int _endMinuteIndex;
 
-  final List<int> _hours = List.generate(24, (i) => i); // 0-23
+  final List<int> _hours = List.generate(24, (i) => i);
   final List<int> _minutes = const [0, 15, 30, 45];
 
   @override
   void initState() {
     super.initState();
-    _startHourIndex = _hours
-        .indexOf(widget.initialStart.hour)
-        .clamp(0, _hours.length - 1);
-    _endHourIndex = _hours
-        .indexOf(widget.initialEnd.hour)
-        .clamp(0, _hours.length - 1);
-    _startMinuteIndex = _minutes
-        .indexOf(widget.initialStart.minute)
-        .clamp(0, _minutes.length - 1);
-    _endMinuteIndex = _minutes
-        .indexOf(widget.initialEnd.minute)
-        .clamp(0, _minutes.length - 1);
+    _startHourIndex =
+        _hours.indexOf(widget.initialStart.hour).clamp(0, _hours.length - 1);
+    _endHourIndex =
+        _hours.indexOf(widget.initialEnd.hour).clamp(0, _hours.length - 1);
+    _startMinuteIndex =
+        _minutes.indexOf(widget.initialStart.minute).clamp(0, _minutes.length - 1);
+    _endMinuteIndex =
+        _minutes.indexOf(widget.initialEnd.minute).clamp(0, _minutes.length - 1);
   }
 
   TimeOfDay get _startTime => TimeOfDay(
@@ -654,8 +655,10 @@ class _ScheduleBottomSheetContentState
     minute: _minutes[_startMinuteIndex],
   );
 
-  TimeOfDay get _endTime =>
-      TimeOfDay(hour: _hours[_endHourIndex], minute: _minutes[_endMinuteIndex]);
+  TimeOfDay get _endTime => TimeOfDay(
+    hour: _hours[_endHourIndex],
+    minute: _minutes[_endMinuteIndex],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -685,10 +688,7 @@ class _ScheduleBottomSheetContentState
               Expanded(
                 child: Text(
                   widget.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
               IconButton(
@@ -699,7 +699,6 @@ class _ScheduleBottomSheetContentState
             ],
           ),
           const SizedBox(height: 16),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
@@ -708,7 +707,6 @@ class _ScheduleBottomSheetContentState
             ],
           ),
           const SizedBox(height: 8),
-
           SizedBox(
             height: 170,
             child: Row(
@@ -720,7 +718,6 @@ class _ScheduleBottomSheetContentState
             ),
           ),
           const SizedBox(height: 20),
-
           SizedBox(
             width: double.infinity,
             height: 48,
@@ -728,9 +725,7 @@ class _ScheduleBottomSheetContentState
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.brandGreen,
                 elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () {
                 final range = TimeRange(start: _startTime, end: _endTime);
@@ -799,6 +794,176 @@ class _ScheduleBottomSheetContentState
           ),
         ),
       ],
+    );
+  }
+}
+
+// ============================================================================
+// FIGMA-LIKE RED PORTION WIDGETS
+// ============================================================================
+
+class _ScheduleLine extends StatelessWidget {
+  const _ScheduleLine({
+    required this.fromText,
+    required this.untilText,
+    required this.onTap,
+    required this.onClear,
+    this.isPlaceholder = false,
+  });
+
+  final String fromText;
+  final String untilText;
+  final VoidCallback onTap;
+  final VoidCallback onClear;
+  final bool isPlaceholder;
+
+  @override
+  Widget build(BuildContext context) {
+    final textColor = isPlaceholder ? Colors.grey.shade600 : Colors.black87;
+    final lineColor = Colors.grey.shade300;
+
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(
+            child: _UnderlinedCell(
+              text: fromText,
+              textColor: textColor,
+              lineColor: lineColor,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text("–", style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: _UnderlinedCell(
+              text: untilText,
+              textColor: textColor,
+              lineColor: lineColor,
+            ),
+          ),
+          const SizedBox(width: 10),
+          InkWell(
+            onTap: onClear,
+            borderRadius: BorderRadius.circular(999),
+            child: Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: lineColor),
+              ),
+              child: Icon(Icons.close, size: 14, color: Colors.grey.shade600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _UnderlinedCell extends StatelessWidget {
+  const _UnderlinedCell({
+    required this.text,
+    required this.textColor,
+    required this.lineColor,
+  });
+
+  final String text;
+  final Color textColor;
+  final Color lineColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w500,
+            color: textColor,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Container(height: 1, color: lineColor),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// FIGMA TOGGLE (60x30)
+// ============================================================================
+
+class AppToggle extends StatelessWidget {
+  const AppToggle({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.width = 60,
+    this.height = 30,
+    this.padding = 2,
+    this.activeColor = const Color(0xFF27AE60),
+    this.inactiveColor = const Color(0xFF727272),
+    this.thumbColor = Colors.white,
+    this.duration = const Duration(milliseconds: 180),
+  });
+
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  final double width;
+  final double height;
+  final double padding;
+
+  final Color activeColor;
+  final Color inactiveColor;
+  final Color thumbColor;
+
+  final Duration duration;
+
+  @override
+  Widget build(BuildContext context) {
+    final thumbSize = height - (padding * 2);
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: GestureDetector(
+        onTap: () => onChanged(!value),
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: duration,
+          padding: EdgeInsets.all(padding),
+          decoration: BoxDecoration(
+            color: value ? activeColor : inactiveColor,
+            borderRadius: BorderRadius.circular(999),
+          ),
+          child: AnimatedAlign(
+            duration: duration,
+            curve: Curves.easeOut,
+            alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              width: thumbSize,
+              height: thumbSize,
+              decoration: BoxDecoration(
+                color: thumbColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(.15),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

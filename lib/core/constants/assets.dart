@@ -94,6 +94,8 @@ class Images {
   static const String NoFavoIcon = 'assets/message/no_favourite.png';
   static const String homeNBg = 'assets/calender/Frame 2147230306.png';
   static const String checkBadgeIcon = 'assets/message/Icon.png';
+  static const String congratulationsIcon = 'assets/images/Icon.png';
+
 
 
   // profile ====================

@@ -40,37 +40,12 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
           child: Column(
             children: [
               // ---------------- TOP BAR + PROGRESS ----------------
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: _handleBackPressed,
-                      icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: 0.4,
-                              minHeight: 6,
-                              backgroundColor: const Color(0xFFE0E0E0),
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                _brandGreen,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              _TopBarProgress(
+                onBack: _handleBackPressed,
+                progress: 0.4,
+                brandGreen: _brandGreen,
               ),
+
 
               const SizedBox(height: 16),
 
@@ -261,6 +236,55 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
       ),
     );
   }
+
+
+  Widget _TopBarProgress({
+    required VoidCallback onBack,
+    required double progress, // 0.0 - 1.0
+    required Color brandGreen,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          // 1) Progress bar (full width)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(99),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 10,
+              backgroundColor: const Color(0xFFE0E0E0),
+              valueColor: AlwaysStoppedAnimation<Color>(brandGreen),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // 2) Back button row (only)
+          SizedBox(
+            height: 40, // keep it tight like Figma
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                visualDensity: VisualDensity.compact,
+                onPressed: onBack,
+                icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+              ),
+            ),
+          ),
+
+
+
+
+        ],
+      ),
+    );
+  }
+
 
   // ---------------------------------------------------------------------------
   // Helper widgets
