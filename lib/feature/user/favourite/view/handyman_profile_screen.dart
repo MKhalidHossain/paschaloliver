@@ -164,33 +164,31 @@ class _ProfileCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                children: const [
+                                children: [
                                   Flexible(
                                     child: Text(
                                       "Nicolas bond",
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontFamily: "Urbanist",
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w800,
-                                        color: _text,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400, // Regular
                                         height: 1.1,
+                                        color: const Color(0xFF727272),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 6),
-                                  _VerifiedDot(),
+                                  const SizedBox(width: 6),
+                                  const _VerifiedDot(),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text(
+                              Text(
                                 "Handyman",
-                                style: TextStyle(
-                                  fontFamily: "Urbanist",
-                                  fontSize: 12.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: _text,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500, // Medium
                                   height: 1.1,
+                                  color: const Color(0xFF181919),
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -221,21 +219,30 @@ class _ProfileCard extends StatelessWidget {
                               ),
                               const SizedBox(height: 6),
                               Row(
-                                children: const [
-                                  _Stars(rating: 4.8),
-                                  SizedBox(width: 6),
+                                children: [
+                                  const _Stars(rating: 4.8),
+                                  const SizedBox(width: 6),
                                   Text(
                                     "4.8",
-                                    style: TextStyle(
-                                      fontFamily: "Urbanist",
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w800,
-                                      color: _text,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400, // Regular
                                       height: 1.1,
+                                      color: const Color(0xFF727272),
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
+                                    "|",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.2,
+                                      color: const Color(0xFF727272),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
                                     "4,323 Reviews",
                                     style: TextStyle(
                                       fontFamily: "Urbanist",
@@ -260,16 +267,16 @@ class _ProfileCard extends StatelessWidget {
                 // right side remains non-clickable
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Icon(Icons.favorite_rounded, color: _green, size: 18),
-                    SizedBox(height: 18),
+                  children: [
+                    const Icon(Icons.favorite_rounded, color: _green, size: 18),
+                    const SizedBox(height: 18),
                     Text(
-                      "656 Services",
-                      style: TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w700,
-                        color: _text,
+                      "656 Services", // or your dynamic value
+                      style: GoogleFonts.urbanist(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500, // Medium
+                        height: 1.1,
+                        color: const Color(0xFF727272),
                       ),
                     ),
                   ],
@@ -350,17 +357,22 @@ class FavoritesEmptyScreen extends StatelessWidget {
               height: 54,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               alignment: Alignment.centerLeft,
-              child: const Text(
+              child: Text(
                 "Favorites",
-                style: TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: _green,
+                style: GoogleFonts.poppins(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.2,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
             ),
-            const Divider(height: 1, thickness: 1, color: _line),
+            const Divider(
+              height: 1,
+              thickness: 2,
+              color: Color(0xFFE5EEFF),
+            ),
+
 
             Expanded(
               child: Padding(
@@ -390,15 +402,14 @@ class FavoritesEmptyScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 14),
-                    const Text(
+                    Text(
                       "To save a professional, tap the heart icon(❤)",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w500,
-                        color: _muted,
-                        height: 1.25,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500, // Medium
+                        height: 1.2,                 // 120%
+                        color: const Color(0xFF727272),
                       ),
                     ),
                     const SizedBox(height: 18),
@@ -417,12 +428,12 @@ class FavoritesEmptyScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Find professional",
-                          style: TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500, // Medium
+                            height: 1.1,
                             color: Colors.white,
                           ),
                         ),
@@ -458,39 +469,39 @@ class _VerifiedDot extends StatelessWidget {
 }
 
 class _InfoChip extends StatelessWidget {
-  const _InfoChip({required this.icon, required this.text});
+  const _InfoChip({
+    required this.icon,
+    required this.text,
+  });
 
   final IconData icon;
   final String text;
 
-  static const _chipBg = Color(0xFFF3F3F3);
-  static const _muted = Color(0xFF6F6F6F);
-  static const _text = Color(0xFF1F1F1F);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
-        color: _chipBg,
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE6E6E6)),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, // ✅ center like Figma
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: _muted),
+          Icon(icon, size: 16, color: const Color(0xFF727272)),
           const SizedBox(width: 8),
-          Expanded(
+          Flexible(
             child: Text(
               text,
-              maxLines: 1,
+              textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontFamily: "Urbanist",
-                fontSize: 11.5,
-                fontWeight: FontWeight.w700,
-                color: _text,
+              style: GoogleFonts.urbanist(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
                 height: 1.1,
+                color: const Color(0xFF727272),
               ),
             ),
           ),
@@ -499,6 +510,7 @@ class _InfoChip extends StatelessWidget {
     );
   }
 }
+
 
 class _Stars extends StatelessWidget {
   const _Stars({required this.rating});

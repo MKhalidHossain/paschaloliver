@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/assets.dart';
 import 'chat_screen.dart';
 
@@ -47,22 +48,22 @@ class InboxScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 18),
+              const SizedBox(height: 5),
 
               // Title
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 18),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
                   "Inbox",
-                  style: TextStyle(
-                    color: _C.green,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600, // SemiBold
                     height: 1.1,
+                    color: const Color(0xFF3FA96B),
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
 
               // Tabs
               const Padding(
@@ -97,16 +98,25 @@ class InboxScreen extends StatelessWidget {
 /// -------------------------
 /// Tabs
 /// -------------------------
+
 class _Tabs extends StatelessWidget {
   const _Tabs();
 
   @override
   Widget build(BuildContext context) {
     return TabBar(
-      labelColor: _C.text,
-      unselectedLabelColor: _C.subText,
-      labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-      unselectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      labelColor: const Color(0xFF727272),
+      unselectedLabelColor: const Color(0xFF727272), // change if Figma shows different
+      labelStyle: GoogleFonts.urbanist(
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        height: 1.2,
+      ),
+      unselectedLabelStyle: GoogleFonts.urbanist(
+        fontSize: 16,
+        fontWeight: FontWeight.w700, // set w500 if your unselected is lighter
+        height: 1.2,
+      ),
       indicatorColor: _C.line,
       indicatorWeight: 2,
       indicatorSize: TabBarIndicatorSize.tab,
@@ -198,11 +208,11 @@ class _ChatRow extends StatelessWidget {
                             item.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 12.8,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14,              // change if your Figma text size differs
+                              fontWeight: FontWeight.w500,
+                              height: 1.1,
                               color: _C.text,
-                              height: 1.15,
                             ),
                           ),
                         ),
@@ -232,11 +242,11 @@ class _ChatRow extends StatelessWidget {
                       item.lastMessage,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 11.2,
-                        fontWeight: FontWeight.w500,
-                        color: _C.text,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400, // Regular
                         height: 1.2,
+                        color: const Color(0xFF181919),
                       ),
                     ),
                   ],
