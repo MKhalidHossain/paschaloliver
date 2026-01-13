@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/user/service/view/service_details_user.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -142,16 +143,15 @@ class _UserServicesScreenState extends State<UserServicesScreen>
             const SizedBox(height: 14),
 
             // Title
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 "Services",
-                style: TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: _green,
+                style: GoogleFonts.urbanist(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600, // SemiBold
                   height: 1.1,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
             ),
@@ -165,17 +165,17 @@ class _UserServicesScreenState extends State<UserServicesScreen>
                 controller: _tab,
                 indicatorColor: _green,
                 indicatorWeight: 2,
-                labelColor: _text,
-                unselectedLabelColor: _text,
-                labelStyle: const TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
+                labelColor: const Color(0xFF181919),
+                unselectedLabelColor: const Color(0xFF181919), // change if Figma differs
+                labelStyle: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.2,
                 ),
-                unselectedLabelStyle: const TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                unselectedLabelStyle: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium (same as Figma text)
+                  height: 1.2,
                 ),
                 tabs: const [
                   Tab(text: "Upcoming"),
@@ -258,14 +258,13 @@ class _UpcomingTab extends StatelessWidget {
 
         // “Do you want to repeat?” section (shows in your screenshot)
         if (repeatSuggestions.isNotEmpty) ...[
-          const Text(
+          Text(
             "Do you want to repeat?",
-            style: TextStyle(
-              fontFamily: "Urbanist",
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: _green,
+            style: GoogleFonts.urbanist(
+              fontSize: 24,
+              fontWeight: FontWeight.w600, // SemiBold
               height: 1.1,
+              color: const Color(0xFF3FA96B),
             ),
           ),
           const SizedBox(height: 12),
@@ -343,14 +342,13 @@ class _PastTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
       children: [
-        const Text(
+        Text(
           "Do you want to repeat?",
-          style: TextStyle(
-            fontFamily: "Urbanist",
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: Color(0xFF2FA86A),
+          style: GoogleFonts.urbanist(
+            fontSize: 24,
+            fontWeight: FontWeight.w600, // SemiBold
             height: 1.1,
+            color: const Color(0xFF3FA96B),
           ),
         ),
         const SizedBox(height: 12),
@@ -453,12 +451,11 @@ class _UpcomingServiceCard extends StatelessWidget {
                           child: Text(
                             item.providerName ?? "Nicolas bond",
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontFamily: "Urbanist",
-                              fontSize: 13.5,
-                              fontWeight: FontWeight.w800,
-                              color: _text,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400, // Regular
                               height: 1.1,
+                              color: const Color(0xFF3B3B3B),
                             ),
                           ),
                         ),
@@ -469,12 +466,11 @@ class _UpcomingServiceCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       item.serviceName ?? "House Cleaning",
-                      style: const TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w700,
-                        color: _text,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500, // Medium
                         height: 1.1,
+                        color: const Color(0xFF181919),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -510,23 +506,21 @@ class _UpcomingServiceCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           (item.rating ?? 4.8).toStringAsFixed(1),
-                          style: const TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w800,
-                            color: _text,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400, // Regular
                             height: 1.1,
+                            color: const Color(0xFF3B3B3B),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           item.reviewsText ?? "4,323 Reviews",
-                          style: const TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 11.2,
-                            fontWeight: FontWeight.w600,
-                            color: _muted,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400, // Regular
                             height: 1.1,
+                            color: const Color(0xFF3B3B3B),
                           ),
                         ),
                       ],
@@ -553,11 +547,11 @@ class _UpcomingServiceCard extends StatelessWidget {
                   const SizedBox(height: 18),
                   Text(
                     "${item.servicesCount ?? 656} Services",
-                    style: const TextStyle(
-                      fontFamily: "Urbanist",
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: _text,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500, // Medium
+                      height: 1.1,
+                      color: const Color(0xFF3B3B3B),
                     ),
                   ),
                 ],
@@ -627,13 +621,15 @@ class _UpcomingServiceCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "View details",
-                style: TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.1,
+                  color: Colors.white,         // change if your button text isn't white
+                  decoration: TextDecoration.underline,
+                  decorationStyle: TextDecorationStyle.solid,
                 ),
               ),
             ),
@@ -696,12 +692,11 @@ class _PastServiceCard extends StatelessWidget {
                   children: [
                     Text(
                       item.serviceName ?? "Cleaning",
-                      style: const TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w800,
-                        color: _text,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500, // Medium
                         height: 1.1,
+                        color: const Color(0xFF181919),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -711,12 +706,11 @@ class _PastServiceCard extends StatelessWidget {
                           child: Text(
                             item.providerName ?? "Nicolas bond",
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontFamily: "Urbanist",
+                            style: GoogleFonts.urbanist(
                               fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: _muted,
+                              fontWeight: FontWeight.w400, // Regular
                               height: 1.1,
+                              color: const Color(0xFF3B3B3B), // use #727272 if your design uses that
                             ),
                           ),
                         ),
@@ -727,17 +721,19 @@ class _PastServiceCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.calendar_month_outlined,
-                            size: 16, color: _text),
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          size: 16,
+                          color: Color(0xFF18191A),
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           date,
-                          style: const TextStyle(
-                            fontFamily: "Urbanist",
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: _text,
-                            height: 1.1,
+                            fontWeight: FontWeight.w400, // Regular
+                            height: 1.2,                 // 120%
+                            color: const Color(0xFF18191A),
                           ),
                         ),
                       ],
@@ -745,17 +741,19 @@ class _PastServiceCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.access_time_rounded,
-                            size: 16, color: _text),
+                        const Icon(
+                          Icons.access_time_rounded,
+                          size: 16,
+                          color: Color(0xFF18191A),
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           time,
-                          style: const TextStyle(
-                            fontFamily: "Urbanist",
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: _text,
-                            height: 1.1,
+                            fontWeight: FontWeight.w400,
+                            height: 1.2,
+                            color: const Color(0xFF18191A),
                           ),
                         ),
                       ],
@@ -778,13 +776,20 @@ class _PastServiceCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              icon: const Icon(Icons.repeat_rounded, color: Colors.white, size: 18),
-              label: const Text(
+              icon: Image.asset(
+                Images.refreshIcon, // or refreshIcon if that's your const
+                width: 10,
+                height: 10,
+                color: Colors.white,
+                colorBlendMode: BlendMode.srcIn,
+              ),
+
+              label: Text(
                 "Repeat",
-                style: TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w800,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.1,
                   color: Colors.white,
                 ),
               ),
@@ -843,12 +848,11 @@ class _CanceledServiceCard extends StatelessWidget {
                   children: [
                     Text(
                       item.serviceName ?? "Cleaning",
-                      style: const TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w800,
-                        color: _text,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500, // Medium
                         height: 1.1,
+                        color: const Color(0xFF181919),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -858,12 +862,11 @@ class _CanceledServiceCard extends StatelessWidget {
                           child: Text(
                             item.providerName ?? "Nicolas bond",
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontFamily: "Urbanist",
+                            style: GoogleFonts.poppins(
                               fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: _muted,
-                              height: 1.1,
+                              fontWeight: FontWeight.w400, // Regular
+                              height: 1.2,                 // 120%
+                              color: const Color(0xFF3B3B3B),
                             ),
                           ),
                         ),
@@ -874,35 +877,40 @@ class _CanceledServiceCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.calendar_month_outlined,
-                            size: 16, color: _text),
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          size: 16,
+                          color: Color(0xFF18191A),
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           date,
-                          style: const TextStyle(
-                            fontFamily: "Urbanist",
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: _text,
-                            height: 1.1,
+                            fontWeight: FontWeight.w400,
+                            height: 1.2,
+                            color: const Color(0xFF18191A),
                           ),
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.access_time_rounded,
-                            size: 16, color: _text),
+                        const Icon(
+                          Icons.access_time_rounded,
+                          size: 16,
+                          color: Color(0xFF18191A),
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           time,
-                          style: const TextStyle(
-                            fontFamily: "Urbanist",
+                          style: GoogleFonts.poppins(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: _text,
-                            height: 1.1,
+                            fontWeight: FontWeight.w400,
+                            height: 1.2,
+                            color: const Color(0xFF18191A),
                           ),
                         ),
                       ],
@@ -925,12 +933,12 @@ class _CanceledServiceCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Request declined",
-                style: TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w800,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.1,
                   color: Colors.white,
                 ),
               ),
@@ -945,20 +953,19 @@ class _CanceledServiceCard extends StatelessWidget {
 /* ============================ SMALL WIDGETS ============================ */
 
 class _VerifiedDot extends StatelessWidget {
-  const _VerifiedDot();
+  const _VerifiedDot({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 8,
-      height: 8,
-      decoration: const BoxDecoration(
-        color: Color(0xFF2FA86A),
-        shape: BoxShape.circle,
-      ),
+    return Image.asset(
+      Images.checkBadgeIcon,
+      width: 16,
+      height: 16,
+      fit: BoxFit.contain,
     );
   }
 }
+
 
 class _InfoChip extends StatelessWidget {
   const _InfoChip({
@@ -971,33 +978,30 @@ class _InfoChip extends StatelessWidget {
   final String text;
   final Color bg;
 
-  static const _muted = Color(0xFF6F6F6F);
-  static const _text = Color(0xFF1F1F1F);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFE5EEFF)), // if you use this border
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 16, color: _muted),
+          Icon(icon, size: 16, color: const Color(0xFF3B3B3B)),
           const SizedBox(width: 8),
-          Expanded(
+          Flexible(
             child: Text(
               text,
-              maxLines: 1,
+              textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontFamily: "Urbanist",
-                fontSize: 11.5,
-                fontWeight: FontWeight.w700,
-                color: _text,
+              style: GoogleFonts.urbanist(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
                 height: 1.1,
+                color: const Color(0xFF3B3B3B),
               ),
             ),
           ),
@@ -1006,6 +1010,7 @@ class _InfoChip extends StatelessWidget {
     );
   }
 }
+
 
 class _Stars extends StatelessWidget {
   const _Stars({required this.rating});

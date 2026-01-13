@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:paschaloliver/feature/inbox/view/inbox_screen.dart';
 import '../../../../core/constants/assets.dart';
@@ -34,7 +35,10 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                 child: IconButton(
                   onPressed: () => Get.back(),
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  constraints: const BoxConstraints(
+                    minWidth: 44,
+                    minHeight: 44,
+                  ),
                   icon: const Icon(
                     Icons.arrow_back_ios_new_rounded,
                     size: 18,
@@ -45,10 +49,7 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
             ),
 
             // ✅ TOP MAP (no gestures so ListView scroll stays smooth)
-            _TopMediaCard(
-              height: 140,
-              child: const _TopMapPreview(),
-            ),
+            _TopMediaCard(height: 140, child: const _TopMapPreview()),
 
             const SizedBox(height: 12),
 
@@ -83,32 +84,36 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                   // Title + status pill
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           "Cleaning Service",
-                          style: TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            color: _text,
-                            height: 1.1,
+                          style: const TextStyle(
+                            fontFamily: 'SF Pro',
+                            // use your exact registered family name
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            // closest to 510
+                            height: 1.2,
+                            color: Color(0xFF000000),
                           ),
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: _pill,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Accepted",
-                          style: TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF777777),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500, // Medium
                             height: 1.1,
+                            color: const Color(0xFF727272),
                           ),
                         ),
                       ),
@@ -135,15 +140,35 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 14),
 
                   // Meta rows
-                  const _MetaRow(icon: Icons.calendar_month_outlined, label: "Date:", value: "12 July 2025"),
+                  const _MetaRow(
+                    icon: Icons.calendar_month_outlined,
+                    label: "Date:",
+                    value: "12 July 2025",
+                  ),
                   const SizedBox(height: 12),
-                  const _MetaRow(icon: Icons.access_time_rounded, label: "Time:", value: "10:00 AM–11 AM"),
+                  const _MetaRow(
+                    icon: Icons.access_time_rounded,
+                    label: "Time:",
+                    value: "10:00 AM–11 AM",
+                  ),
                   const SizedBox(height: 12),
-                  const _MetaRow(icon: Icons.cleaning_services_outlined, label: "Services:", value: "Cleaner"),
+                  const _MetaRow(
+                    icon: Icons.cleaning_services_outlined,
+                    label: "Services:",
+                    value: "Cleaner",
+                  ),
                   const SizedBox(height: 12),
-                  const _MetaRow(icon: Icons.mail_outline_rounded, label: "Email:", value: "example@gmail.com"),
+                  const _MetaRow(
+                    icon: Icons.mail_outline_rounded,
+                    label: "Email:",
+                    value: "example@gmail.com",
+                  ),
                   const SizedBox(height: 12),
-                  const _MetaRow(icon: Icons.call_outlined, label: "Phone:", value: "012562589663"),
+                  const _MetaRow(
+                    icon: Icons.call_outlined,
+                    label: "Phone:",
+                    value: "012562589663",
+                  ),
 
                   const SizedBox(height: 14),
 
@@ -168,7 +193,6 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                     ],
                   ),
 
-
                   const SizedBox(height: 16),
 
                   // Send message
@@ -177,13 +201,15 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                     width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        Get.to(()=>const InboxScreen());
+                        Get.to(() => const InboxScreen());
                       },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Color(0xFFBDBDBD)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      icon:  Image.asset(
+                      icon: Image.asset(
                         Images.sendMessageIcon,
                         width: 15,
                         height: 15,
@@ -191,13 +217,13 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                         colorBlendMode: BlendMode.srcIn,
                       ),
 
-                      label: const Text(
+                      label: Text(
                         "Send massage",
-                        style: TextStyle(
-                          fontFamily: "Urbanist",
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w800,
-                          color: _text,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500, // Medium
+                          height: 1.1,
+                          color: const Color(0xFF727272),
                         ),
                       ),
                     ),
@@ -214,16 +240,22 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _danger,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      icon: const Icon(Icons.close_rounded, color: Colors.white, size: 18),
-                      label: const Text(
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                      label: Text(
                         "Cancel Booking",
-                        style: TextStyle(
-                          fontFamily: "Urbanist",
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500, // Medium
+                          height: 1.1,
+                          color: const Color(0xFFE4E4E4),
                         ),
                       ),
                     ),
@@ -270,9 +302,6 @@ class UserServiceViewDetailsScreen extends StatelessWidget {
   }
 }
 
-
-
-
 /* ========================= GOOGLE MAP PREVIEW (TOP) ========================= */
 
 class _TopMapPreview extends StatelessWidget {
@@ -302,6 +331,7 @@ class _TopMapPreview extends StatelessWidget {
 
 class _TopMediaCard extends StatelessWidget {
   const _TopMediaCard({required this.child, required this.height});
+
   final Widget child;
   final double height;
 
@@ -351,7 +381,12 @@ class _ProviderStrip extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(999),
-            child: Image.asset(avatar, width: 40, height: 40, fit: BoxFit.cover),
+            child: Image.asset(
+              avatar,
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -360,23 +395,24 @@ class _ProviderStrip extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: const TextStyle(
-                    fontFamily: "Urbanist",
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w900,
-                    color: _text,
-                    height: 1.1,
+                  style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
+                    color: const Color(0xFF000000),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: const TextStyle(
-                    fontFamily: "Urbanist",
+                    fontFamily: 'SF Pro',
+                    // use your exact registered SF Pro family name
                     fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: _muted,
-                    height: 1.1,
+                    fontWeight: FontWeight.w400,
+                    // Regular
+                    height: 1.2,
+                    color: Color(0xFF6B6B6B),
                   ),
                 ),
               ],
@@ -403,6 +439,7 @@ class _ProviderStrip extends StatelessWidget {
 
 class _PaymentChevronRow extends StatelessWidget {
   const _PaymentChevronRow({required this.title, required this.onTap});
+
   final String title;
   final VoidCallback onTap;
 
@@ -430,18 +467,21 @@ class _PaymentChevronRow extends StatelessWidget {
                 child: const Icon(Icons.payment, size: 16, color: _green),
               ),
               const SizedBox(width: 10),
+
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    fontFamily: "Urbanist",
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: _text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                     height: 1.1,
+                    color: const Color(0xFF181919),
                   ),
                 ),
               ),
+
               const Icon(Icons.chevron_right_rounded, size: 22, color: _text),
             ],
           ),
@@ -454,26 +494,38 @@ class _PaymentChevronRow extends StatelessWidget {
 /* ----------------------------- DOT + META ----------------------------- */
 
 class _DotRow extends StatelessWidget {
-  const _DotRow({required this.text});
+  const _DotRow({super.key, required this.text});
+
   final String text;
 
-  static const _text = Color(0xFF1F1F1F);
+  static const _text = Color(0xFF181919);
+  static const _green = Color(0xFF2FA86A);
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center, // ✅ 17px row alignment
       children: [
-        Container(width: 7, height: 7, decoration: const BoxDecoration(color: Color(0xFF2FA86A), shape: BoxShape.circle)),
-        const SizedBox(width: 10),
+        Container(
+          width: 7,
+          height: 7,
+          decoration: const BoxDecoration(
+            color: _green,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 8), // ✅ Figma gap
+
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              fontFamily: "Urbanist",
-              fontSize: 12.5,
-              fontWeight: FontWeight.w700,
-              color: _text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w500, // Medium
               height: 1.2,
+              color: _text,
             ),
           ),
         ),
@@ -483,42 +535,47 @@ class _DotRow extends StatelessWidget {
 }
 
 class _MetaRow extends StatelessWidget {
-  const _MetaRow({required this.icon, required this.label, required this.value});
+  const _MetaRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   final IconData icon;
   final String label;
   final String value;
 
-  static const _text = Color(0xFF1F1F1F);
-  static const _muted = Color(0xFF8B8B8B);
+  static const _text = Color(0xFF181919);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center, // ✅ better for 17px row
       children: [
         Icon(icon, size: 18, color: _text),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8), // ✅ Figma gap
+
         Text(
-          label,
-          style: const TextStyle(
-            fontFamily: "Urbanist",
-            fontSize: 12.5,
-            fontWeight: FontWeight.w800,
+          label, // "Date:"
+          style: GoogleFonts.urbanist(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            height: 1.2,
             color: _text,
-            height: 1.1,
           ),
         ),
         const SizedBox(width: 6),
+
         Expanded(
           child: Text(
-            value,
-            style: const TextStyle(
-              fontFamily: "Urbanist",
-              fontSize: 12.5,
-              fontWeight: FontWeight.w700,
-              color: _muted,
+            value, // "12 July 2025"
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
               height: 1.2,
+              color: _text,
             ),
           ),
         ),
@@ -556,9 +613,22 @@ class _SmallStatCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF727272))),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF727272),
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
               ],
             ),
           ),
@@ -576,7 +646,6 @@ Widget appIcon(dynamic icon, {double size = 18, Color? color}) {
 
   // Asset path
   if (icon is String) {
-
     return Image.asset(
       icon,
       width: size,
@@ -589,10 +658,6 @@ Widget appIcon(dynamic icon, {double size = 18, Color? color}) {
 
   return SizedBox(width: size, height: size);
 }
-
-
-
-
 
 /* ============================ SERVICE PRICE SHEET ============================ */
 /* ✅ FIXED: no outer margin/gap. Sheet attaches to left/right/bottom edges. */
@@ -671,15 +736,14 @@ class _ServicePriceSheet extends StatelessWidget {
               // Header
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "Service price",
-                      style: TextStyle(
-                        fontFamily: "Urbanist",
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: _green,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600, // SemiBold
                         height: 1.1,
+                        color: const Color(0xFF3FA96B),
                       ),
                     ),
                   ),
@@ -694,7 +758,11 @@ class _ServicePriceSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(999),
                         border: Border.all(color: _line),
                       ),
-                      child: const Icon(Icons.close_rounded, size: 18, color: _muted),
+                      child: const Icon(
+                        Icons.close_rounded,
+                        size: 18,
+                        color: _muted,
+                      ),
                     ),
                   ),
                 ],
@@ -714,11 +782,23 @@ class _ServicePriceSheet extends StatelessWidget {
               const Divider(height: 1, thickness: 1, color: _line),
               const SizedBox(height: 12),
 
-              _PriceRow(left: "Professional's minimum charge", right: "+ ${_money(minCharge)}", showInfo: true),
+              _PriceRow(
+                left: "Professional's minimum charge",
+                right: "+ ${_money(minCharge)}",
+                showInfo: true,
+              ),
               const SizedBox(height: 10),
-              _PriceRow(left: "Management fees", right: "+ ${_money(managementFee)}", showInfo: true),
+              _PriceRow(
+                left: "Management fees",
+                right: "+ ${_money(managementFee)}",
+                showInfo: true,
+              ),
               const SizedBox(height: 10),
-              _PriceRow(left: "VAT ( heading fee )", right: "+ ${_money(vatFee)}", showInfo: true),
+              _PriceRow(
+                left: "VAT ( heading fee )",
+                right: "+ ${_money(vatFee)}",
+                showInfo: true,
+              ),
 
               const SizedBox(height: 12),
               const Divider(height: 1, thickness: 1, color: _line),
@@ -726,23 +806,23 @@ class _ServicePriceSheet extends StatelessWidget {
 
               Row(
                 children: [
-                  const Text(
+                  Text(
                     "Price:",
-                    style: TextStyle(
-                      fontFamily: "Urbanist",
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      color: _text,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400, // Regular
+                      height: 1.1,
+                      color: const Color(0xFF000000),
                     ),
                   ),
                   const Spacer(),
                   Text(
                     _money(total),
-                    style: const TextStyle(
-                      fontFamily: "Urbanist",
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w900,
-                      color: _text,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400, // Regular
+                      height: 1.1,
+                      color: const Color(0xFF000000),
                     ),
                   ),
                 ],
@@ -759,15 +839,17 @@ class _ServicePriceSheet extends StatelessWidget {
                         onPressed: () => Get.back(),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: _green, width: 1.2),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Exit",
-                          style: TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
-                            color: _green,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500, // Medium
+                            height: 1.1,
+                            color: const Color(0xFF3FA96B),
                           ),
                         ),
                       ),
@@ -782,14 +864,16 @@ class _ServicePriceSheet extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _green,
                           elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                        child: const Text(
+                        child: Text(
                           "Remain",
-                          style: TextStyle(
-                            fontFamily: "Urbanist",
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500, // Medium
+                            height: 1.1,
                             color: Colors.white,
                           ),
                         ),
@@ -833,43 +917,49 @@ class _PriceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              Flexible(
-                child: Text(
-                  left,
-                  style: const TextStyle(
-                    fontFamily: "Urbanist",
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                    color: _text,
-                    height: 1.1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2), // ✅ top 2 / bottom 2
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // ✅ space-between
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    left,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400, // Regular
+                      height: 1.1,
+                      color: const Color(0xFF000000),
+                    ),
                   ),
                 ),
-              ),
-              if (showInfo) ...[
-                const SizedBox(width: 6),
-                const Icon(Icons.info_outline_rounded, size: 16, color: _muted),
+                if (showInfo) ...[
+                  const SizedBox(width: 6),
+                  const Icon(Icons.info_outline_rounded, size: 16, color: _muted),
+                ],
               ],
-            ],
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          right,
-          style: const TextStyle(
-            fontFamily: "Urbanist",
-            fontSize: 12.5,
-            fontWeight: FontWeight.w800,
-            color: _text,
-            height: 1.1,
+          const SizedBox(width: 12),
+          Text(
+            right,
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w400, // Regular
+              height: 1.1,
+              color: const Color(0xFF000000),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
+
