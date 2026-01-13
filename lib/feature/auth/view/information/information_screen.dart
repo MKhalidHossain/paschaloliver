@@ -26,7 +26,7 @@ class _InformationScreenState extends State<InformationScreen> {
 
   final _picker = ImagePicker();
 
-  // ✅ Front ID image used in back-side flow
+  // Front ID image used in back-side flow
   //    (this comes from your saved asset, matching your Figma front card)
   final ImageProvider _frontImage = const AssetImage(Images.idFront);
 

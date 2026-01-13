@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../area/select_country_screen.dart';
+import '../welcome_screen.dart';
 
 class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
   const HandyOnboardingEarnMoneyScreen({super.key});
@@ -26,9 +27,7 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      // close onboarding → go to home or main screen
-                      // Get.offAllNamed('/home');
-                      Get.back();
+                      Get.offAll(() => const WelcomeScreenView()); // clears stack
                     },
                     child: Text(
                       'Exit',
@@ -39,6 +38,7 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                 ],
               ),
 

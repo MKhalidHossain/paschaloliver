@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -191,30 +192,36 @@ class MyAddressesScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         centerTitle: false,
-        title: const Text(
+        title:  Text(
           "Addresses",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+          style: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            height: 1.1,
+            color: const Color(0xFF000000),
+          ),
         ),
+
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Enter the address where the service will be performed\n"
                   "to show your available professionals.",
-              style: TextStyle(
-                fontSize: 12.5,
-                height: 1.3,
-                color: AddressUI.muted,
-                fontWeight: FontWeight.w600,
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                fontWeight: FontWeight.w400, // Regular
+                height: 1.1,                 // 110%
+                color: AddressUI.muted,       // or const Color(0xFF000000)
               ),
             ),
             const SizedBox(height: 14),
 
             _SearchField(
-              hint: "Street name and number…",
+              hint: "Street name and number...",
               onTap: () => Get.to(() => const AddressSearchScreen()),
             ),
             const SizedBox(height: 14),
@@ -380,10 +387,15 @@ class ServiceAddressMapScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      "Service  address",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                      "Service address",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500, // Medium
+                        height: 1.1,
+                        color: const Color(0xFF181919),
+                      ),
                     ),
                   ),
                   _TinyCircle(
@@ -656,9 +668,14 @@ class AddressDetailsScreen extends StatelessWidget {
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(width: 8),
-                        const Text(
+                        Text(
                           "Address details:",
-                          style: TextStyle(fontWeight: FontWeight.w800, color: AddressUI.text),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            height: 1.1,
+                            color: AddressUI.text,
+                          ),
                         ),
                       ],
                     ),
@@ -755,30 +772,40 @@ class FloorDoorSheet extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 "Floor and door?",
-                style: TextStyle(
-                  color: AddressUI.green,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
+                style: GoogleFonts.urbanist(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600, // SemiBold
+                  height: 1.1,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
             ),
             const SizedBox(height: 8),
 
-            const Text(
-              "Include additional details of your address ( floor, door,\n"
-                  "apartment, etc ) to make it easier for the professional to\n"
-                  "find your home.",
-              style: TextStyle(
-                color: AddressUI.muted,
-                height: 1.3,
-                fontWeight: FontWeight.w600,
-                fontSize: 12.5,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SizedBox(
+                width: 343, // matches Figma width
+                child: Text(
+                  "Include additional details of your address (floor, door, apartment, etc) "
+                      "to make it easier for the professional to find your home.",
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400, // Regular
+                    height: 1.1,
+                    color: const Color(0xFF000000),
+                  ),
+                ),
               ),
             ),
+
+
+
 
             const SizedBox(height: 14),
 
@@ -872,7 +899,7 @@ class _SearchBarInline extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.location_on_outlined, color: AddressUI.green, size: 18),
+          const Icon(Icons.search_sharp, color: AddressUI.green, size: 18),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(

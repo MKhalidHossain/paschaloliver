@@ -69,6 +69,8 @@ class Images {
   static const String mcIcon = 'assets/icons/mc.png';
   static const String comedianIcon = 'assets/icons/comedian.png';
   static const String comedianIcon1 = 'assets/icons/comedian1.png';
+  static const String offerIcon = 'assets/images/servicer.png';
+  static const String clientIcon = 'assets/images/client.png';
 
 
 

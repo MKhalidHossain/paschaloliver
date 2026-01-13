@@ -78,7 +78,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                     borderRadius: BorderRadius.circular(99),
                     child: LinearProgressIndicator(
                       value: 0.25,
-                      minHeight: 10,
+                      minHeight: 11,
                       backgroundColor: Colors.grey.shade300,
                       valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/constants/assets.dart';
+import '../welcome_screen.dart';
 import 'onboarding2.dart';
 
 class HandyOnboardingAtHomeScreen extends StatelessWidget {
@@ -26,8 +27,7 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      // close onboarding
-                      Get.back(); // or Get.offAllNamed('/home');
+                      Get.offAll(() => const WelcomeScreenView()); // clears stack
                     },
                     child: Text(
                       'Exit',
@@ -38,6 +38,7 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                 ],
               ),
 

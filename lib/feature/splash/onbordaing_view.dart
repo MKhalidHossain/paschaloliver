@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:paschaloliver/core/constants/app_colors.dart';
 
+import '../auth/view/sign_up_view.dart';
 
-import '../auth/view/SignUpScreen.dart';
+
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -40,7 +41,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: InkWell(
                   onTap: () {
-                    Get.to(() => SignupScreenView());
+                    Get.to(() => SignUpScreen());
                   },
                   child: Text(
                     "Skip",
@@ -147,7 +148,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPressed: () {
                   if (_currentPage == 2) {
                     // Last page → Go to SignUp screen
-                    Get.to(() => SignupScreenView());
+                    Get.to(() => SignUpScreen());
                   } else {
                     // Move to next page
                     _controller.nextPage(

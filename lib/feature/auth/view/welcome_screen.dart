@@ -47,7 +47,7 @@ class WelcomeScreenView extends StatelessWidget {
                 child: Column(
                   children: [
                     // you can change top spacing by changing this value
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 100),
 
                     // logo + title
                     Row(

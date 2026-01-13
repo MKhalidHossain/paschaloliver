@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/assets.dart';
 import '../conteroller/role_controller.dart';
 
 import 'sign_up_view.dart';
+
 
 enum AccountType { user, serviceProvider }
 
@@ -29,19 +31,17 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'What will you do on HandyNaija?',
+              'What do you want to do on HanyNaija?',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 24,
-                fontWeight: FontWeight.w600, // SemiBold
-                height: 1.2,                 // 120%
-                letterSpacing: 0,
+                fontWeight: FontWeight.w600,
+                height: 1.2,
                 color: Color(0xFF000000),
               ),
             ),
-
-            SizedBox(height: 15),
-            Text(
+            const SizedBox(height: 15),
+            const Text(
               "Don't worry—this decision isn't permanent. You can always switch later and use the same account as both a client and a professional.",
               style: TextStyle(color: Colors.black),
             ),
@@ -50,26 +50,25 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
             _accountOption(
               title: 'Book a Service',
               subtitle: '(I am a client)',
-              icon: Icons.account_circle_outlined,
               value: AccountType.user,
+              imagePath: Images.clientIcon,   //
             ),
-            const SizedBox(height: 16),
 
             _accountOption(
               title: 'Offer Services',
               subtitle: '(I am a professional)',
-              icon: Icons.handyman_outlined,
               value: AccountType.serviceProvider,
+              imagePath: Images.offerIcon,    //
             ),
+
 
             const Spacer(),
 
             ElevatedButton(
               onPressed: selectedType == null ? null : _continue,
               style: ElevatedButton.styleFrom(
-                backgroundColor: selectedType == null
-                    ? Colors.white
-                    : AppColors.appColor,
+                backgroundColor:
+                selectedType == null ? Colors.white : AppColors.appColor,
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -84,7 +83,7 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -93,7 +92,6 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
 
   void _continue() {
     final role = selectedType == AccountType.user ? 'customer' : 'provider';
-
     roleController.setRole(role);
     Get.to(() => SignUpScreen());
   }
@@ -101,8 +99,8 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
   Widget _accountOption({
     required String title,
     required String subtitle,
-    required IconData icon,
     required AccountType value,
+    required String imagePath, // ✅ new param
   }) {
     final isSelected = selectedType == value;
 
@@ -110,8 +108,6 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
       onTap: () => setState(() => selectedType = value),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        //
-        //  padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -126,8 +122,7 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
                 width: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: const Color.fromARGB(255, 250, 250, 250),
-                  shape: BoxShape.rectangle,
+                  color: const Color(0xFFFAFAFA),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -136,16 +131,18 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
                     ),
                   ],
                 ),
-
-                padding: const EdgeInsets.all(0),
-                child: Image.asset(
-                  "assets/images/client.png",
-                  fit: BoxFit.fill,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    imagePath, // ✅ use different image
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
 
             const SizedBox(width: 16),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,19 +155,16 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(color: Colors.black)),
+                  Text(subtitle, style: const TextStyle(color: Colors.black)),
                 ],
               ),
             ),
-            /*    Radio<AccountType>(
-              value: value,
-              groupValue: selectedType,
-              onChanged: (v) => setState(() => selectedType = v),
-              activeColor: AppColors.appColor,
-            ), */
           ],
         ),
       ),
     );
   }
 }
+
+
+

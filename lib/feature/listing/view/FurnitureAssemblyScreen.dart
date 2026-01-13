@@ -177,7 +177,7 @@ class _TopProgressBar extends StatelessWidget {
     final v = value.clamp(0.0, 1.0);
 
     return Container(
-      height: 12,
+      height: 15,
       decoration: BoxDecoration(
         color: track,
         borderRadius: BorderRadius.circular(999),
