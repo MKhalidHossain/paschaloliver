@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 import '../../../core/constants/assets.dart'; // Images.welcome, Images.google
 
@@ -161,8 +162,8 @@ class _BottomSheet extends StatelessWidget {
               padding: const EdgeInsets.all(2.0),
               child: Image.asset(
                 Images.google,
-                height: 18,
-                width: 18,
+                height: 15,
+                width: 15,
                 fit: BoxFit.contain,
               ),
             ),
@@ -210,14 +211,13 @@ class _BottomSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Log in with email',
-                style: TextStyle(
-                  fontFamily: 'Urbanist',
+                style: GoogleFonts.urbanist(
                   fontSize: 16,
-                  fontWeight: FontWeight.w500, // Medium (500)
-                  height: 1.10, // 110%
-                  color: Color(0xFFFFFFFF),
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.1, // 110%
+                  color: const Color(0xFFFFFFFF),
                   letterSpacing: 0,
                 ),
               ),

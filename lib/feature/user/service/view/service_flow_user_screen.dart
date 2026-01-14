@@ -180,7 +180,7 @@ class _UserServicesScreenState extends State<UserServicesScreen>
                 tabs: const [
                   Tab(text: "Upcoming"),
                   Tab(text: "Past"),
-                  Tab(text: "Canceled"),
+                  Tab(text: "Cancelled"),
                 ],
               ),
             ),
@@ -927,7 +927,7 @@ class _CanceledServiceCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: _danger,
+                backgroundColor: Colors.grey,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

@@ -447,15 +447,60 @@ class ServiceAddressMapScreen extends StatelessWidget {
                     left: 18,
                     right: 18,
                     bottom: 18,
-                    child: _GreyButton(
+                    child: _ActionButton(
                       label: "Confirm address",
+                      background: const Color(0xFF27AE60),
+                      textColor: Colors.white,
                       onTap: () => Get.to(() => const AddressDetailsScreen()),
                     ),
                   ),
+
+
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.label,
+    required this.onTap,
+    required this.background,
+    required this.textColor,
+    super.key,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+  final Color background;
+  final Color textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 54,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: background,
+          foregroundColor: textColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            height: 1.1,
+            color: textColor,
+          ),
         ),
       ),
     );

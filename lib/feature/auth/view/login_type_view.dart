@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:paschaloliver/app_ground.dart';
 import 'package:paschaloliver/core/constants/app_colors.dart';
 
 
+import '../../user/app_ground_user.dart';
 import 'account_type_view.dart';
 import 'sign_in_view.dart';
 
@@ -96,7 +96,7 @@ class LoginTypeView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextButton(
-                onPressed: () => Get.to(() => AppGround()),
+                onPressed: () => Get.to(() => UserAppGround()),
                 child: const Text(
                   'Continue as a guest',
                   style: TextStyle(fontSize: 16, color: Colors.black54),
