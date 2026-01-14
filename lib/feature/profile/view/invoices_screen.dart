@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'billing_screen.dart';
 
@@ -78,12 +79,28 @@ class _TopBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 6),
+          // Expanded(
+          //   child: Text(
+          //     title,
+          //     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text),
+          //   ),
+          // ),
+
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w700, // Bold
+                height: 1.1, // 110%
+                letterSpacing: 0,
+                color: const Color(0xFF000000),
+              ),
             ),
           ),
+
           const SizedBox(width: 18),
         ],
       ),

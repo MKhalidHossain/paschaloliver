@@ -99,6 +99,7 @@ class Images {
   static const String refreshIcon = 'assets/message/refresh_icon.png';
 
   static const String congratulationsIcon = 'assets/images/Icon.png';
+  static const String addressLocIcon = 'assets/images/Locationm_ marker-pin-06.png';
 
 
 

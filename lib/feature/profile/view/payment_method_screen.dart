@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 
@@ -23,10 +24,17 @@ class PaymentMethodsScreen extends StatelessWidget {
           onPressed: Get.back,
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _green),
         ),
-        title: const Text(
+        title: Text(
           "Payment methods",
-          style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: _text),
+          style: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w700, // Bold
+            height: 1.1, // 110%
+            letterSpacing: 0,
+            color: const Color(0xFF000000),
+          ),
         ),
+
         actions: [
           IconButton(
             onPressed: () {
@@ -47,17 +55,18 @@ class PaymentMethodsScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
 
-                const Text(
+                Text(
                   "No Payment methods",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "Poppins",
+                  style: GoogleFonts.poppins(
                     fontSize: 24,
-                    height: 1.2,
-                    fontWeight: FontWeight.w500,
-                    color: _muted,
+                    fontWeight: FontWeight.w500, // Medium
+                    height: 1.2, // 120%
+                    letterSpacing: 0,
+                    color: const Color(0xFF727272),
                   ),
                 ),
+
 
                 const SizedBox(height: 18),
 
@@ -72,17 +81,18 @@ class PaymentMethodsScreen extends StatelessWidget {
 
                 const SizedBox(height: 18),
 
-                const Text(
+                Text(
                   "You haven't any payment\nmethod yet",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 16,
-                    height: 1.25,
-                    fontWeight: FontWeight.w400,
-                    color: _muted,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500, // Medium
+                    height: 1.2, // 120%
+                    letterSpacing: 0,
+                    color: const Color(0xFF727272),
                   ),
                 ),
+
 
                 const SizedBox(height: 22),
 
@@ -100,15 +110,17 @@ class PaymentMethodsScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                     icon: const Icon(Icons.add, color: Colors.white, size: 18),
-                    label: const Text(
+                    label: Text(
                       "Add new payment methods",
-                      style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500, // Medium
+                        height: 1.1, // 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFFFFFFFF),
                       ),
                     ),
+
                   ),
                 ),
 

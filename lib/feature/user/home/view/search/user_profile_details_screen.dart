@@ -117,7 +117,7 @@ class NicolasProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Nicolas bond on Handynaija",
+                          "Nicolas bond on HandyNaija",
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
@@ -606,7 +606,7 @@ class NicolasProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    "Handynaija Guaranty",
+                    "HandyNaija Guaranty",
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w900,

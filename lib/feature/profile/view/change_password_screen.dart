@@ -68,12 +68,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Text(
                     "Change Password",
                     style: GoogleFonts.urbanist(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
-                      color: _text,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700, // Bold
+                      height: 1.1, // 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFF000000),
                     ),
                   ),
+
                 ],
               ),
 
@@ -132,11 +134,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ),
 
               // ✅ keep big white space like screenshot
-              const Spacer(),
+              // const Spacer(),
 
               // Optional button (not in your screenshot)
               // Uncomment if you need it.
-              /*
+
+              const SizedBox(height: 18),
+
               SizedBox(
                 width: double.infinity,
                 height: 48,
@@ -161,7 +165,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
               ),
               const SizedBox(height: 18),
-              */
+
             ],
           ),
         ),

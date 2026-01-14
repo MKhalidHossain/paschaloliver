@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChooseLanguageScreen extends StatefulWidget {
   const ChooseLanguageScreen({
@@ -34,15 +35,17 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: _LC.green),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           "Choose Language",
-          style: TextStyle(
-            fontSize: 14.5,
-            fontWeight: FontWeight.w700,
-            color: _LC.text,
-            height: 1.1,
+          style: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w700, // Bold
+            height: 1.1, // 110%
+            letterSpacing: 0,
+            color: const Color(0xFF000000),
           ),
         ),
+
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Divider(height: 1, thickness: 1, color: _LC.divider),

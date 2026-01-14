@@ -339,7 +339,7 @@ class _SecureInfoSheet extends StatelessWidget {
                             const SizedBox(height: 10),
 
                             const Text(
-                              "Book and communicate with User always\nthough handynaija.",
+                              "Book and communicate with User always\nthough HandyNaija.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: _C.text,

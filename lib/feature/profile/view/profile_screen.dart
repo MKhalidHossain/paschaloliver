@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/profile/view/payment_and_refund_screen.dart';
 import 'package:paschaloliver/feature/profile/view/per_details_screen.dart';
 import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart';
@@ -22,7 +22,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final bottomInset = MediaQuery.of(context).padding.bottom;
 
     // your bottom bar height (you used 62 in AppGround)
@@ -32,7 +31,9 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: _C.bg,
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.only(bottom: 18 + bottomBarHeight + bottomInset,),
+          padding: EdgeInsets.only(
+            bottom: 18 + bottomBarHeight + bottomInset,
+          ),
           children: [
             const SizedBox(height: 8),
 
@@ -53,37 +54,36 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Paschaloliver",
-                          style: TextStyle(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w700,
-                            color: _C.text,
-                            height: 1.15,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400, // Regular
+                            height: 1.1, // 110%
+                            letterSpacing: 0,
+                            color: const Color(0xFF181919),
                           ),
                         ),
                         const SizedBox(height: 3),
-                        // inside your ProfileScreen header (replace only "View Profile" Text part)
-
                         InkWell(
                           onTap: () {
                             Get.to(() => const PersonalDetailsScreen());
                           },
                           borderRadius: BorderRadius.circular(6),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
                             child: Text(
                               "View Profile",
-                              style: TextStyle(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w600,
-                                color: _C.green,
-                                height: 1.15,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400, // Regular
+                                height: 1.1, // 110%
+                                letterSpacing: 0,
+                                color: const Color(0xFF3FA96B),
                               ),
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -98,108 +98,129 @@ class ProfileScreen extends StatelessWidget {
             // SHARE & EARN
             // =========================
             const _SectionTitle("SHARE AND EARN MONEY!"),
-            _TileRow(
-              leading: _LeadingIcon(
-                child: Image.asset(
-                  Images.giftIcon,
-                  width: 23.25,
-                  height: 23.25,
-                  fit: BoxFit.contain,
-                ),
-              ),
-
-              title: "# 10 for every friend you bring",
-              onTap: () {
-                Get.to(()=>const ShareAndEarnMoneyScreen());
-              },
-            ),
             const Divider(height: 1, thickness: 1, color: _C.divider),
+            _ShadowWrap(
+              child: _TileRow(
+                leading: _LeadingIcon(
+                  child: Image.asset(
+                    Images.giftIcon,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                title: "# 10 for every friend you bring",
+                onTap: () {
+                  Get.to(() => const ShareAndEarnMoneyScreen());
+                },
+              ),
+            ),
+            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
 
             // =========================
             // YOUR ACCOUNT
             // =========================
             const _SectionTitle("ACCOUNT SETTINGS"),
-            _TileRow(
-              leading: const _LeadingIcon(
-                child: Icon(Icons.person_outline_rounded, size: 18, color: _C.green),
+            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
+            _ShadowWrap(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.person_outline_rounded, size: 18, color: _C.green),
+                    ),
+                    title: "Personal details",
+                    onTap: () {
+                      Get.to(() => const PerDetailsScreen());
+                    },
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.location_on_outlined, size: 18, color: _C.green),
+                    ),
+                    title: "My addresses",
+                    onTap: () {
+                      Get.to(() => const MyAddressesLikeScreen());
+                    },
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.calendar_today_outlined, size: 18, color: _C.green),
+                    ),
+                    title: "Payment and refunds",
+                    onTap: () {
+                      Get.to(() => const PaymentsAndRefundsScreen());
+                    },
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.lock_outline_rounded, size: 18, color: _C.green),
+                    ),
+                    title: "Change password",
+                    onTap: () => Get.to(() => const ChangePasswordScreen()),
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.language_rounded, size: 18, color: _C.green),
+                    ),
+                    title: "Language",
+                    onTap: () async {
+                      final result = await Get.to<LanguageOption>(
+                            () => const ChooseLanguageScreen(initialLocale: "en"),
+                      );
+
+                      if (result != null) {
+                        // TODO: save locale and update app locale
+                      }
+                    },
+                  ),
+                ],
               ),
-              title: "Personal details",
-              onTap: () {
-                Get.to(() => const PerDetailsScreen());
-              },
             ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.location_on_outlined, size: 18, color: _C.green)),
-              title: "My addresses",
-              onTap: () {
-                Get.to(()=>const MyAddressesLikeScreen());
-              },
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.calendar_today_outlined, size: 18, color: _C.green)),
-              title: "Payment and refunds",
-              onTap: () {
-                Get.to(()=>const PaymentsAndRefundsScreen());
-
-              },
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.lock_outline_rounded, size: 18, color: _C.green)),
-              title: "Change password",
-              onTap: () => Get.to(() => const ChangePasswordScreen()),
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(
-                child: Icon(Icons.language_rounded, size: 18, color: _C.green),
-              ),
-              title: "Language",
-              onTap: () async {
-                final result = await Get.to<LanguageOption>(
-                      () => const ChooseLanguageScreen(initialLocale: "en"),
-                );
-
-                if (result != null) {
-                  // result.locale -> "en", "fr", "ar" ...
-                  // TODO: save to controller/storage and update app locale
-                  // Example:
-                  // Get.find<SettingsController>().setLocale(result.locale);
-                  // Get.updateLocale(Locale(result.locale)); // if you use GetX localization
-                }
-              },
-            ),
-
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
+            // =========================
+            // Codes and Promotions
+            // =========================
             const _SectionTitle("Codes and Promotions"),
-            _TileRow(
-              leading: _LeadingIcon(
-                child: Image.asset(
-                  Images.couponIcon,
-                  width: 20,
-                  height: 20,
-                  fit: BoxFit.contain,
+            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
+            _ShadowWrap(
+              child: _TileRow(
+                leading: _LeadingIcon(
+                  child: Image.asset(
+                    Images.couponIcon,
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.contain,
+                  ),
                 ),
+                title: "My Coupon codes",
+                onTap: () {
+                  Get.to(() => const MyCodesScreen());
+                },
               ),
-              title: "My Coupon codes",
-              onTap: () {
-                Get.to(()=>const MyCodesScreen());
-              },
             ),
 
             // =========================
             // OFFER SERVICES
             // =========================
             const _SectionTitle("So you want to offer services?"),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.swap_horiz_rounded, size: 23, color: _C.green)),
-              title: "Switch to Client version",
-              onTap: () {
-                // Get.to(()=>const UserAppGround());
-              },
+            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
+            _ShadowWrap(
+              child: _TileRow(
+                leading: const _LeadingIcon(
+                  child: Icon(Icons.swap_horiz_rounded, size: 23, color: _C.green),
+                ),
+                title: "Switch to Client version",
+                onTap: () {
+                  // Get.to(()=>const UserAppGround());
+                },
+              ),
             ),
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
@@ -207,87 +228,111 @@ class ProfileScreen extends StatelessWidget {
             // LIKE THE APP
             // =========================
             const _SectionTitle("Do you like the app?"),
-            _TileRow(
-              leading: _LeadingIcon(
-                child: Image.asset(
-                  Images.starIcon,
-                  width: 20,
-                  height: 20,
-                  fit: BoxFit.contain,
-                ),
+            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
+            _ShadowWrap(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _TileRow(
+                    leading: _LeadingIcon(
+                      child: Image.asset(
+                        Images.starIcon,
+                        width: 20,
+                        height: 20,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    title: "Will you give us 5 stars?😊",
+                    onTap: () {
+                      Get.dialog(
+                        const _RateAppDialog(),
+                        barrierDismissible: true,
+                      );
+                    },
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.share_outlined, size: 18, color: _C.green),
+                    ),
+                    title: "Share the HandyNaija App",
+                    onTap: () {
+                      Get.dialog(
+                        const ShareAppDialog(),
+                        barrierDismissible: true,
+                        barrierColor: Colors.black.withOpacity(.35),
+                      );
+                    },
+                  ),
+                ],
               ),
-
-              title: "Will you give us 5 stars?😊",
-              onTap: () {
-                Get.dialog(
-                  const _RateAppDialog(),
-                  barrierDismissible: true,
-                );
-              },
             ),
-
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.share_outlined, size: 18, color: _C.green)),
-              title: "Share the HandyNaija App",
-              onTap: () {
-                Get.dialog(
-                  const ShareAppDialog(),
-                  barrierDismissible: true,
-                  barrierColor: Colors.black.withOpacity(.35),
-                );
-              },
-            ),
-
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
             // =========================
             // SUPPORT CENTRE
             // =========================
             const _SectionTitle("SUPPORT CENTRE"),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.headset_mic_outlined, size: 18, color: _C.green)),
-              title: "Help",
-              onTap: () {},
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.lightbulb_outline, size: 18, color: _C.green)),
-              title: "How can we improve?",
-              onTap: () {},
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.emoji_objects_outlined, size: 18, color: _C.green)),
-              title: "Privacy Policy",
-              onTap: () => Get.to(() => const PrivacyPolicyScreen()),
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.indeterminate_check_box_outlined, size: 18, color: _C.green)),
-              title: "Terms And Condition",
-              onTap: () => Get.to(() => const TermsConditionsScreen()),
-            ),
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(
-                child: Icon(Icons.info_outline_rounded, size: 18, color: _C.green),
+            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
+            _ShadowWrap(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.headset_mic_outlined, size: 18, color: _C.green),
+                    ),
+                    title: "Help",
+                    onTap: () {},
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.lightbulb_outline, size: 18, color: _C.green),
+                    ),
+                    title: "How can we improve?",
+                    onTap: () {},
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.emoji_objects_outlined, size: 18, color: _C.green),
+                    ),
+                    title: "Privacy Policy",
+                    onTap: () => Get.to(() => const PrivacyPolicyScreen()),
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.indeterminate_check_box_outlined, size: 18, color: _C.green),
+                    ),
+                    title: "Terms And Condition",
+                    onTap: () => Get.to(() => const TermsConditionsScreen()),
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.info_outline_rounded, size: 18, color: _C.green),
+                    ),
+                    title: "About HandyNaija App",
+                    onTap: () => Get.to(() => const AboutHandyNaijaScreen()),
+                  ),
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: const _LeadingIcon(
+                      child: Icon(Icons.logout_rounded, size: 18, color: _C.green),
+                    ),
+                    title: "Log out",
+                    onTap: () {
+                      Get.dialog(
+                        const _LogoutConfirmDialog(),
+                        barrierDismissible: true,
+                        barrierColor: Colors.black.withOpacity(.45),
+                      );
+                    },
+                  ),
+                ],
               ),
-              title: "About HandyNaija App",
-              onTap: () => Get.to(() => const AboutHandyNaijaScreen()),
-            ),
-
-            const _ThinDivider(),
-            _TileRow(
-              leading: const _LeadingIcon(child: Icon(Icons.logout_rounded, size: 18, color: _C.green)),
-              title: "Log out",
-              onTap: () {
-                Get.dialog(
-                  const _LogoutConfirmDialog(),
-                  barrierDismissible: true,
-                  barrierColor: Colors.black.withOpacity(.45),
-                );
-              },
             ),
 
             const SizedBox(height: 10),
@@ -298,11 +343,32 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
+/// ✅ ONLY shadow wrapper
+class _ShadowWrap extends StatelessWidget {
+  const _ShadowWrap({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.10),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
 /// ------------------------------------------------------------
 /// ✅ Rate dialog (UI like your screenshot)
-/// - 5 stars selectable
-/// - Cancel (outlined) + Submit (green)
-/// - Center white card with rounded corners
 /// ------------------------------------------------------------
 class _RateAppDialog extends StatefulWidget {
   const _RateAppDialog();
@@ -312,7 +378,7 @@ class _RateAppDialog extends StatefulWidget {
 }
 
 class _RateAppDialogState extends State<_RateAppDialog> {
-  int _rating = 3; // default like screenshot (3 selected)
+  int _rating = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -335,7 +401,6 @@ class _RateAppDialogState extends State<_RateAppDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // top icon (cute star)
             Container(
               width: 46,
               height: 46,
@@ -345,9 +410,7 @@ class _RateAppDialogState extends State<_RateAppDialog> {
               ),
               child: const Icon(Icons.star_rounded, color: Color(0xFFF4B400), size: 28),
             ),
-
             const SizedBox(height: 10),
-
             const Text(
               "Rate Handynaija App",
               style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: Color(0xFF111111)),
@@ -357,10 +420,7 @@ class _RateAppDialogState extends State<_RateAppDialog> {
               "Tap a star to give your rating.",
               style: TextStyle(fontSize: 11.2, fontWeight: FontWeight.w700, color: Color(0xFF8B8B8B)),
             ),
-
             const SizedBox(height: 12),
-
-            // stars
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (i) {
@@ -380,9 +440,7 @@ class _RateAppDialogState extends State<_RateAppDialog> {
                 );
               }),
             ),
-
             const SizedBox(height: 14),
-
             Row(
               children: [
                 Expanded(
@@ -407,10 +465,7 @@ class _RateAppDialogState extends State<_RateAppDialog> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // TODO: send rating to backend / store locally
-                        // print("User rating: $_rating");
-
-                        Get.back(); // close dialog
+                        Get.back();
                         Get.snackbar(
                           "Thanks!",
                           "You rated $_rating star${_rating == 1 ? '' : 's'} ⭐",
@@ -438,8 +493,6 @@ class _RateAppDialogState extends State<_RateAppDialog> {
     );
   }
 }
-
-
 
 class ShareAppDialog extends StatelessWidget {
   const ShareAppDialog({super.key});
@@ -471,7 +524,6 @@ class ShareAppDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // top icon
               Container(
                 width: 54,
                 height: 54,
@@ -488,10 +540,7 @@ class ShareAppDialog extends StatelessWidget {
                   ),
                 ),
               ),
-
-
               const SizedBox(height: 12),
-
               const Text(
                 "Share HandyNaija App",
                 textAlign: TextAlign.center,
@@ -501,9 +550,7 @@ class ShareAppDialog extends StatelessWidget {
                   color: _text,
                 ),
               ),
-
               const SizedBox(height: 6),
-
               const Text(
                 "Tap share to share this app with your friends.",
                 textAlign: TextAlign.center,
@@ -514,11 +561,9 @@ class ShareAppDialog extends StatelessWidget {
                   height: 1.25,
                 ),
               ),
-
               const SizedBox(height: 14),
               const Divider(height: 1, thickness: 1, color: _line),
               const SizedBox(height: 12),
-
               Row(
                 children: [
                   Expanded(
@@ -540,12 +585,9 @@ class ShareAppDialog extends StatelessWidget {
                         Get.back();
                       },
                     ),
-
-
                   ),
                 ],
               ),
-
               const SizedBox(height: 4),
             ],
           ),
@@ -571,9 +613,9 @@ class _OutlineBtn extends StatelessWidget {
           side: const BorderSide(color: Color(0xFF27AE60), width: 1.2),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
-        child: const Text(
-          "Cancel",
-          style: TextStyle(
+        child: Text(
+          label,
+          style: const TextStyle(
             fontSize: 12.5,
             fontWeight: FontWeight.w800,
             color: Color(0xFF27AE60),
@@ -587,7 +629,7 @@ class _OutlineBtn extends StatelessWidget {
 class _GreenBtn extends StatelessWidget {
   const _GreenBtn({
     required this.label,
-    required this.leading, // ✅ icon or image
+    required this.leading,
     required this.onTap,
   });
 
@@ -620,8 +662,6 @@ class _GreenBtn extends StatelessWidget {
   }
 }
 
-
-
 class _LogoutConfirmDialog extends StatelessWidget {
   const _LogoutConfirmDialog();
 
@@ -643,7 +683,6 @@ class _LogoutConfirmDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // top icon
               Container(
                 width: 46,
                 height: 46,
@@ -654,7 +693,6 @@ class _LogoutConfirmDialog extends StatelessWidget {
                 child: const Icon(Icons.logout_rounded, color: _C.green, size: 24),
               ),
               const SizedBox(height: 10),
-
               const Text(
                 "Are you sure want to Log out",
                 textAlign: TextAlign.center,
@@ -665,7 +703,6 @@ class _LogoutConfirmDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-
               const Text(
                 "Tap log out to Log out from this app.",
                 textAlign: TextAlign.center,
@@ -677,10 +714,8 @@ class _LogoutConfirmDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-
               Row(
                 children: [
-                  // Cancel (white + red border)
                   Expanded(
                     child: SizedBox(
                       height: 42,
@@ -704,18 +739,12 @@ class _LogoutConfirmDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-
-                  // Log out (red filled)
                   Expanded(
                     child: SizedBox(
                       height: 42,
                       child: ElevatedButton.icon(
                         onPressed: () async {
-                          // close dialog first
                           Get.back();
-
-                          // TODO: clear storage/session here
-
                           Get.offAll(() => const HandyEmailLoginScreen());
                         },
                         icon: const Icon(Icons.logout_rounded, size: 18, color: Colors.white),
@@ -741,15 +770,15 @@ class _LogoutConfirmDialog extends StatelessWidget {
   }
 }
 
-
 /// =========================
-/// TILE ROW (matches screenshot)
+/// TILE ROW
 /// =========================
 class _TileRow extends StatelessWidget {
   const _TileRow({
     required this.leading,
     required this.title,
     required this.onTap,
+    super.key,
   });
 
   final Widget leading;
@@ -771,15 +800,22 @@ class _TileRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: _C.text,
-                    height: 1.2,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400, // Regular
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFF181919),
                   ),
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, size: 22, color: _C.chev),
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 24,
+                color: _C.chev,
+              ),
             ],
           ),
         ),
@@ -817,26 +853,25 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(18, 14, 18, 10),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: _C.section,
-          letterSpacing: .4,
+        style: GoogleFonts.urbanist(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          height: 1.1,
+          letterSpacing: 0,
+          color: const Color(0xFF3B3B3B),
         ),
       ),
     );
   }
 }
 
+/// ✅ full width divider (no left indent)
 class _ThinDivider extends StatelessWidget {
   const _ThinDivider();
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 18),
-      child: Divider(height: 1, thickness: 1, color: _C.divider),
-    );
+    return const Divider(height: 1, thickness: 1, color: _C.divider);
   }
 }
 

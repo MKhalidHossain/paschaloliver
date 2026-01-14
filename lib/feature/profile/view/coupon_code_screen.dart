@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/assets.dart';
 
@@ -80,10 +81,17 @@ class MyCodesScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
+                Text(
                   "My codes",
-                  style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: _text),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700, // Bold
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFF000000),
+                  ),
                 ),
+
               ],
             ),
 

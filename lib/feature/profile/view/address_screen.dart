@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../core/constants/assets.dart';
 
 /// ✅ My Addresses screen (UI like your screenshot)
 class MyAddressesLikeScreen extends StatelessWidget {
@@ -19,10 +22,17 @@ class MyAddressesLikeScreen extends StatelessWidget {
           onPressed: Get.back,
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
         ),
-        title: const Text(
+        title: Text(
           "My Addresses",
-          style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800),
+          style: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w700, // Bold
+            height: 1.1, // 110%
+            letterSpacing: 0,
+            color: const Color(0xFF000000),
+          ),
         ),
+
         actions: [
           IconButton(
             onPressed: () {
@@ -110,32 +120,40 @@ class _AddressTile extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 34,
-                height: 34,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: _A.soft,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: _A.line),
+                  color: _A.soft, // grey background
+                  borderRadius: BorderRadius.circular(8),
+                  // ✅ no border here (your screenshot doesn’t have it)
                 ),
-                child: const Icon(
-                  Icons.person_outline_rounded,
-                  color: _A.green,
-                  size: 20,
+                child: Center(
+                  child: Image.asset(
+                    Images.addressLocIcon,
+                    width: 22,
+                    height: 22,
+                    fit: BoxFit.contain,
+                    color: _A.green, // ✅ green icon (remove if your png already has green)
+                  ),
                 ),
               ),
+
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12.8,
-                    fontWeight: FontWeight.w700,
-                    color: _A.text,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500, // Medium
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFF181919),
                   ),
                 ),
               ),
+
               const SizedBox(width: 8),
               InkWell(
                 onTap: onMore,
