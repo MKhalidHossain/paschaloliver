@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:paschaloliver/app_ground.dart';
 import 'package:paschaloliver/core/constants/app_colors.dart';
+import 'package:paschaloliver/feature/user/app_ground_user.dart';
 
 import '../../../core/constants/assets.dart';
 import 'account_type_view.dart';
@@ -158,7 +159,7 @@ class WelcomeScreenView extends StatelessWidget {
               const SizedBox(height: 20),
 
               TextButton(
-                onPressed: () => Get.to(() => AppGround()),
+                onPressed: () => Get.to(() => UserAppGround()),
                 child: Text(
                   'Continue as a guest',
                   textAlign: TextAlign.center,

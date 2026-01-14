@@ -1,8 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 import '../../../core/constants/assets.dart'; // Images.welcome, Images.google
+import 'package:flutter/gestures.dart';
+
+import '../../profile/view/privacy_policy_screen.dart';
+import '../../profile/view/terms_and_condition_screen.dart';
 
 class HandyLoginScreen extends StatelessWidget {
   const HandyLoginScreen({super.key});
@@ -308,39 +314,97 @@ class _DividerLine extends StatelessWidget {
   }
 }
 
-class _TermsAndPrivacyText extends StatelessWidget {
-  const _TermsAndPrivacyText();
+
+
+
+
+class _TermsAndPrivacyText extends StatefulWidget {
+  const _TermsAndPrivacyText({
+    this.onTermsTap,
+    this.onPrivacyTap,
+  });
+
+  final VoidCallback? onTermsTap;
+  final VoidCallback? onPrivacyTap;
+
+  @override
+  State<_TermsAndPrivacyText> createState() => _TermsAndPrivacyTextState();
+}
+
+class _TermsAndPrivacyTextState extends State<_TermsAndPrivacyText> {
+  late final TapGestureRecognizer _terms;
+  late final TapGestureRecognizer _privacy;
+
+  static const Color _grey = Color(0xFF727272); // Figma Gray
+  static const Color _green = Color(0xFF3FA96B); // Green Primary
+
+  @override
+  void initState() {
+    super.initState();
+    _terms = TapGestureRecognizer()..onTap = _handleTerms;
+    _privacy = TapGestureRecognizer()..onTap = _handlePrivacy;
+  }
+
+  @override
+  void didUpdateWidget(covariant _TermsAndPrivacyText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // keep recognizers, just update callbacks behavior
+    _terms.onTap = _handleTerms;
+    _privacy.onTap = _handlePrivacy;
+  }
+
+  void _handleTerms() {
+    if (widget.onTermsTap != null) widget.onTermsTap!();
+  }
+
+  void _handlePrivacy() {
+    if (widget.onPrivacyTap != null) widget.onPrivacyTap!();
+  }
+
+  @override
+  void dispose() {
+    _terms.dispose();
+    _privacy.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final baseStyle = GoogleFonts.poppins(
+      fontSize: 10,
+      fontWeight: FontWeight.w400, // Regular
+      height: 1.2, // 120%
+      letterSpacing: 0,
+      color: _grey,
+    );
+
+    final linkStyle = baseStyle.copyWith(color: _green);
+
     return Text.rich(
       TextSpan(
-        text: 'By creating an account, I accept the ',
-        style: const TextStyle(
-          fontFamily: 'Urbanist',
-          fontSize: 11,
-          color: Colors.black54,
-          height: 1.4,
-        ),
+        style: baseStyle,
         children: [
+          const TextSpan(text: 'By creating an account, I accept the '),
           TextSpan(
             text: 'Terms and Conditions',
-            style: TextStyle(
-              color: Colors.blue.shade600,
-              fontWeight: FontWeight.w600,
-            ),
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => Get.to(() => const TermsConditionsScreen()),
           ),
-          const TextSpan(text: ' and\nconfirm that I have read the '),
+          const TextSpan(text: ' and confirm that I have read the '),
           TextSpan(
             text: 'Privacy policy.',
-            style: TextStyle(
-              color: Colors.blue.shade600,
-              fontWeight: FontWeight.w600,
-            ),
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => Get.to(() => const PrivacyPolicyScreen()),
           ),
+
         ],
       ),
       textAlign: TextAlign.center,
+      softWrap: true,
     );
   }
 }
+
+
