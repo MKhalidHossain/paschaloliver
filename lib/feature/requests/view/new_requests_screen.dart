@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/requests/view/request_details_screen.dart';
 import '../models/requests_model.dart';
 
@@ -114,13 +115,16 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Text(
-                'Requests History',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: _C.green,
+                "Requests History",
+                style: GoogleFonts.urbanist(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600, // SemiBold
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
+
             ),
             const SizedBox(height: 14),
 
@@ -129,21 +133,31 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: TabBar(
                 controller: _tabController,
-                labelColor: _C.text,
+                labelColor: const Color(0xFF181919),
                 unselectedLabelColor: _C.subtext,
-                labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12.5),
-                unselectedLabelStyle:
-                const TextStyle(fontWeight: FontWeight.w500, fontSize: 12.5),
+                labelStyle: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.2, // 120%
+                  letterSpacing: 0,
+                ),
+                unselectedLabelStyle: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.2, // 120%
+                  letterSpacing: 0,
+                ),
                 indicatorColor: _C.green,
                 indicatorWeight: 2.5,
                 dividerColor: Colors.transparent,
                 tabs: const [
                   Tab(text: 'New Requests'),
                   Tab(text: 'Completed'),
-                  Tab(text: 'Canceled'),
+                  Tab(text: 'Cancelled'),
                 ],
               ),
             ),
+
 
             const SizedBox(height: 8),
 

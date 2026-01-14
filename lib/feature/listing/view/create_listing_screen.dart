@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/assets.dart';
 import 'list_home_category_screen.dart'; // ✅ update path if needed
@@ -68,25 +69,29 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
 
               const SizedBox(height: 10),
 
-              const Text(
+              Text(
                 "Create your listing",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: CreateListingScreen.green,
-                  height: 1.1,
+                style: GoogleFonts.urbanist(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600, // SemiBold
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
+
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 "Select or search for the service you want you offer",
-                style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w500,
-                  color: CreateListingScreen.muted,
-                  height: 1.25,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400, // Regular
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
+
 
               const SizedBox(height: 14),
 

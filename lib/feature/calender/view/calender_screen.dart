@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../listing/view/create_listing_screen.dart';
 
@@ -166,28 +167,33 @@ class _CalendarEmptyListing extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 34),
-          const Text(
+          Text(
             "Calendar",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
-              height: 1.15,
-              color: Color(0xFF1E1E1E),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.urbanist(
+              fontSize: 24,
+              fontWeight: FontWeight.w500, // Medium
+              height: 1.2, // 120%
+              letterSpacing: 0,
+              color: const Color(0xFF000000),
             ),
           ),
+
           const SizedBox(height: 10),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Text(
               "Your services will appear here",
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-                height: 1.2,
-                color: _muted,
+              style: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w400, // Regular
+                height: 1.1, // 110%
+                letterSpacing: 0,
+                color: const Color(0xFF000000),
               ),
             ),
           ),
+
           const SizedBox(height: 14),
 
           // grey card + button
@@ -203,39 +209,44 @@ class _CalendarEmptyListing extends StatelessWidget {
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(top: 2),
+                  children: [
+                    const Padding(
+                      padding: const EdgeInsets.only(top: 2),
                       child: Icon(
-                        Icons.warning_amber_rounded,
-                        size: 20,
-                        color: Color(0xFF1E1E1E),
+                        Icons.warning_amber_outlined, // outlined = closer to 2px stroke look
+                        size: 21,
+                        color: const Color(0xFF000000),
                       ),
                     ),
-                    SizedBox(width: 10),
+
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "You're not visible yet",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2,
-                              color: Color(0xFF1E1E1E),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700, // Bold
+                              height: 1.2, // 120%
+                              letterSpacing: 0,
+                              color: const Color(0xFF000000),
                             ),
                           ),
-                          SizedBox(height: 4),
+
+                          const SizedBox(height: 4),
                           Text(
                             "Remember that you must complete\nyour listing in order to be booked",
-                            style: TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w400,
-                              height: 1.25,
-                              color: _muted,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400, // Regular
+                              height: 1.1, // 110%
+                              letterSpacing: 0,
+                              color: const Color(0xFF000000),
                             ),
                           ),
+
                         ],
                       ),
                     ),
@@ -254,14 +265,17 @@ class _CalendarEmptyListing extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Complete listing",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500, // Medium
+                        height: 1.1, // 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFFFFFFFF),
                       ),
                     ),
+
                   ),
                 ),
               ],
