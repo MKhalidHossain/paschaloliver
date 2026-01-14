@@ -283,11 +283,14 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                 Checkbox(
                   value: _rememberMe,
                   visualDensity: VisualDensity.compact,
+                  activeColor: const Color(0xFF3FA96B), // ✅ green when checked
+                  checkColor: Colors.white,             // ✅ tick color
                   onChanged: (v) {
                     if (v == null) return;
                     setState(() => _rememberMe = v);
                   },
                 ),
+
                 const SizedBox(width: 2),
                 const Text(
                   'Remember me',

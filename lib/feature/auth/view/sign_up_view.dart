@@ -203,8 +203,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 borderColor: Colors.grey.shade300,
                 icon: Image.asset(
                   Images.google, // TODO: change path
-                  height: 20,
-                  width: 20,
+                  height: 18,
+                  width: 18,
                 ),
                 onTap: () {
                   // TODO: google login
@@ -361,23 +361,25 @@ class _SocialButton extends StatelessWidget {
     return SizedBox(
       height: 48,
       width: double.infinity,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: borderColor),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Row(
-            children: [
-              icon,
-              const SizedBox(width: 12),
-              Expanded(
-                child: Center(
-                  child: Text(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: borderColor),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // ✅ icon+text stay together
+                children: [
+                  icon,
+                  const SizedBox(width: 10),
+                  Text(
                     text,
                     style: TextStyle(
                       fontSize: 14,
@@ -385,13 +387,13 @@ class _SocialButton extends StatelessWidget {
                       color: textColor,
                     ),
                   ),
-                ),
+                ],
               ),
-              const SizedBox(width: 26), // to balance icon space on the right
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
