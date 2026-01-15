@@ -58,10 +58,10 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                 onTap: () => Get.back(),
                 borderRadius: BorderRadius.circular(10),
                 child: const Padding(
-                  padding: EdgeInsets.all(6),
+                  padding: EdgeInsets.all(2),
                   child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 18,
+                    Icons.arrow_back,
+                    size: 20,
                     color: CreateListingScreen.green,
                   ),
                 ),

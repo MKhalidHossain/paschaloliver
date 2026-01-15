@@ -103,6 +103,8 @@ class Images {
 
 
 
+
+
   // profile ====================
 
   static const String edit = 'assets/profile/edit.png';

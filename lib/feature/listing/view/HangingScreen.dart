@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'SmallRepairScreen.dart';
 
@@ -56,7 +57,6 @@ class _HangingScreenState extends State<HangingScreen> {
     }
   }
 
-
   void _saveAndExit() {
     // TODO: Save to backend / controller if needed
     // Example payload:
@@ -91,31 +91,62 @@ class _HangingScreenState extends State<HangingScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        onTap: () => Get.back(),
-                        child: const Padding(
-                          padding: EdgeInsets.all(6),
-                          child: Icon(Icons.arrow_back_ios_new_rounded,
-                              size: 18, color: _brand),
-                        ),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: _saveAndExit,
-                        child: const Text(
-                          "Save and exit",
-                          style: TextStyle(
-                            color: _muted,
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w500,
+
+                  SizedBox(
+                    height: 40, // ✅ consistent header height
+                    child: Row(
+                      children: [
+                        // ✅ Back aligned to left edge
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () => Get.back(),
+                            child: const SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Align(
+                                alignment: Alignment
+                                    .centerLeft, // ✅ perfect left align
+                                child: Icon(
+                                  Icons.arrow_back,
+                                  size: 20,
+                                  color: _brand,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+
+                        const Spacer(),
+
+                        // ✅ Save & exit aligned to right edge and vertically centered
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: _saveAndExit,
+                            child: SizedBox(
+                              height: 40, // ✅ match left side height
+                              child: Center(
+                                child: Text(
+                                  "Save and exit",
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.1,
+                                    letterSpacing: 0,
+                                    color: const Color(0xFF727272),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+
                   const SizedBox(height: 10),
                   const Align(
                     alignment: Alignment.centerLeft,
@@ -138,18 +169,17 @@ class _HangingScreenState extends State<HangingScreen> {
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  border: Border(
-                    top: BorderSide(color: _line, width: 1),
-                  ),
+                  border: Border(top: BorderSide(color: _line, width: 1)),
                 ),
                 child: ListView.separated(
                   padding: EdgeInsets.zero,
                   itemCount: _items.length + (_otherSelected ? 1 : 0),
                   separatorBuilder: (_, __) =>
-                  const Divider(height: 1, thickness: 1, color: _line),
+                      const Divider(height: 1, thickness: 1, color: _line),
                   itemBuilder: (context, index) {
                     // Insert "Other objective" text field under the row when selected
-                    if (_otherSelected && index == _items.indexOf("Other objective") + 1) {
+                    if (_otherSelected &&
+                        index == _items.indexOf("Other objective") + 1) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
                         child: Container(
@@ -158,7 +188,10 @@ class _HangingScreenState extends State<HangingScreen> {
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: const Color(0xFFE7E7E7)),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 10,
+                          ),
                           child: TextField(
                             controller: _otherCtrl,
                             textInputAction: TextInputAction.done,
@@ -183,8 +216,9 @@ class _HangingScreenState extends State<HangingScreen> {
                     }
 
                     // Map index to item when extra field inserted
-                    final adjustedIndex = (_otherSelected &&
-                        index > _items.indexOf("Other objective"))
+                    final adjustedIndex =
+                        (_otherSelected &&
+                            index > _items.indexOf("Other objective"))
                         ? index - 1
                         : index;
 
@@ -258,12 +292,12 @@ class _ProCheckbox extends StatelessWidget {
           ),
           boxShadow: value
               ? [
-            BoxShadow(
-              color: brand.withOpacity(.25),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            )
-          ]
+                  BoxShadow(
+                    color: brand.withOpacity(.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
               : null,
         ),
         child: value

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/assets.dart';
 import 'PriceOfServiceScreen.dart';
@@ -30,7 +31,12 @@ class ListingHomeCategoryScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            10,
+            16,
+            0,
+          ), // ✅ 16 makes width = 343
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,15 +46,31 @@ class ListingHomeCategoryScreen extends StatelessWidget {
               // Progress bar
               _TopProgress(value: _progress),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               // Back
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                color: _green,
-                onPressed: () => Get.back(),
+              // ✅ Back button that is PERFECTLY aligned with the left edge (x = 16)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => Get.back(),
+                    child: const SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Align(
+                        alignment: Alignment.centerLeft, // ✅ important
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 22,
+                          color: ListingHomeCategoryScreen._green,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
 
               const SizedBox(height: 10),
@@ -63,13 +85,14 @@ class ListingHomeCategoryScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 "Select or search for the service you want you offer",
-                style: TextStyle(
-                  fontSize: 12.5,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: _muted,
-                  height: 1.25,
+                  height: 1.1, // Figma 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
 
@@ -87,7 +110,11 @@ class ListingHomeCategoryScreen extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    Icon(Icons.arrow_back_ios_new_rounded, size: 14, color: Color(0xFF6F6F6F)),
+                    Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 14,
+                      color: Color(0xFF6F6F6F),
+                    ),
                     SizedBox(width: 8),
                     Text(
                       "Home",
@@ -241,14 +268,23 @@ class _SearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 12,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: ListingHomeCategoryScreen._fieldBorder, width: 1),
+            borderSide: const BorderSide(
+              color: ListingHomeCategoryScreen._fieldBorder,
+              width: 1,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: ListingHomeCategoryScreen._fieldBorder, width: 1.2),
+            borderSide: const BorderSide(
+              color: ListingHomeCategoryScreen._fieldBorder,
+              width: 1.2,
+            ),
           ),
         ),
       ),
@@ -296,7 +332,12 @@ class _ServiceBubble extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(iconPath, width: 30, height: 30, fit: BoxFit.contain),
+                Image.asset(
+                  iconPath,
+                  width: 30,
+                  height: 30,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 6),
                 Text(
                   label,

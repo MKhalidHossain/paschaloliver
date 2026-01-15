@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'HangingScreen.dart';
 
@@ -38,28 +41,46 @@ class PriceOfServiceScreen extends StatelessWidget {
               // Back + Save and exit
               Row(
                 children: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                    color: _green,
-                    onPressed: () => Get.back(),
+                  // ✅ Back arrow perfectly left-aligned
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () => Get.back(),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Align(
+                          alignment:
+                              Alignment.centerLeft, // ✅ align icon to left edge
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                            color: PriceOfServiceScreen._green, // or _green
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
+
                   const Spacer(),
+
                   TextButton(
-                    onPressed: () {
-                      // TODO: save draft
-                      Get.back();
-                    },
+                    onPressed: () => Get.back(),
                     style: TextButton.styleFrom(
-                      foregroundColor: _muted,
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      padding: EdgeInsets.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       minimumSize: Size.zero,
                     ),
-                    child: const Text(
+                    child: Text(
                       "Save and exit",
-                      style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w500),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        height: 1.1,
+                        letterSpacing: 0,
+                        color: const Color(0xFF727272),
+                      ),
                     ),
                   ),
                 ],
@@ -68,15 +89,20 @@ class PriceOfServiceScreen extends StatelessWidget {
               const SizedBox(height: 10),
 
               // Title
-              const Text(
-                "Price of your service",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: _green,
-                  height: 1.12,
+              SizedBox(
+                width: 343, // ✅ Figma
+                child: Text(
+                  "Price of your service",
+                  style: GoogleFonts.urbanist(
+                    fontSize: 24, // ✅ Figma
+                    fontWeight: FontWeight.w600, // ✅ SemiBold
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFF3FA96B), // ✅ Figma green primary
+                  ),
                 ),
               ),
+
               const SizedBox(height: 6),
 
               // Subtitle
@@ -97,14 +123,21 @@ class PriceOfServiceScreen extends StatelessWidget {
                 onTap: () {
                   // TODO: open info page / bottom sheet
                 },
-                child: const Text(
-                  "How much you will make for my services?",
-                  style: TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w600,
-                    color: _green,
-                    decoration: TextDecoration.underline,
-                    decorationThickness: 1.2,
+                child: SizedBox(
+                  width: 343, // ✅ Figma
+                  child: Text(
+                    "How much you will make for my services?",
+                    textAlign: TextAlign.center, // ✅ Figma center
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16, // ✅ Figma
+                      fontWeight: FontWeight.w600, // ✅ SemiBold
+                      height: 1.1, // ✅ 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFF3FA96B), // ✅ Green Primary
+                      decoration: TextDecoration.underline,
+                      decorationStyle: TextDecorationStyle.solid,
+                      decorationThickness: 1, // keep clean like Figma
+                    ),
                   ),
                 ),
               ),
@@ -215,19 +248,32 @@ class _ServiceRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: PriceOfServiceScreen._text),
+            Icon(icon, size: 32, color: PriceOfServiceScreen._text),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w500,
-                  color: PriceOfServiceScreen._text,
+                style: GoogleFonts.urbanist(
+                  fontSize: 18, // ✅ Figma
+                  fontWeight: FontWeight.w500, // ✅ Medium
+                  height: 1.1, // ✅ 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF727272), // ✅ Figma black text
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, size: 22, color: Color(0xFF9E9E9E)),
+
+            Transform.rotate(
+              angle: math.pi, // ✅ 180° (same as -180°)
+              child: const Icon(
+                Icons
+                    .arrow_back_ios_new_rounded, // looks like "arrow-back-simple"
+                size: 24, // ✅ 24x24
+                color: Color(
+                  0xFF9E9E9E,
+                ), // keep your grey (change if Figma says)
+              ),
+            ),
           ],
         ),
       ),

@@ -121,11 +121,7 @@ class _ViewDetailsState extends State<ViewDetails> {
 
                   // Main card
                   Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: _C.border, width: 1),
-                    ),
+                    
                     child: Column(
                       children: [
                         // Person row
@@ -240,7 +236,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                               ),
                                             ),
                                           ),
-                                          const Icon(Icons.edit_location_alt_outlined, size: 18, color: _C.subtext),
+                                          // const Icon(Icons.edit_location_alt_outlined, size: 18, color: _C.subtext),
                                         ],
                                       ),
                                       const SizedBox(height: 6),
@@ -491,7 +487,7 @@ class AreYouReadyDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 22),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 50),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
