@@ -49,14 +49,14 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
 
             _accountOption(
               title: 'Book a Service',
-              subtitle: '(I am a client)',
+              subtitle: '(I\'m client)',
               value: AccountType.user,
               imagePath: Images.clientIcon,   //
             ),
 
             _accountOption(
               title: 'Offer Services',
-              subtitle: '(I am a professional)',
+              subtitle: '(I\'m a professional)',
               value: AccountType.serviceProvider,
               imagePath: Images.offerIcon,    //
             ),

@@ -79,22 +79,10 @@ class WelcomeScreenView extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
 
-                    // subtitle
-                    // Text(
-                    //   'Doorstep convenience,\nfor any service',
-                    //   textAlign: TextAlign.center,
-                    //   style: GoogleFonts.schoolbell(
-                    //     fontWeight: FontWeight.w400,
-                    //     fontSize: 14,
-                    //     height: 1.2,
-                    //     letterSpacing: 0,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 64 + 5),
+                      padding: const EdgeInsets.only(left: 60),
                       // logo width + gap
                       child: Text(
                         'Doorstep convenience,\nfor any service',

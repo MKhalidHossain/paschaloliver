@@ -19,7 +19,6 @@ import '../../../../../core/constants/assets.dart';
 /// - FloorDoorSheet
 /// ---------------------------------------------------------------------------
 
-
 class AddressFlowController extends GetxController {
   // text controllers
   final searchCtrl = TextEditingController();
@@ -71,7 +70,8 @@ class AddressFlowController extends GetxController {
 
       final perm = await Geolocator.checkPermission();
       hasLocationPermission.value =
-      (perm == LocationPermission.always || perm == LocationPermission.whileInUse);
+          (perm == LocationPermission.always ||
+          perm == LocationPermission.whileInUse);
     } catch (_) {
       hasLocationPermission.value = false;
     }
@@ -89,7 +89,9 @@ class AddressFlowController extends GetxController {
       perm = await Geolocator.requestPermission();
     }
 
-    final ok = (perm == LocationPermission.always || perm == LocationPermission.whileInUse);
+    final ok =
+        (perm == LocationPermission.always ||
+        perm == LocationPermission.whileInUse);
     hasLocationPermission.value = ok;
     return ok;
   }
@@ -187,12 +189,15 @@ class MyAddressesScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: AddressUI.text,
+        // ✅ reduce left empty space
+        leadingWidth: 40, // default is 56
+        titleSpacing: 0, // default adds extra spacing
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
           onPressed: () => Get.back(),
         ),
         centerTitle: false,
-        title:  Text(
+        title: Text(
           "Addresses",
           style: GoogleFonts.urbanist(
             fontSize: 16,
@@ -201,7 +206,6 @@ class MyAddressesScreen extends StatelessWidget {
             color: const Color(0xFF000000),
           ),
         ),
-
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
@@ -210,12 +214,12 @@ class MyAddressesScreen extends StatelessWidget {
           children: [
             Text(
               "Enter the address where the service will be performed\n"
-                  "to show your available professionals.",
+              "to show your available professionals.",
               style: GoogleFonts.urbanist(
                 fontSize: 14,
                 fontWeight: FontWeight.w400, // Regular
-                height: 1.1,                 // 110%
-                color: AddressUI.muted,       // or const Color(0xFF000000)
+                height: 1.1, // 110%
+                color: AddressUI.muted, // or const Color(0xFF000000)
               ),
             ),
             const SizedBox(height: 14),
@@ -238,6 +242,7 @@ class MyAddressesScreen extends StatelessWidget {
                   ),
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
+                  barrierColor: Colors.black.withOpacity(.35),
                 );
               },
             ),
@@ -254,7 +259,10 @@ class MyAddressesScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.location_on_outlined, color: AddressUI.green),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      color: AddressUI.green,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
@@ -275,7 +283,7 @@ class MyAddressesScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -304,63 +312,90 @@ class StreetNumberSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = Get.find<AddressFlowController>();
 
-    return _BottomSheetCard(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    "Street number:",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-                  ),
-                ),
-                _SheetCloseButton(onTap: () => Get.back()),
-              ],
-            ),
-            const SizedBox(height: 10),
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeOut,
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 420),
+            child: Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              clipBehavior: Clip.antiAlias,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "Street number:",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        _SheetCloseButton(onTap: () => Get.back()),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
 
-            Text(
-              placeTitle,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              placeSub,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AddressUI.muted,
-                fontWeight: FontWeight.w600,
+                    Text(
+                      placeTitle,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      placeSub,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AddressUI.muted,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: c.streetNumberCtrl,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AddressUI.fill,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    _GreenButton(
+                      label: "Next",
+                      onTap: () {
+                        Get.back();
+                        Get.to(() => const ServiceAddressMapScreen());
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-
-            const SizedBox(height: 14),
-            TextField(
-              controller: c.streetNumberCtrl,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: AddressUI.fill,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
-
-            _GreenButton(
-              label: "Next",
-              onTap: () {
-                Get.back(); // close sheet
-                Get.to(() => const ServiceAddressMapScreen());
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -422,7 +457,10 @@ class ServiceAddressMapScreen extends StatelessWidget {
                     child: Obx(() {
                       final target = c.selectedLatLng.value;
                       return GoogleMap(
-                        initialCameraPosition: CameraPosition(target: target, zoom: 15),
+                        initialCameraPosition: CameraPosition(
+                          target: target,
+                          zoom: 15,
+                        ),
                         onMapCreated: c.onMapCreated,
                         markers: c.markers,
                         myLocationEnabled: c.hasLocationPermission.value,
@@ -454,8 +492,6 @@ class ServiceAddressMapScreen extends StatelessWidget {
                       onTap: () => Get.to(() => const AddressDetailsScreen()),
                     ),
                   ),
-
-
                 ],
               ),
             ),
@@ -491,7 +527,9 @@ class _ActionButton extends StatelessWidget {
           backgroundColor: background,
           foregroundColor: textColor,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
         child: Text(
           label,
@@ -540,7 +578,9 @@ class AddressSearchScreen extends StatelessWidget {
                   if (q.isEmpty) {
                     c.suggestions.assignAll(all);
                   } else {
-                    c.suggestions.assignAll(all.where((e) => e.toLowerCase().contains(q)));
+                    c.suggestions.assignAll(
+                      all.where((e) => e.toLowerCase().contains(q)),
+                    );
                   }
                 },
               ),
@@ -603,10 +643,17 @@ class AddressDetailsScreen extends StatelessWidget {
                 children: [
                   TextButton.icon(
                     onPressed: () => Get.back(),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: AddressUI.green),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 16,
+                      color: AddressUI.green,
+                    ),
                     label: const Text(
                       "Back",
-                      style: TextStyle(color: AddressUI.green, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        color: AddressUI.green,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const Spacer(),
@@ -615,7 +662,10 @@ class AddressDetailsScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                   ),
                   const Spacer(),
-                  _TinyCircle(icon: Icons.close_rounded, onTap: () => Get.back()),
+                  _TinyCircle(
+                    icon: Icons.close_rounded,
+                    onTap: () => Get.back(),
+                  ),
                 ],
               ),
             ),
@@ -628,7 +678,10 @@ class AddressDetailsScreen extends StatelessWidget {
                     child: Obx(() {
                       final target = c.selectedLatLng.value;
                       return GoogleMap(
-                        initialCameraPosition: CameraPosition(target: target, zoom: 15),
+                        initialCameraPosition: CameraPosition(
+                          target: target,
+                          zoom: 15,
+                        ),
                         onMapCreated: c.onMapCreated,
                         markers: c.markers,
                         myLocationEnabled: c.hasLocationPermission.value,
@@ -644,11 +697,20 @@ class AddressDetailsScreen extends StatelessWidget {
                     top: 54,
                     child: Column(
                       children: [
-                        _MapFloatingBtn(icon: Icons.near_me_outlined, onTap: () async => c.useCurrentLocation()),
+                        _MapFloatingBtn(
+                          icon: Icons.near_me_outlined,
+                          onTap: () async => c.useCurrentLocation(),
+                        ),
                         const SizedBox(height: 10),
-                        _MapFloatingBtn(icon: Icons.add, onTap: () async => c.zoomBy(1)),
+                        _MapFloatingBtn(
+                          icon: Icons.add,
+                          onTap: () async => c.zoomBy(1),
+                        ),
                         const SizedBox(height: 10),
-                        _MapFloatingBtn(icon: Icons.remove, onTap: () async => c.zoomBy(-1)),
+                        _MapFloatingBtn(
+                          icon: Icons.remove,
+                          onTap: () async => c.zoomBy(-1),
+                        ),
                       ],
                     ),
                   ),
@@ -680,7 +742,10 @@ class AddressDetailsScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     c.selectedAddress.value,
-                                    style: const TextStyle(fontWeight: FontWeight.w800, color: AddressUI.text),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      color: AddressUI.text,
+                                    ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
@@ -694,7 +759,10 @@ class AddressDetailsScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const Icon(Icons.chevron_right_rounded, color: AddressUI.muted),
+                            const Icon(
+                              Icons.chevron_right_rounded,
+                              color: Color.fromARGB(255, 15, 14, 14),
+                            ),
                           ],
                         ),
                       );
@@ -732,7 +800,10 @@ class AddressDetailsScreen extends StatelessWidget {
                       maxLines: 4,
                       decoration: InputDecoration(
                         hintText: "Floor, door, apartment, etc.",
-                        hintStyle: const TextStyle(color: AddressUI.muted, fontWeight: FontWeight.w600),
+                        hintStyle: const TextStyle(
+                          color: AddressUI.muted,
+                          fontWeight: FontWeight.w600,
+                        ),
                         filled: true,
                         fillColor: AddressUI.fill,
                         border: OutlineInputBorder(
@@ -812,7 +883,6 @@ class FloorDoorSheet extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-
             ),
 
             const SizedBox(height: 10),
@@ -837,7 +907,7 @@ class FloorDoorSheet extends StatelessWidget {
                 width: 343, // matches Figma width
                 child: Text(
                   "Include additional details of your address (floor, door, apartment, etc) "
-                      "to make it easier for the professional to find your home.",
+                  "to make it easier for the professional to find your home.",
                   textAlign: TextAlign.left,
                   style: GoogleFonts.urbanist(
                     fontSize: 14,
@@ -848,9 +918,6 @@ class FloorDoorSheet extends StatelessWidget {
                 ),
               ),
             ),
-
-
-
 
             const SizedBox(height: 14),
 
@@ -908,7 +975,10 @@ class _SearchField extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               hint,
-              style: const TextStyle(color: AddressUI.muted, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                color: AddressUI.muted,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -954,7 +1024,10 @@ class _SearchBarInline extends StatelessWidget {
               onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: const TextStyle(color: AddressUI.muted, fontWeight: FontWeight.w600),
+                hintStyle: const TextStyle(
+                  color: AddressUI.muted,
+                  fontWeight: FontWeight.w600,
+                ),
                 border: InputBorder.none,
                 isCollapsed: true,
               ),
@@ -987,11 +1060,16 @@ class _PrimaryOutlineButton extends StatelessWidget {
         icon: Icon(icon, size: 18, color: AddressUI.text),
         label: Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.w700, color: AddressUI.text),
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: AddressUI.text,
+          ),
         ),
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: AddressUI.text.withOpacity(.25)),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       ),
     );
@@ -1013,12 +1091,17 @@ class _GreenButton extends StatelessWidget {
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: AddressUI.green,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           elevation: 0,
         ),
         child: Text(
           label,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
     );
@@ -1040,7 +1123,9 @@ class _GreyButton extends StatelessWidget {
           backgroundColor: const Color(0xFFE6E6E6),
           foregroundColor: AddressUI.text,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         child: Text(label, style: const TextStyle(fontWeight: FontWeight.w800)),
       ),
@@ -1061,12 +1146,17 @@ class _WhiteOutlineBtn extends StatelessWidget {
         onPressed: onTap,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: AddressUI.green.withOpacity(.7), width: 1.2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           backgroundColor: Colors.white,
         ),
         child: Text(
           label,
-          style: const TextStyle(color: AddressUI.green, fontWeight: FontWeight.w800),
+          style: const TextStyle(
+            color: AddressUI.green,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
     );
@@ -1100,8 +1190,6 @@ class _BottomSheetCard extends StatelessWidget {
     );
   }
 }
-
-
 
 class _SheetCloseButton extends StatelessWidget {
   const _SheetCloseButton({required this.onTap});
@@ -1144,7 +1232,7 @@ class _TinyCircle extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
           border: Border.all(color: AddressUI.line),
         ),
-        child: Icon(icon, size: 18, color: AddressUI.muted),
+        child: Icon(icon, size: 18, color: const Color.fromARGB(255, 17, 16, 16)),
       ),
     );
   }

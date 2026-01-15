@@ -93,7 +93,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: Colors.white),
+                    Icon(Icons.arrow_back, size: 20, color: Colors.white),
                     SizedBox(width: 6),
                     Text(
                       "Back",
@@ -347,7 +347,7 @@ class _WhiteCircleIcon extends StatelessWidget {
               width: 40,
               height: 40,
               child: Center(
-                child: Icon(icon, color: const Color(0xFF1E1E1E), size: 20),
+                child: Icon(icon, color: const Color(0xFF1E1E1E), size: 26),
               ),
             ),
           ),

@@ -124,7 +124,7 @@ class _BottomSheet extends StatelessWidget {
                   child: Icon(
                     Icons.close,
                     size: 22,
-                    color: Colors.black54,
+                    color: Colors.black87,
                   ),
                 ),
               ),
@@ -188,7 +188,7 @@ class _BottomSheet extends StatelessWidget {
                 'or',
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.black54,
+                  color: Colors.black87,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -309,7 +309,7 @@ class _DividerLine extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 1,
-      color: const Color(0xFFE0E0E0),
+      color: const Color.fromARGB(255, 22, 16, 16),
     );
   }
 }

@@ -178,13 +178,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Icon(
-                        _emailSelected
-                            ? Icons.radio_button_checked
-                            : Icons.radio_button_off,
-                        size: 20,
-                        color: _brandGreen,
-                      ),
+                      
                     ],
                   ),
                 ),

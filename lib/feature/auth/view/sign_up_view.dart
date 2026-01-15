@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: Colors.grey.shade300,
+                      color: const Color.fromARGB(255, 12, 11, 11),
                     ),
                   ),
                   const Padding(
@@ -173,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Expanded(
                     child: Container(
                       height: 1,
-                      color: Colors.grey.shade300,
+                      color: const Color.fromARGB(255, 22, 21, 21),
                     ),
                   ),
                 ],
