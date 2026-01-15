@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/user/home/view/address/address_flow_screens.dart';
 import 'package:paschaloliver/feature/user/home/view/search/search_services_find_screen.dart';
 import 'package:paschaloliver/feature/user/home/view/subcateogry/available_schedule_screen.dart';
 
@@ -136,7 +137,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                   height: 46,
                   width: double.infinity,
                   child: OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => const MyAddressesScreen());
+                    },
                     icon: const Icon(Icons.add, size: 18, color: Colors.white),
                     label: const Text(
                       "Add address",

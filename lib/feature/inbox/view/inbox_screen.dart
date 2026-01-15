@@ -424,6 +424,22 @@ class _HundredIconWidget extends StatelessWidget {
   }
 }
 
+class _AlertItem {
+  final AlertType type;
+  final String title;
+  final String subtitle;
+  final String timeLabel;
+  final VoidCallback? onTap;
+
+  const _AlertItem({
+    required this.type,
+    required this.title,
+    required this.subtitle,
+    required this.timeLabel,
+    this.onTap,
+  });
+}
+
 /// ===========================================================================
 /// ALERTS TAB
 /// ===========================================================================
@@ -467,14 +483,16 @@ class _AlertRow extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.title,
-                          style: const TextStyle(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w700,
-                            color: _C.text,
-                            height: 1.15,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            letterSpacing: 0,
+                            color: const Color(0xFF181919),
                           ),
                         ),
                       ),
+
                       const SizedBox(width: 10),
                       Text(
                         item.timeLabel,
@@ -489,13 +507,16 @@ class _AlertRow extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     item.subtitle,
-                    style: const TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w500,
-                      color: _C.subTextDark,
-                      height: 1.25,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400, // Regular
+                      height: 1.2, // 120%
+                      letterSpacing: 0,
+                      color: const Color(0xFF181919),
                     ),
                   ),
+
+
                 ],
               ),
             ),
@@ -586,21 +607,7 @@ class _ChatItem {
 
 enum AlertType { review, calendar }
 
-class _AlertItem {
-  final AlertType type;
-  final String title;
-  final String subtitle;
-  final String timeLabel;
-  final VoidCallback? onTap;
 
-  const _AlertItem({
-    required this.type,
-    required this.title,
-    required this.subtitle,
-    required this.timeLabel,
-    this.onTap,
-  });
-}
 
 const _demoChats = <_ChatItem>[
   _ChatItem(

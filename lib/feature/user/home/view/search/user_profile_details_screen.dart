@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/user/home/view/search/payment_screen.dart';
 import 'package:paschaloliver/feature/user/home/view/search/rating_screen.dart';
 import 'package:paschaloliver/feature/user/home/view/search/view_availability_screen.dart';
 
@@ -847,7 +848,8 @@ class NicolasProfileScreen extends StatelessWidget {
                   height: 44,
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.to(() => const BookingDetailsScreen());
+                      // Get.to(() => const BookingDetailsScreen());
+                      Get.to(() => const ConfirmAndPayScreen());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _C.green,
@@ -857,7 +859,7 @@ class NicolasProfileScreen extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      "View Availability",
+                      "Continue",
                       style: TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w900,

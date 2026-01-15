@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 
 import '../../../core/constants/assets.dart';
@@ -52,35 +53,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 8),
 
-              // Text(
-              //   'HandyNaija',
-              //   style: TextStyle(
-              //     fontSize: 28,
-              //     fontWeight: FontWeight.w700,
-              //     color: _brandGreen,
-              //     letterSpacing: 0.3,
-              //   ),
-              // ),
+
               const SizedBox(height: 24),
 
               // ------------------ Title & subtitle ------------------
               Text(
                 'Create New Account',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: _textColor,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.urbanist(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600, // SemiBold
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF123055),
                 ),
               ),
+
               const SizedBox(height: 4),
               Text(
-                'Sign up  to get started',
+                'Sign up to get started',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF181919),
                 ),
               ),
+
               const SizedBox(height: 24),
 
               // ------------------ Form fields ------------------
@@ -88,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 6),
               _buildTextField(
                 controller: _fullNameCtrl,
-                hint: 'The king',
+                hint: 'Festus Okonkwo',
                 textInputType: TextInputType.name,
               ),
               const SizedBox(height: 16),
@@ -265,13 +266,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
+        style: GoogleFonts.urbanist(
+          fontSize: 16,
+          fontWeight: FontWeight.w500, // Medium
+          height: 1.1, // 110%
+          letterSpacing: 0,
+          color: const Color(0xFF181919),
         ),
       ),
     );
   }
+
 
   Widget _buildTextField({
     required TextEditingController controller,
@@ -283,12 +288,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       keyboardType: textInputType,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 13,
-          color: _hintColor,
+        hintStyle: GoogleFonts.urbanist(
+          fontSize: 16,
+          fontWeight: FontWeight.w400, // Regular
+          height: 1.1, // 110%
+          letterSpacing: 0,
+          color: const Color(0xFF727272),
         ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
           borderSide: BorderSide(color: _fieldBorder),
@@ -300,6 +307,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
 
   Widget _buildPasswordField({
     required TextEditingController controller,

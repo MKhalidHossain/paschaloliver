@@ -38,9 +38,6 @@ class WelcomeScreenView extends StatelessWidget {
               alignment: Alignment.topCenter,
             ),
 
-
-
-
             // ✅ logo + texts on wallpaper (top)
             SafeArea(
               child: Padding(
@@ -56,7 +53,7 @@ class WelcomeScreenView extends StatelessWidget {
                       children: [
                         Image.asset(
                           Images.wellcomeappLogo,
-                          width: 64,  // ✅ Figma: 80
+                          width: 64, // ✅ Figma: 80
                           height: 46, // ✅ Figma: 58
                           fit: BoxFit.contain,
                           // if your logo is black and you need white:
@@ -68,37 +65,48 @@ class WelcomeScreenView extends StatelessWidget {
                           'HandyNaija',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.notoSansTaiTham(
-                            fontSize: 24,                 // ✅ Figma: 24px
-                            fontWeight: FontWeight.w600,  // ✅ closest to 586 (SemiBold)
-                            height: 1.2,                  // ✅ 120%
-                            letterSpacing: 0,             // ✅ 0%
-                            color: Colors.white,          // ✅ #FFFFFF
+                            fontSize: 24,
+                            // ✅ Figma: 24px
+                            fontWeight: FontWeight.w600,
+                            // ✅ closest to 586 (SemiBold)
+                            height: 1.2,
+                            // ✅ 120%
+                            letterSpacing: 0,
+                            // ✅ 0%
+                            color: Colors.white, // ✅ #FFFFFF
                           ),
                         ),
-
-
                       ],
                     ),
 
                     const SizedBox(height: 4),
 
                     // subtitle
-                    Text(
-                      'Doorstep convenience,\nfor any service',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.schoolbell(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.2,
-                        letterSpacing: 0,
-                        color: Colors.white,
+                    // Text(
+                    //   'Doorstep convenience,\nfor any service',
+                    //   textAlign: TextAlign.center,
+                    //   style: GoogleFonts.schoolbell(
+                    //     fontWeight: FontWeight.w400,
+                    //     fontSize: 14,
+                    //     height: 1.2,
+                    //     letterSpacing: 0,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 64 + 5),
+                      // logo width + gap
+                      child: Text(
+                        'Doorstep convenience,\nfor any service',
+                        textAlign: TextAlign.left,
+                        style: GoogleFonts.schoolbell(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          height: 1.2,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-
-
-
-
-
                   ],
                 ),
               ),

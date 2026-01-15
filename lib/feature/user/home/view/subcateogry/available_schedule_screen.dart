@@ -261,19 +261,7 @@ class AvailabilityScheduleScreen extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-                    Center(
-                      child: Text(
-                        "Reach 3h to avoid a surcharge of ₦11.00",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500, // Medium
-                          height: 1.1, // 110%
-                          letterSpacing: 0,
-                          color: const Color(0xFF181919),
-                        ),
-                      ),
-                    ),
+
 
                     const SizedBox(height: 10),
 
@@ -298,7 +286,7 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            "Select start time",
+                            "Search Professionals",
                             style: GoogleFonts.urbanist(
                               fontSize: 16,
                               fontWeight: FontWeight.w500, // Medium
