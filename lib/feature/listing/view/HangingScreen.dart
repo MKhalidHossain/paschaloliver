@@ -148,15 +148,19 @@ class _HangingScreenState extends State<HangingScreen> {
                   ),
 
                   const SizedBox(height: 10),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Hanging",
-                      style: TextStyle(
-                        color: _brand,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        height: 1.1,
+                    child: SizedBox(
+                      width: 343, // ✅ Figma
+                      child: Text(
+                        "Hanging",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 24, // ✅ Figma
+                          fontWeight: FontWeight.w600, // ✅ SemiBold
+                          height: 1.1, // ✅ 110%
+                          letterSpacing: 0,
+                          color: const Color(0xFF3FA96B), // ✅ Green Primary
+                        ),
                       ),
                     ),
                   ),
@@ -168,8 +172,13 @@ class _HangingScreenState extends State<HangingScreen> {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(top: BorderSide(color: _line, width: 1)),
+                  border: Border(
+                    top: BorderSide(color: _line, width: 1),
+                    bottom: BorderSide(
+                      color: _line,
+                      width: 1,
+                    ), // ✅ adds last line
+                  ),
                 ),
                 child: ListView.separated(
                   padding: EdgeInsets.zero,
