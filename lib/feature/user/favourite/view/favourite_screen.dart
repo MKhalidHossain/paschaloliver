@@ -193,7 +193,7 @@ class _FavoriteRow extends StatelessWidget {
             ),
 
             const SizedBox(width: 10),
-            const Icon(Icons.chevron_right_rounded, color: Color(0xFF8B8B8B), size: 22),
+            const Icon(Icons.chevron_right_rounded, color: Color.fromARGB(255, 26, 22, 22), size: 22),
           ],
         ),
       ),

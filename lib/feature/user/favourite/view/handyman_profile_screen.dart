@@ -18,17 +18,12 @@ class HandymanProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _TopBar(
-              title: "Handyman",
-              onBack: () => Get.back(),
-            ),
+            _TopBar(title: "Handyman", onBack: () => Get.back()),
             const Divider(height: 1, thickness: 1, color: _line),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-                children: const [
-                  _ProfileCard(),
-                ],
+                children: const [_ProfileCard()],
               ),
             ),
           ],
@@ -62,7 +57,11 @@ class _TopBar extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
               child: Row(
                 children: [
-                  Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _green),
+                  Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 18,
+                    color: _green,
+                  ),
                   SizedBox(width: 6),
                   Text(
                     "Profile",
@@ -292,22 +291,49 @@ class _ProfileCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: _InfoChip(icon: Icons.badge_outlined, text: "Business Profile")),
+                    Expanded(
+                      child: _InfoChip(
+                        icon: Icons.badge_outlined,
+                        text: "Business Profile",
+                      ),
+                    ),
                     SizedBox(width: 10),
-                    Expanded(child: _InfoChip(icon: Icons.repeat_rounded, text: "7 have repeated")),
+                    Expanded(
+                      child: _InfoChip(
+                        icon: Icons.repeat_rounded,
+                        text: "7 have repeated",
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 10),
                 Row(
                   children: [
-                    Expanded(child: _InfoChip(icon: Icons.calendar_month_outlined, text: "Updated schedule")),
+                    Expanded(
+                      child: _InfoChip(
+                        icon: Icons.calendar_month_outlined,
+                        text: "Updated schedule",
+                      ),
+                    ),
                     SizedBox(width: 10),
-                    Expanded(child: _InfoChip(icon: Icons.attach_money_rounded, text: "Minimum charge ₦30")),
+                    Expanded(
+                      child: _InfoChip(
+                        icon: Icons.attach_money_rounded,
+                        text: "Minimum charge ₦30",
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
+
+          const SizedBox(
+            width: 350,
+            child: Divider(height: 0, thickness: 0.7, color: Color.fromARGB(255, 22, 17, 17)),
+          ),
+
+          const SizedBox(height: 4,),
 
           // photos
           SizedBox(
@@ -367,12 +393,7 @@ class FavoritesEmptyScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const Divider(
-              height: 1,
-              thickness: 2,
-              color: Color(0xFFE5EEFF),
-            ),
-
+            const Divider(height: 1, thickness: 2, color: Color(0xFFE5EEFF)),
 
             Expanded(
               child: Padding(
@@ -408,7 +429,7 @@ class FavoritesEmptyScreen extends StatelessWidget {
                       style: GoogleFonts.urbanist(
                         fontSize: 16,
                         fontWeight: FontWeight.w500, // Medium
-                        height: 1.2,                 // 120%
+                        height: 1.2, // 120%
                         color: const Color(0xFF727272),
                       ),
                     ),
@@ -457,22 +478,17 @@ class _VerifiedDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Image.asset(
+      Images.checkBadgeIcon,
       width: 8,
       height: 8,
-      decoration: const BoxDecoration(
-        color: Color(0xFF2FA86A),
-        shape: BoxShape.circle,
-      ),
+      fit: BoxFit.contain,
     );
   }
 }
 
 class _InfoChip extends StatelessWidget {
-  const _InfoChip({
-    required this.icon,
-    required this.text,
-  });
+  const _InfoChip({required this.icon, required this.text});
 
   final IconData icon;
   final String text;
@@ -511,7 +527,6 @@ class _InfoChip extends StatelessWidget {
   }
 }
 
-
 class _Stars extends StatelessWidget {
   const _Stars({required this.rating});
   final double rating;
@@ -524,11 +539,25 @@ class _Stars extends StatelessWidget {
     final stars = <Widget>[];
     for (int i = 0; i < 5; i++) {
       if (i < full) {
-        stars.add(const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF4B400)));
+        stars.add(
+          const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF4B400)),
+        );
       } else if (i == full && half) {
-        stars.add(const Icon(Icons.star_half_rounded, size: 14, color: Color(0xFFF4B400)));
+        stars.add(
+          const Icon(
+            Icons.star_half_rounded,
+            size: 14,
+            color: Color(0xFFF4B400),
+          ),
+        );
       } else {
-        stars.add(const Icon(Icons.star_border_rounded, size: 14, color: Color(0xFFF4B400)));
+        stars.add(
+          const Icon(
+            Icons.star_border_rounded,
+            size: 14,
+            color: Color(0xFFF4B400),
+          ),
+        );
       }
     }
     return Row(children: stars);

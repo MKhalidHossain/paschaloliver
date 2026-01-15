@@ -377,6 +377,7 @@ class RequestCard extends StatelessWidget {
               _PrimaryButton(
                 text: 'View Details',
                 onTap: onViewDetails,
+
               )
             else
               Row(
@@ -429,6 +430,7 @@ class _PrimaryButton extends StatelessWidget {
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
                 fontSize: 14.5,
+                
               ),
             ),
           ),

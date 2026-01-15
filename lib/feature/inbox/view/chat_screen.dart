@@ -133,11 +133,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       if (x == null) return;
 
       setState(() {
-        _messages.add(_Msg.image(
-          who: _Who.me,
-          time: _nowLabel(),
-          path: x.path,
-        ));
+        _messages.add(
+          _Msg.image(who: _Who.me, time: _nowLabel(), path: x.path),
+        );
       });
       _scrollToBottom();
     } catch (e) {
@@ -154,11 +152,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       if (x == null) return;
 
       setState(() {
-        _messages.add(_Msg.image(
-          who: _Who.me,
-          time: _nowLabel(),
-          path: x.path,
-        ));
+        _messages.add(
+          _Msg.image(who: _Who.me, time: _nowLabel(), path: x.path),
+        );
       });
       _scrollToBottom();
     } catch (e) {
@@ -179,12 +175,14 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       if (path == null) return;
 
       setState(() {
-        _messages.add(_Msg.file(
-          who: _Who.me,
-          time: _nowLabel(),
-          fileName: f.name,
-          path: path,
-        ));
+        _messages.add(
+          _Msg.file(
+            who: _Who.me,
+            time: _nowLabel(),
+            fileName: f.name,
+            path: path,
+          ),
+        );
       });
       _scrollToBottom();
     } catch (e) {
@@ -194,9 +192,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   void _toast(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   // =============================================================================
@@ -229,11 +225,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                   CircleAvatar(
                     radius: 16,
                     backgroundColor: const Color(0xFFDADADA),
-                    backgroundImage: (widget.avatarUrl == null || widget.avatarUrl!.isEmpty)
+                    backgroundImage:
+                        (widget.avatarUrl == null || widget.avatarUrl!.isEmpty)
                         ? null
                         : NetworkImage(widget.avatarUrl!),
-                    child: (widget.avatarUrl == null || widget.avatarUrl!.isEmpty)
-                        ? const Icon(Icons.person, size: 16, color: Color(0xFF666666))
+                    child:
+                        (widget.avatarUrl == null || widget.avatarUrl!.isEmpty)
+                        ? const Icon(
+                            Icons.person,
+                            size: 16,
+                            color: Color(0xFF666666),
+                          )
                         : null,
                   ),
                   const SizedBox(width: 10),
@@ -274,59 +276,14 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
             // ✅ Service completed block
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "Service completed:",
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w600,
-                      color: _C.subText,
-                      height: 1.2,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Thursday 09/10 - 12:25 - 15:15",
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w800,
-                      color: _C.green,
-                      height: 1.2,
-                    ),
-                  ),
-                ],
-              ),
+            // ✅ Replace BOTH blocks with this single widget call:
+            _ServiceMetaBar(
+              title: "Service completed:",
+              timeLine: "Thursday 09/10 - 12:25 - 15:15",
+              onService: () {},
+              onShare: () {},
             ),
 
-            // ✅ Action chips row
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _ChipBtn(
-                      icon: Icons.home_outlined,
-                      label: "Service",
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _ChipBtn(
-                      icon: Icons.ios_share_rounded,
-                      label: "Share profile",
-                      onTap: () {},
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 10),
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
             // ✅ Messages
@@ -433,6 +390,132 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ServiceMetaBar extends StatelessWidget {
+  const _ServiceMetaBar({
+    required this.title,
+    required this.timeLine,
+    required this.onService,
+    required this.onShare,
+  });
+
+  final String title;
+  final String timeLine;
+  final VoidCallback onService;
+  final VoidCallback onShare;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: _C.divider,
+            width: 1,
+          ), // ✅ one bottom line only
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: _C.subText,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            timeLine,
+            style: const TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w800,
+              color: _C.green,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start, // or center
+              children: [
+                SizedBox(
+                  width: 140,
+                  height: 36,
+                  child: _ActionChip(
+                    icon: Icons.home_outlined,
+                    label: "Service",
+                    onTap: () {},
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 140,
+                  height: 36,
+                  child: _ActionChip(
+                    icon: Icons.ios_share_rounded,
+                    label: "Share profile",
+                    onTap: () {},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActionChip extends StatelessWidget {
+  const _ActionChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 36,
+      child: Material(
+        color: _C.chipBg,
+        borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 16, color: _C.subTextDark),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: _C.text,
+                  height: 1.1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -566,6 +649,7 @@ class _ChipBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 34,
+      width: 20,
       child: Material(
         color: _C.chipBg,
         borderRadius: BorderRadius.circular(10),
@@ -606,7 +690,8 @@ class _TextBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final align = isMe ? Alignment.centerRight : Alignment.centerLeft;
+    // ✅ TOP align (upper)
+    final align = isMe ? Alignment.topRight : Alignment.topLeft;
     final cross = isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
 
     final radius = BorderRadius.only(
@@ -619,6 +704,8 @@ class _TextBubble extends StatelessWidget {
     return Align(
       alignment: align,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start, // ✅ keep upper
         crossAxisAlignment: cross,
         children: [
           Container(
@@ -630,6 +717,7 @@ class _TextBubble extends StatelessWidget {
             ),
             child: Text(
               text,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -641,6 +729,7 @@ class _TextBubble extends StatelessWidget {
           const SizedBox(height: 3),
           Text(
             time,
+            textAlign: isMe ? TextAlign.right : TextAlign.left,
             style: const TextStyle(fontSize: 10, color: _C.subText),
           ),
           const SizedBox(height: 10),
@@ -651,11 +740,7 @@ class _TextBubble extends StatelessWidget {
 }
 
 class _ImageBubble extends StatelessWidget {
-  const _ImageBubble({
-    required this.isMe,
-    required this.time,
-    this.path,
-  });
+  const _ImageBubble({required this.isMe, required this.time, this.path});
 
   final bool isMe;
   final String time;
@@ -670,7 +755,9 @@ class _ImageBubble extends StatelessWidget {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -680,17 +767,12 @@ class _ImageBubble extends StatelessWidget {
               color: const Color(0xFFEDEDED),
               alignment: Alignment.center,
               child: (file != null && file.existsSync())
-                  ? Image.file(
-                file,
-                width: 220,
-                height: 140,
-                fit: BoxFit.cover,
-              )
+                  ? Image.file(file, width: 220, height: 140, fit: BoxFit.cover)
                   : const Icon(
-                Icons.image_outlined,
-                size: 40,
-                color: Color(0xFF9A9A9A),
-              ),
+                      Icons.image_outlined,
+                      size: 40,
+                      color: Color(0xFF9A9A9A),
+                    ),
             ),
           ),
           const SizedBox(height: 4),
@@ -707,6 +789,7 @@ class _ImageBubble extends StatelessWidget {
 /// ===========================================================================
 
 enum _Who { me, other }
+
 enum _MsgKind { text, image }
 
 class _Msg {
@@ -730,14 +813,9 @@ class _Msg {
     required _Who who,
     required String text,
     required String time,
-  }) =>
-      _Msg._(who: who, kind: _MsgKind.text, text: text, time: time);
+  }) => _Msg._(who: who, kind: _MsgKind.text, text: text, time: time);
 
-  factory _Msg.image({
-    required _Who who,
-    required String time,
-    String? path,
-  }) =>
+  factory _Msg.image({required _Who who, required String time, String? path}) =>
       _Msg._(who: who, kind: _MsgKind.image, time: time, path: path);
 
   factory _Msg.file({
@@ -745,14 +823,13 @@ class _Msg {
     required String time,
     required String fileName,
     required String path,
-  }) =>
-      _Msg._(
-        who: who,
-        kind: _MsgKind.text,
-        time: time,
-        text: fileName, // shows file name in normal bubble
-        path: path,
-      );
+  }) => _Msg._(
+    who: who,
+    kind: _MsgKind.text,
+    time: time,
+    text: fileName, // shows file name in normal bubble
+    path: path,
+  );
 }
 
 /// ===========================================================================

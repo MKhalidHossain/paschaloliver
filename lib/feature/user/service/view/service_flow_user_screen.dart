@@ -166,7 +166,9 @@ class _UserServicesScreenState extends State<UserServicesScreen>
                 indicatorColor: _green,
                 indicatorWeight: 2,
                 labelColor: const Color(0xFF181919),
-                unselectedLabelColor: const Color(0xFF181919), // change if Figma differs
+                unselectedLabelColor: const Color(
+                  0xFF181919,
+                ), // change if Figma differs
                 labelStyle: GoogleFonts.urbanist(
                   fontSize: 16,
                   fontWeight: FontWeight.w500, // Medium
@@ -210,10 +212,7 @@ class _UserServicesScreenState extends State<UserServicesScreen>
 /* ============================ UPCOMING TAB ============================ */
 
 class _UpcomingTab extends StatelessWidget {
-  const _UpcomingTab({
-    required this.upcoming,
-    required this.repeatSuggestions,
-  });
+  const _UpcomingTab({required this.upcoming, required this.repeatSuggestions});
 
   final List<_ServiceItem> upcoming;
   final List<_ServiceItem> repeatSuggestions;
@@ -239,7 +238,7 @@ class _UpcomingTab extends StatelessWidget {
         // If there are upcoming services, show list (like 3rd screenshot)
         if (hasUpcoming) ...[
           ...upcoming.map(
-                (e) => Padding(
+            (e) => Padding(
               padding: const EdgeInsets.only(bottom: 14),
               child: _UpcomingServiceCard(
                 item: e,
@@ -269,7 +268,7 @@ class _UpcomingTab extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           ...repeatSuggestions.map(
-                (e) => _UpcomingServiceCard(
+            (e) => _UpcomingServiceCard(
               item: e,
               onViewDetails: () {
                 // TODO: navigate
@@ -287,10 +286,7 @@ class _UpcomingTab extends StatelessWidget {
 }
 
 class _UpcomingEmptyState extends StatelessWidget {
-  const _UpcomingEmptyState({
-    required this.imageAsset,
-    required this.text,
-  });
+  const _UpcomingEmptyState({required this.imageAsset, required this.text});
 
   final String imageAsset;
   final String text;
@@ -309,11 +305,7 @@ class _UpcomingEmptyState extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Image.asset(
-            imageAsset,
-            height: 120,
-            fit: BoxFit.contain,
-          ),
+          Image.asset(imageAsset, height: 120, fit: BoxFit.contain),
           const SizedBox(height: 10),
           Text(
             text,
@@ -353,7 +345,7 @@ class _PastTab extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         ...items.map(
-              (e) => Padding(
+          (e) => Padding(
             padding: const EdgeInsets.only(bottom: 14),
             child: _PastServiceCard(
               item: e,
@@ -380,7 +372,7 @@ class _CanceledTab extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
       children: [
         ...items.map(
-              (e) => Padding(
+          (e) => Padding(
             padding: const EdgeInsets.only(bottom: 14),
             child: _CanceledServiceCard(item: e),
           ),
@@ -480,10 +472,11 @@ class _UpcomingServiceCard extends StatelessWidget {
                           "₦${(item.pricePerHour ?? 20.50).toStringAsFixed(2)}",
                           style: const TextStyle(
                             fontFamily: "Urbanist",
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w800,
-                            color: _green,
-                            height: 1.1,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.1, // ✅ 110%
+                            letterSpacing: 0, // ✅ 0%
+                            color: Color(0xFF3FA96B), // ✅ Green Primary
                           ),
                         ),
                         const SizedBox(width: 6),
@@ -491,10 +484,11 @@ class _UpcomingServiceCard extends StatelessWidget {
                           "Per hour",
                           style: TextStyle(
                             fontFamily: "Urbanist",
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w600,
-                            color: _muted,
-                            height: 1.1,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400, // Regular (400)
+                            height: 1.1, // 110%
+                            letterSpacing: 0,
+                            color: Color(0xFF727272), // Gray
                           ),
                         ),
                       ],
@@ -514,6 +508,21 @@ class _UpcomingServiceCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
+
+                        const Text(
+                          "|",
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            height: 1.2, // 120%
+                            letterSpacing: 0,
+                            color: Color(0xFF3B3B3B), // Black text
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+
                         Text(
                           item.reviewsText ?? "4,323 Reviews",
                           style: GoogleFonts.urbanist(
@@ -550,7 +559,8 @@ class _UpcomingServiceCard extends StatelessWidget {
                     style: GoogleFonts.urbanist(
                       fontSize: 12,
                       fontWeight: FontWeight.w500, // Medium
-                      height: 1.1,
+                      height: 1.1, // 110%
+                      letterSpacing: 0,
                       color: const Color(0xFF3B3B3B),
                     ),
                   ),
@@ -627,7 +637,7 @@ class _UpcomingServiceCard extends StatelessWidget {
                   fontSize: 16,
                   fontWeight: FontWeight.w500, // Medium
                   height: 1.1,
-                  color: Colors.white,         // change if your button text isn't white
+                  color: Colors.white, // change if your button text isn't white
                   decoration: TextDecoration.underline,
                   decorationStyle: TextDecorationStyle.solid,
                 ),
@@ -641,10 +651,7 @@ class _UpcomingServiceCard extends StatelessWidget {
 }
 
 class _PastServiceCard extends StatelessWidget {
-  const _PastServiceCard({
-    required this.item,
-    required this.onRepeat,
-  });
+  const _PastServiceCard({required this.item, required this.onRepeat});
 
   final _ServiceItem item;
   final VoidCallback onRepeat;
@@ -710,7 +717,9 @@ class _PastServiceCard extends StatelessWidget {
                               fontSize: 12,
                               fontWeight: FontWeight.w400, // Regular
                               height: 1.1,
-                              color: const Color(0xFF3B3B3B), // use #727272 if your design uses that
+                              color: const Color(
+                                0xFF3B3B3B,
+                              ), // use #727272 if your design uses that
                             ),
                           ),
                         ),
@@ -732,7 +741,7 @@ class _PastServiceCard extends StatelessWidget {
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w400, // Regular
-                            height: 1.2,                 // 120%
+                            height: 1.2, // 120%
                             color: const Color(0xFF18191A),
                           ),
                         ),
@@ -865,7 +874,7 @@ class _CanceledServiceCard extends StatelessWidget {
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               fontWeight: FontWeight.w400, // Regular
-                              height: 1.2,                 // 120%
+                              height: 1.2, // 120%
                               color: const Color(0xFF3B3B3B),
                             ),
                           ),
@@ -966,13 +975,8 @@ class _VerifiedDot extends StatelessWidget {
   }
 }
 
-
 class _InfoChip extends StatelessWidget {
-  const _InfoChip({
-    required this.icon,
-    required this.text,
-    required this.bg,
-  });
+  const _InfoChip({required this.icon, required this.text, required this.bg});
 
   final IconData icon;
   final String text;
@@ -985,7 +989,9 @@ class _InfoChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE5EEFF)), // if you use this border
+        border: Border.all(
+          color: const Color(0xFFE5EEFF),
+        ), // if you use this border
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1011,7 +1017,6 @@ class _InfoChip extends StatelessWidget {
   }
 }
 
-
 class _Stars extends StatelessWidget {
   const _Stars({required this.rating});
   final double rating;
@@ -1024,14 +1029,25 @@ class _Stars extends StatelessWidget {
     final stars = <Widget>[];
     for (int i = 0; i < 5; i++) {
       if (i < full) {
-        stars.add(const Icon(Icons.star_rounded,
-            size: 14, color: Color(0xFFF4B400)));
+        stars.add(
+          const Icon(Icons.star_rounded, size: 14, color: Color(0xFFF4B400)),
+        );
       } else if (i == full && half) {
-        stars.add(const Icon(Icons.star_half_rounded,
-            size: 14, color: Color(0xFFF4B400)));
+        stars.add(
+          const Icon(
+            Icons.star_half_rounded,
+            size: 14,
+            color: Color(0xFFF4B400),
+          ),
+        );
       } else {
-        stars.add(const Icon(Icons.star_border_rounded,
-            size: 14, color: Color(0xFFF4B400)));
+        stars.add(
+          const Icon(
+            Icons.star_border_rounded,
+            size: 14,
+            color: Color(0xFFF4B400),
+          ),
+        );
       }
     }
     return Row(children: stars);

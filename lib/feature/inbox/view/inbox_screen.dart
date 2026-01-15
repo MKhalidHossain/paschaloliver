@@ -106,17 +106,19 @@ class _Tabs extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabBar(
       labelColor: const Color(0xFF727272),
-      unselectedLabelColor: const Color(0xFF727272), // change if Figma shows different
+      // unselectedLabelColor: const Color(0xFF727272), // change if Figma shows different
       labelStyle: GoogleFonts.urbanist(
         fontSize: 16,
         fontWeight: FontWeight.w700,
         height: 1.2,
       ),
+      unselectedLabelColor: const Color(0xFF727272),
       unselectedLabelStyle: GoogleFonts.urbanist(
         fontSize: 16,
-        fontWeight: FontWeight.w700, // set w500 if your unselected is lighter
-        height: 1.2,
+        fontWeight: FontWeight.w500, // ✅ Medium 500
+        height: 1.2, // ✅ 120%
       ),
+
       indicatorColor: _C.line,
       indicatorWeight: 2,
       indicatorSize: TabBarIndicatorSize.tab,
@@ -149,7 +151,10 @@ class _ChatList extends StatelessWidget {
       return Center(
         child: Text(
           emptyText ?? "No chats yet.",
-          style: const TextStyle(color: _C.subText, fontWeight: FontWeight.w600),
+          style: const TextStyle(
+            color: _C.subText,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       );
     }
@@ -157,22 +162,17 @@ class _ChatList extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 16),
       itemCount: items.length,
-      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _C.divider),
+      separatorBuilder: (_, __) =>
+          const Divider(height: 1, thickness: 1, color: _C.divider),
       itemBuilder: (context, i) {
-        return _ChatRow(
-          item: items[i],
-          onTap: () => onTapChat(items[i]),
-        );
+        return _ChatRow(item: items[i], onTap: () => onTapChat(items[i]));
       },
     );
   }
 }
 
 class _ChatRow extends StatelessWidget {
-  const _ChatRow({
-    required this.item,
-    required this.onTap,
-  });
+  const _ChatRow({required this.item, required this.onTap});
 
   final _ChatItem item;
   final VoidCallback onTap;
@@ -191,9 +191,15 @@ class _ChatRow extends StatelessWidget {
               CircleAvatar(
                 radius: 18,
                 backgroundColor: const Color(0xFFDADADA),
-                backgroundImage: item.avatarUrl == null ? null : NetworkImage(item.avatarUrl!),
+                backgroundImage: item.avatarUrl == null
+                    ? null
+                    : NetworkImage(item.avatarUrl!),
                 child: item.avatarUrl == null
-                    ? const Icon(Icons.person, size: 18, color: Color(0xFF666666))
+                    ? const Icon(
+                        Icons.person,
+                        size: 18,
+                        color: Color(0xFF666666),
+                      )
                     : null,
               ),
               const SizedBox(width: 12),
@@ -209,7 +215,8 @@ class _ChatRow extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.urbanist(
-                              fontSize: 14,              // change if your Figma text size differs
+                              fontSize:
+                                  14, // change if your Figma text size differs
                               fontWeight: FontWeight.w500,
                               height: 1.1,
                               color: _C.text,
@@ -290,7 +297,9 @@ class _SecureInfoSheet extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: maxH),
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(18),
+              ),
               child: Container(
                 color: Colors.white,
                 child: Column(
@@ -311,7 +320,11 @@ class _SecureInfoSheet extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
-                        icon: const Icon(Icons.close, size: 18, color: _C.subText),
+                        icon: const Icon(
+                          Icons.close,
+                          size: 18,
+                          color: _C.subText,
+                        ),
                         onPressed: onClose,
                       ),
                     ),
@@ -350,14 +363,14 @@ class _SecureInfoSheet extends StatelessWidget {
                             ),
                             const SizedBox(height: 14),
 
-                            const Text(
-                              "This way you will be protected against scams and our\nsatisfaction guarantee.",
+                            Text(
+                              "This way you will be protected against scams and our satisfaction guarantee.",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: _C.subText,
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w500,
-                                height: 1.35,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400, // Regular
+                                height: 1.2, // 120%
+                                color: const Color(0xFF181919),
                               ),
                             ),
 
@@ -418,7 +431,11 @@ class _HundredIconWidget extends StatelessWidget {
       );
     }
     if (icon is Widget) {
-      return SizedBox(width: 150, height: 150, child: Center(child: icon as Widget));
+      return SizedBox(
+        width: 150,
+        height: 150,
+        child: Center(child: icon as Widget),
+      );
     }
     return const Icon(Icons.verified_user, size: 120, color: _C.green);
   }
@@ -452,7 +469,8 @@ class _AlertsList extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 16),
       itemCount: items.length,
-      separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _C.divider),
+      separatorBuilder: (_, __) =>
+          const Divider(height: 1, thickness: 1, color: _C.divider),
       itemBuilder: (context, i) => _AlertRow(item: items[i]),
     );
   }
@@ -515,8 +533,6 @@ class _AlertRow extends StatelessWidget {
                       color: const Color(0xFF181919),
                     ),
                   ),
-
-
                 ],
               ),
             ),
@@ -538,7 +554,9 @@ class _AlertIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = type == AlertType.review ? Icons.emoji_events_outlined : Icons.calendar_month_outlined;
+    final icon = type == AlertType.review
+        ? Icons.emoji_events_outlined
+        : Icons.calendar_month_outlined;
 
     return SizedBox(
       width: 44,
@@ -556,7 +574,10 @@ class _AlertIcon extends StatelessWidget {
             child: Container(
               width: 16,
               height: 16,
-              decoration: const BoxDecoration(color: _C.green, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                color: _C.green,
+                shape: BoxShape.circle,
+              ),
               child: const Icon(Icons.check, size: 12, color: Colors.white),
             ),
           ),
@@ -607,8 +628,6 @@ class _ChatItem {
 
 enum AlertType { review, calendar }
 
-
-
 const _demoChats = <_ChatItem>[
   _ChatItem(
     name: "YERXON",
@@ -647,19 +666,22 @@ final _demoAlerts = <_AlertItem>[
     type: AlertType.review,
     title: "Rate your service with\nYERXON",
     timeLabel: "Thursday",
-    subtitle: "Let us know how your Cleaning service\nwith YERXON went. Your feedback is very\nimportant for other customers!",
+    subtitle:
+        "Let us know how your Cleaning service\nwith YERXON went. Your feedback is very\nimportant for other customers!",
   ),
   _AlertItem(
     type: AlertType.calendar,
     title: "Your service is about to\nbegin",
     timeLabel: "Thursday",
-    subtitle: "Just a reminder: in 2 hours , you have\nyour Cleaning service with YERXON.\nEnjoy!",
+    subtitle:
+        "Just a reminder: in 2 hours , you have\nyour Cleaning service with YERXON.\nEnjoy!",
   ),
   _AlertItem(
     type: AlertType.calendar,
     title: "Booking request\nconfirmed",
     timeLabel: "Wednesday",
-    subtitle: "Congratulations! YERXON has confirmed\nyour Cleaning booking request. Enjoy\nyour service!",
+    subtitle:
+        "Congratulations! YERXON has confirmed\nyour Cleaning booking request. Enjoy\nyour service!",
   ),
 ];
 
