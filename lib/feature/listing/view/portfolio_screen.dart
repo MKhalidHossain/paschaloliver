@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'AboutMeDescriptionScreen.dart';
@@ -78,7 +79,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       // ),
                       const SizedBox(height: 8),
 
-                      _TopProgressBar(value: _progress, track: _track, fill: _green),
+                      _TopProgressBar(
+                        value: _progress,
+                        track: _track,
+                        fill: _green,
+                      ),
                       const SizedBox(height: 12),
 
                       // Back + Save and exit
@@ -88,19 +93,35 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             onTap: () => Navigator.pop(context),
                             borderRadius: BorderRadius.circular(10),
                             child: const Padding(
-                              padding: EdgeInsets.all(6),
-                              child: Icon(Icons.arrow_back, size: 22, color: _green),
+                              padding: EdgeInsets.all(0),
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 22,
+                                color: _green,
+                              ),
                             ),
                           ),
                           const Spacer(),
                           TextButton(
                             onPressed: () => Navigator.pop(context),
                             style: TextButton.styleFrom(
-                              foregroundColor: _muted,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                              textStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            child: const Text("Save and exit"),
+                            child: Text(
+                              "Save and exit",
+                              style: GoogleFonts.urbanist(
+                                fontSize: 16, // ✅ Figma
+                                fontWeight: FontWeight.w500, // ✅ 500 Medium
+                                height: 1.1, // ✅ 110%
+                                letterSpacing: 0,
+                                color: const Color(0xFF727272), // ✅ Figma
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -117,13 +138,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         ),
                       ),
                       const SizedBox(height: 6),
-                      const Text(
+                      Text(
                         "Add service related photos as portfolio to do your listing",
-                        style: TextStyle(
-                          color: _text,
-                          fontSize: 12.8,
-                          fontWeight: FontWeight.w400,
-                          height: 1.3,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14, // ✅ Figma
+                          fontWeight: FontWeight.w400, // ✅ Regular
+                          height: 1.1, // ✅ 110%
+                          letterSpacing: 0,
+                          color: const Color(0xFF000000),
                         ),
                       ),
 
@@ -132,10 +154,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       // ✅ RED PORTION behavior:
                       // - if no images => only Add more
                       // - if images exist => show images + Add more at end
-                      _GalleryTilesRow(
-                        images: _images,
-                        onAddMore: _onAddMore,
-                      ),
+                      _GalleryTilesRow(images: _images, onAddMore: _onAddMore),
 
                       const SizedBox(height: 18),
 
@@ -160,7 +179,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  border: Border(top: BorderSide(color: Color(0xFFEDEDED), width: 1)),
+                  border: Border(
+                    top: BorderSide(color: Color(0xFFEDEDED), width: 1),
+                  ),
                 ),
                 child: SizedBox(
                   height: 52,
@@ -170,7 +191,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _green,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: const Text(
                       "Continue",
@@ -194,10 +217,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 /* --------------------------- Widgets --------------------------- */
 
 class _GalleryTilesRow extends StatelessWidget {
-  const _GalleryTilesRow({
-    required this.images,
-    required this.onAddMore,
-  });
+  const _GalleryTilesRow({required this.images, required this.onAddMore});
 
   final List<File> images;
   final VoidCallback onAddMore;
@@ -206,11 +226,7 @@ class _GalleryTilesRow extends StatelessWidget {
   Widget build(BuildContext context) {
     // ✅ First time: ONLY Add more
     if (images.isEmpty) {
-      return Row(
-        children: [
-          _AddMoreTile(onTap: onAddMore),
-        ],
-      );
+      return Row(children: [_AddMoreTile(onTap: onAddMore)]);
     }
 
     // ✅ After adding: show images + Add more at end
@@ -309,15 +325,18 @@ class _AddMoreTile extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add, size: 22, color: Color(0xFF5C5C5C)),
-            SizedBox(height: 6),
+          children: [
+            const Icon(Icons.add, size: 22, color: Color(0xFF5C5C5C)),
+            const SizedBox(height: 6),
             Text(
               "Add more",
-              style: TextStyle(
-                color: Color(0xFF5C5C5C),
-                fontSize: 12.5,
-                fontWeight: FontWeight.w500,
+              textAlign: TextAlign.center, // ✅ Center align (Figma)
+              style: GoogleFonts.urbanist(
+                fontSize: 14, // ✅ 14px
+                fontWeight: FontWeight.w400, // ✅ Regular (400)
+                height: 1.1, // ✅ 110%
+                letterSpacing: 0, // ✅ 0%
+                color: const Color(0xFF000000), // ✅ #000000
               ),
             ),
           ],
@@ -328,10 +347,7 @@ class _AddMoreTile extends StatelessWidget {
 }
 
 class _TipsCard extends StatelessWidget {
-  const _TipsCard({
-    required this.title,
-    required this.items,
-  });
+  const _TipsCard({required this.title, required this.items});
 
   final String title;
   final List<_TipItem> items;
@@ -359,12 +375,15 @@ class _TipsCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              color: Color(0xFF4A4A4A),
-              fontSize: 14.5,
-              fontWeight: FontWeight.w600,
+            style: GoogleFonts.urbanist(
+              fontSize: 20, // ✅ Figma
+              fontWeight: FontWeight.w600, // ✅ SemiBold
+              height: 1.1, // ✅ 110%
+              letterSpacing: 0,
+              color: const Color(0xFF727272), // ✅ Figma
             ),
           ),
+
           const SizedBox(height: 10),
           ...items.map((e) {
             final icon = e.good ? Icons.check_rounded : Icons.close_rounded;

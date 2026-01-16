@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'InstallationScreen.dart';
 
 class FurnitureAssemblyScreen extends StatefulWidget {
   const FurnitureAssemblyScreen({super.key});
 
   @override
-  State<FurnitureAssemblyScreen> createState() => _FurnitureAssemblyScreenState();
+  State<FurnitureAssemblyScreen> createState() =>
+      _FurnitureAssemblyScreenState();
 }
 
 class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
@@ -65,7 +67,7 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
                     onTap: () => Navigator.pop(context),
                     borderRadius: BorderRadius.circular(10),
                     child: const Padding(
-                      padding: EdgeInsets.all(6),
+                      padding: EdgeInsets.all(2),
                       child: Icon(Icons.arrow_back, size: 22, color: _green),
                     ),
                   ),
@@ -73,11 +75,20 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
-                      foregroundColor: _muted,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      textStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500),
+                      padding: EdgeInsets.zero, // ✅ don’t change layout
+                      minimumSize: Size.zero, // ✅ remove default min size
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text("Save and exit"),
+                    child: Text(
+                      "Save and exit",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16, // ✅ Figma
+                        fontWeight: FontWeight.w500, // ✅ Medium
+                        height: 1.1, // ✅ 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFF727272),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -85,13 +96,14 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
               const SizedBox(height: 6),
 
               // ✅ title
-              const Text(
+              Text(
                 "Furniture assembly",
-                style: TextStyle(
-                  color: _green,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  height: 1.15,
+                style: GoogleFonts.urbanist(
+                  fontSize: 24, // ✅ Figma
+                  fontWeight: FontWeight.w600, // ✅ SemiBold
+                  height: 1.1, // ✅ 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
 
@@ -117,16 +129,20 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
                                 Expanded(
                                   child: Text(
                                     item.title,
-                                    style: const TextStyle(
-                                      color: Color(0xFF2B2B2B),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 18, // ✅ Figma
+                                      fontWeight: FontWeight.w500, // ✅ Medium
+                                      height: 1.1, // ✅ 110%
+                                      letterSpacing: 0,
+                                      color: const Color(0xFF3B3B3B), // ✅ Figma
                                     ),
                                   ),
                                 ),
+
                                 _GreySquareCheck(
                                   value: item.checked,
-                                  onTap: () => _toggleAndMaybeGo(i, !item.checked),
+                                  onTap: () =>
+                                      _toggleAndMaybeGo(i, !item.checked),
                                   borderColor: _boxBorder,
                                   fillColor: _boxFill,
                                   checkColor: _green,
@@ -232,7 +248,9 @@ class _GreySquareCheck extends StatelessWidget {
           borderRadius: BorderRadius.circular(3),
           border: Border.all(color: borderColor, width: 1.2),
         ),
-        child: value ? Icon(Icons.check_rounded, size: 18, color: checkColor) : null,
+        child: value
+            ? Icon(Icons.check_rounded, size: 18, color: checkColor)
+            : null,
       ),
     );
   }

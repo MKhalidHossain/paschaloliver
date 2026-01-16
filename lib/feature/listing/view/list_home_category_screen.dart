@@ -111,8 +111,8 @@ class ListingHomeCategoryScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: const [
                     Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      size: 14,
+                      Icons.arrow_back,
+                      size: 20,
                       color: Color(0xFF6F6F6F),
                     ),
                     SizedBox(width: 8),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'add_screen.dart';
 
 class InstallationScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _InstallationScreenState extends State<InstallationScreen> {
                     onTap: () => Navigator.pop(context),
                     borderRadius: BorderRadius.circular(10),
                     child: const Padding(
-                      padding: EdgeInsets.all(6),
+                      padding: EdgeInsets.all(1),
                       child: Icon(Icons.arrow_back, size: 22, color: _green),
                     ),
                   ),
@@ -76,11 +77,23 @@ class _InstallationScreenState extends State<InstallationScreen> {
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     style: TextButton.styleFrom(
-                      foregroundColor: _muted,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      textStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ), // keep if you want
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text("Save and exit"),
+                    child: Text(
+                      "Save and exit",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16, // ✅ Figma
+                        fontWeight: FontWeight.w500, // ✅ Medium
+                        height: 1.1, // ✅ 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFF727272), // ✅ Figma
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -88,13 +101,14 @@ class _InstallationScreenState extends State<InstallationScreen> {
               const SizedBox(height: 6),
 
               // title
-              const Text(
+              Text(
                 "Installation",
-                style: TextStyle(
-                  color: _green,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  height: 1.15,
+                style: GoogleFonts.urbanist(
+                  fontSize: 24, // ✅ Figma
+                  fontWeight: FontWeight.w600, // ✅ SemiBold
+                  height: 1.1, // ✅ 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
 
@@ -119,13 +133,16 @@ class _InstallationScreenState extends State<InstallationScreen> {
                                 Expanded(
                                   child: Text(
                                     _items[i],
-                                    style: const TextStyle(
-                                      color: Color(0xFF2B2B2B),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 18, // ✅ Figma
+                                      fontWeight: FontWeight.w500, // ✅ Medium
+                                      height: 1.1, // ✅ 110%
+                                      letterSpacing: 0,
+                                      color: const Color(0xFF3B3B3B), // ✅ Figma
                                     ),
                                   ),
                                 ),
+
                                 _GreySquareCheck(
                                   value: _selected[i],
                                   onTap: () => _toggleAndGo(i),
@@ -199,9 +216,9 @@ class _GreySquareCheck extends StatelessWidget {
   const _GreySquareCheck({
     required this.value,
     required this.onTap,
-    required this.borderColor,
-    required this.fillColor,
-    required this.checkColor,
+    this.borderColor = const Color(0xFF727272), // ✅ Figma
+    this.fillColor = const Color(0xFFE4E4E4),   // ✅ Figma
+    this.checkColor = const Color(0xFF181919),  // choose your check color
   });
 
   final bool value;
@@ -214,16 +231,23 @@ class _GreySquareCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(3),
+      borderRadius: BorderRadius.circular(2), // ✅ radius 2
       child: Container(
-        width: 28,
-        height: 28,
+        width: 30,  // ✅ 30x30
+        height: 30, // ✅ 30x30
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: fillColor,
-          borderRadius: BorderRadius.circular(3),
-          border: Border.all(color: borderColor, width: 1.2),
+          color: fillColor, // ✅ #E4E4E4
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(color: borderColor, width: 1), // ✅ 1px
         ),
-        child: value ? Icon(Icons.check_rounded, size: 18, color: checkColor) : null,
+        child: value
+            ? Icon(
+                Icons.check_rounded,
+                size: 18, // adjust if your Figma check is smaller/larger
+                color: checkColor,
+              )
+            : null,
       ),
     );
   }

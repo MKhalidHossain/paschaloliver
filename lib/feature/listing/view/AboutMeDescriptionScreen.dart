@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AboutMeScreen extends StatefulWidget {
   const AboutMeScreen({super.key});
@@ -116,7 +117,11 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                   child: Column(
                     children: [
-                      _TopProgressBar(value: _progress, track: _track, fill: _green),
+                      _TopProgressBar(
+                        value: _progress,
+                        track: _track,
+                        fill: _green,
+                      ),
                       const SizedBox(height: 12),
 
                       Row(
@@ -125,22 +130,36 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                             onTap: _onBack,
                             borderRadius: BorderRadius.circular(10),
                             child: const Padding(
-                              padding: EdgeInsets.all(6),
-                              child: Icon(Icons.arrow_back, size: 22, color: _green),
+                              padding: EdgeInsets.all(2),
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 22,
+                                color: _green,
+                              ),
                             ),
                           ),
                           const Spacer(),
                           TextButton(
                             onPressed: _onSaveAndExit,
                             style: TextButton.styleFrom(
-                              foregroundColor: _muted,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                              textStyle: const TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w500,
+                              foregroundColor: const Color(
+                                0xFF727272,
+                              ), // ✅ #727272
+                              padding: EdgeInsets
+                                  .zero, // ✅ keeps it tight like Figma
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              minimumSize: Size.zero,
+                              textStyle: GoogleFonts.urbanist(
+                                fontSize: 16, // ✅ 16px
+                                fontWeight: FontWeight.w500, // ✅ Medium
+                                height: 1.1, // ✅ 110%
+                                letterSpacing: 0, // ✅ 0%
                               ),
                             ),
-                            child: const Text("Save and exit"),
+                            child: const Text(
+                              "Save and exit",
+                              textAlign: TextAlign.center, // ✅ center
+                            ),
                           ),
                         ],
                       ),
@@ -154,25 +173,34 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "About me",
-                          style: TextStyle(
-                            color: _green,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            height: 1.1,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 24, // ✅ 24px
+                            fontWeight: FontWeight.w600, // ✅ SemiBold (600)
+                            height: 1.1, // ✅ 110%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF3FA96B), // ✅ #3FA96B
                           ),
                         ),
+
                         const SizedBox(height: 8),
-                        const Text(
-                          "Write a brief description about yourself and your\nservices. This will be the first thing client see on your\nprofile, so be as professional as possible.",
-                          style: TextStyle(
-                            color: _muted,
-                            fontSize: 12.8,
-                            height: 1.35,
-                            fontWeight: FontWeight.w400,
+                        SizedBox(
+                          width: 343, // ✅ Figma width (optional)
+                          child: Text(
+                            "Write a brief description about yourself and your services. "
+                            "This will be the first thing client see on your profile, so be as "
+                            "professional as possible.",
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14, // ✅ 14px
+                              fontWeight: FontWeight.w400, // ✅ Regular
+                              height: 1.1, // ✅ 110%
+                              letterSpacing: 0, // ✅ 0%
+                              color: const Color(0xFF000000), // ✅ #000000
+                            ),
                           ),
                         ),
+
                         const SizedBox(height: 14),
 
                         // Textarea box
@@ -181,54 +209,73 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: _border, width: 1),
                           ),
-                          child: TextField(
-                            focusNode: _focus,
-                            controller: _ctrl,
-                            maxLength: _maxLen,
-                            maxLines: 6,
-                            keyboardType: TextInputType.multiline,
-                            style: const TextStyle(
-                              color: _text,
-                              fontSize: 13.5,
-                              height: 1.35,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            decoration: const InputDecoration(
-                              counterText: "", // hide default counter
-                              hintText: "Write a description about you.......",
-                              hintStyle: TextStyle(
-                                color: Color(0xFFB3B3B3),
-                                fontWeight: FontWeight.w500,
+                          child: Stack(
+                            children: [
+                              TextField(
+                                focusNode: _focus,
+                                controller: _ctrl,
+                                maxLength: _maxLen, // 50
+                                maxLines: 6,
+                                keyboardType: TextInputType.multiline,
+                                style: const TextStyle(
+                                  color: _text,
+                                  fontSize: 13.5,
+                                  height: 1.35,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                decoration: const InputDecoration(
+                                  counterText:
+                                      "", // ✅ hide default counter (outside)
+                                  hintText:
+                                      "Write a description about you.......",
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFFB3B3B3),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  // ✅ give extra bottom padding for the inside counter
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                    14,
+                                    12,
+                                    14,
+                                    34,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                                onChanged: (_) {
+                                  if (_showEmptyError &&
+                                      _ctrl.text.trim().isNotEmpty) {
+                                    setState(() => _showEmptyError = false);
+                                  }
+                                },
                               ),
-                              contentPadding: EdgeInsets.fromLTRB(14, 12, 14, 12),
-                              border: InputBorder.none,
-                            ),
-                            onChanged: (_) {
-                              if (_showEmptyError && _ctrl.text.trim().isNotEmpty) {
-                                setState(() => _showEmptyError = false);
-                              } else {
-                                setState(() {});
-                              }
-                            },
+
+                              // ✅ Counter inside box (bottom-right)
+                              Positioned(
+                                right: 12,
+                                bottom: 10,
+                                child: IgnorePointer(
+                                  child:
+                                      ValueListenableBuilder<TextEditingValue>(
+                                        valueListenable: _ctrl,
+                                        builder: (_, v, __) {
+                                          return Text(
+                                            "${v.text.length}/$_maxLen",
+                                            style: const TextStyle(
+                                              fontSize: 12.5,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.1,
+                                              color: Color(0xFF7A7A7A),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
 
                         const SizedBox(height: 6),
-
-                        // Counter right
-                        Row(
-                          children: [
-                            const Spacer(),
-                            Text(
-                              "${_count.clamp(0, _maxLen)}/$_maxLen",
-                              style: const TextStyle(
-                                color: _muted,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
 
                         // Empty error
                         if (_showEmptyError) ...[
@@ -248,32 +295,50 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                         // Tips card
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 14,
+                          ),
                           decoration: BoxDecoration(
                             color: _bgSoft,
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: _border, width: 1),
                           ),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "What's makes a good\ndescription?",
-                                style: TextStyle(
-                                  color: _text,
-                                  fontSize: 15.5,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.15,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 20, // ✅ 20px
+                                  fontWeight:
+                                      FontWeight.w600, // ✅ SemiBold (600)
+                                  height: 1.1, // ✅ 110%
+                                  letterSpacing: 0, // ✅ 0%
+                                  color: const Color(0xFF727272), // ✅ #727272
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              _TipRow(ok: true, text: "Brief your personal description"),
-                              SizedBox(height: 8),
-                              _TipRow(ok: true, text: "Working matehoods"),
-                              SizedBox(height: 8),
-                              _TipRow(ok: true, text: "Why they should book you"),
-                              SizedBox(height: 8),
-                              _TipRow(ok: false, text: "Links to web page"),
+
+                              const SizedBox(height: 10),
+                              const _TipRow(
+                                ok: true,
+                                text: "Brief your personal description",
+                              ),
+                              const SizedBox(height: 8),
+                              const _TipRow(
+                                ok: true,
+                                text: "Working matehoods",
+                              ),
+                              const SizedBox(height: 8),
+                              const _TipRow(
+                                ok: true,
+                                text: "Why they should book you",
+                              ),
+                              const SizedBox(height: 8),
+                              const _TipRow(
+                                ok: false,
+                                text: "Links to web page",
+                              ),
                             ],
                           ),
                         ),
@@ -339,31 +404,39 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                       borderRadius: BorderRadius.circular(999),
                       child: const Padding(
                         padding: EdgeInsets.all(6),
-                        child: Icon(Icons.close, size: 18, color: Color(0xFF6F6F6F)),
+                        child: Icon(
+                          Icons.close,
+                          size: 18,
+                          color: Color(0xFF6F6F6F),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   "Your description doesn't meet\nthe requirements",
-                  style: TextStyle(
-                    color: _green,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    height: 1.15,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 24, // ✅ 24px
+                    fontWeight: FontWeight.w600, // ✅ SemiBold (600)
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: const Color(0xFF3FA96B), // ✅ #3FA96B
                   ),
                 ),
+
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   "The description must be at least 50 character long",
-                  style: TextStyle(
-                    color: Color(0xFF6F6F6F),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    height: 1.3,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14, // ✅ 14px
+                    fontWeight: FontWeight.w400, // ✅ Regular
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: const Color(0xFF000000), // ✅ #000000
                   ),
                 ),
+
                 const SizedBox(height: 18),
                 SizedBox(
                   height: 48,
@@ -417,31 +490,39 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                       borderRadius: BorderRadius.circular(999),
                       child: const Padding(
                         padding: EdgeInsets.all(6),
-                        child: Icon(Icons.close, size: 18, color: Color(0xFF6F6F6F)),
+                        child: Icon(
+                          Icons.close,
+                          size: 18,
+                          color: Color(0xFF6F6F6F),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   "Do you want to leave without\nsaving?",
-                  style: TextStyle(
-                    color: _green,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    height: 1.15,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 24, // ✅ 24px
+                    fontWeight: FontWeight.w600, // ✅ SemiBold (600)
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: const Color(0xFF3FA96B), // ✅ #3FA96B
                   ),
                 ),
+
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   "If you leave without saving, you will loss all the\ninformation completed in this section.",
-                  style: TextStyle(
-                    color: Color(0xFF6F6F6F),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    height: 1.35,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14, // ✅ 14px
+                    fontWeight: FontWeight.w400, // ✅ Regular
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: const Color(0xFF000000), // ✅ #000000
                   ),
                 ),
+
                 const SizedBox(height: 18),
                 Row(
                   children: [
@@ -457,9 +538,15 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             "Leave anyway",
-                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 16, // ✅ 16px
+                              fontWeight: FontWeight.w500, // ✅ Medium (500)
+                              height: 1.1, // ✅ 110%
+                              letterSpacing: 0, // ✅ 0%
+                              color: const Color(0xFF3FA96B), // ✅ #3FA96B
+                            ),
                           ),
                         ),
                       ),
@@ -477,12 +564,14 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             "Stay",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 13.5,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 16, // ✅ 16px
+                              fontWeight: FontWeight.w500, // ✅ Medium (500)
+                              height: 1.1, // ✅ 110%
+                              letterSpacing: 0, // ✅ 0%
+                              color: Colors.white, // ✅ #FFFFFF
                             ),
                           ),
                         ),
@@ -540,20 +629,22 @@ class _TipRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = ok ? Icons.check_rounded : Icons.close_rounded;
-    final color = ok ? const Color(0xFF2FA86A) : const Color(0xFF9E9E9E);
+    final iconColor = ok ? const Color(0xFF2FA86A) : const Color(0xFF9E9E9E);
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 18, color: color),
+        Icon(icon, size: 18, color: iconColor),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              color: Color(0xFF1B1B1B),
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              height: 1.25,
+            style: GoogleFonts.urbanist(
+              fontSize: 14, // ✅ Figma
+              fontWeight: FontWeight.w500, // ✅ Medium (500)
+              height: 1.1, // ✅ 110%
+              letterSpacing: 0, // ✅ 0%
+              color: const Color(0xFF3B3B3B), // ✅ #3B3B3B
             ),
           ),
         ),

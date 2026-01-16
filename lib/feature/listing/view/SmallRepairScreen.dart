@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'FurnitureAssemblyScreen.dart';
 
@@ -65,7 +66,7 @@ class _SmallRepairScreenState extends State<SmallRepairScreen> {
                     borderRadius: BorderRadius.circular(10),
                     onTap: () => Navigator.pop(context),
                     child: const Padding(
-                      padding: EdgeInsets.all(6),
+                      padding: EdgeInsets.all(0),
                       child: Icon(Icons.arrow_back, size: 22),
                     ),
                   ),
@@ -79,11 +80,14 @@ class _SmallRepairScreenState extends State<SmallRepairScreen> {
                         vertical: 8,
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Save and exit",
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w500,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16, // ✅ Figma
+                        fontWeight: FontWeight.w500, // ✅ Medium (500)
+                        height: 1.1, // ✅ 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFF727272),
                       ),
                     ),
                   ),
@@ -93,13 +97,14 @@ class _SmallRepairScreenState extends State<SmallRepairScreen> {
               const SizedBox(height: 8),
 
               // Title
-              const Text(
+              Text(
                 "Small Repair",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: _Colors.green,
-                  height: 1.1,
+                style: GoogleFonts.urbanist(
+                  fontSize: 24, // ✅ Figma
+                  fontWeight: FontWeight.w600, // ✅ SemiBold (600)
+                  height: 1.1, // ✅ 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF3FA96B),
                 ),
               ),
 
@@ -158,15 +163,17 @@ class _OptionRow extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 15.5,
-              fontWeight: FontWeight.w500,
-              color: _Colors.green,
-              height: 1.2,
+            title, // "cistern repair"
+            style: GoogleFonts.urbanist(
+              fontSize: 18, // ✅ Figma
+              fontWeight: FontWeight.w400, // ✅ Regular (400)
+              height: 1.1, // ✅ 110%
+              letterSpacing: 0,
+              color: const Color(0xFF181919), // ✅ Figma
             ),
           ),
         ),
+
         Theme(
           data: Theme.of(context).copyWith(
             checkboxTheme: CheckboxThemeData(
@@ -183,10 +190,7 @@ class _OptionRow extends StatelessWidget {
           ),
           child: Transform.scale(
             scale: 1.1,
-            child: Checkbox(
-              value: value,
-              onChanged: onChanged,
-            ),
+            child: Checkbox(value: value, onChanged: onChanged),
           ),
         ),
       ],

@@ -42,21 +42,30 @@ class PriceOfServiceScreen extends StatelessWidget {
               Row(
                 children: [
                   // ✅ Back arrow perfectly left-aligned
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () => Get.back(),
-                      child: const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Align(
-                          alignment:
-                              Alignment.centerLeft, // ✅ align icon to left edge
-                          child: Icon(
-                            Icons.arrow_back,
-                            size: 20,
-                            color: PriceOfServiceScreen._green, // or _green
+                  Padding(
+                    padding: const EdgeInsets.all(
+                      0,
+                    ), // ✅ match your screen left padding
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () => Get.back(),
+                        child: SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: Center(
+                            child: Transform.translate(
+                              offset: const Offset(
+                                -2,
+                                0,
+                              ), // ✅ perfect visual align
+                              child: const Icon(
+                                Icons.arrow_back,
+                                size: 20,
+                                color: PriceOfServiceScreen._green,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -72,14 +81,23 @@ class PriceOfServiceScreen extends StatelessWidget {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       minimumSize: Size.zero,
                     ),
-                    child: Text(
-                      "Save and exit",
-                      style: GoogleFonts.urbanist(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        height: 1.1,
-                        letterSpacing: 0,
-                        color: const Color(0xFF727272),
+                    child: SizedBox(
+                      width: 97,
+                      height: 18,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "Save and exit",
+                          maxLines: 1,
+                          overflow: TextOverflow.visible,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            letterSpacing: 0,
+                            color: const Color(0xFF727272),
+                          ),
+                        ),
                       ),
                     ),
                   ),
