@@ -85,6 +85,11 @@ class Images {
   static const String onboarding4 = 'assets/images/image_129.png';
 
 
+  static const String bookmarkIcon = 'assets/images/bookmark-add.png';
+  static const String paymentIcon = 'assets/images/paymentIcon.png';
+  static const String invoiceFileIcon = 'assets/images/invoices-file-06.png';
+
+
   //message
   static const String messageIcon = 'assets/message/message_icon.png';
   static const String calenderIcon = 'assets/message/calendar_icon.png';
@@ -100,6 +105,12 @@ class Images {
 
   static const String congratulationsIcon = 'assets/images/Icon.png';
   static const String addressLocIcon = 'assets/images/Locationm_ marker-pin-06.png';
+  static const String roundIcon = 'assets/images/round.png';
+  static const String logoutIcon = 'assets/images/logout.png';
+  static const String logout2Icon = 'assets/images/log-out-02.png';
+  static const String star2Icon = 'assets/images/star.png';
+
+
 
 
 

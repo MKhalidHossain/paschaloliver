@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TermsConditionsScreen extends StatelessWidget {
   const TermsConditionsScreen({super.key});
@@ -56,19 +57,20 @@ class TermsConditionsScreen extends StatelessWidget {
               ),
             ),
 
-            const Divider(height: 1, thickness: 1, color: _C.divider),
+            // const Divider(height: 1, thickness: 1, color: _C.divider),
 
             // Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
-                child: const Text(
+                child: Text(
                   _DemoText.terms,
-                  style: TextStyle(
-                    fontSize: 12.2,
-                    fontWeight: FontWeight.w500,
-                    color: _C.text,
-                    height: 1.45,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16, // ✅ 16px
+                    fontWeight: FontWeight.w400, // ✅ Regular
+                    height: 1.5, // ✅ 150%
+                    letterSpacing: 0, // ✅ 0%
+                    color: const Color(0xFF000000), // ✅ black
                   ),
                 ),
               ),

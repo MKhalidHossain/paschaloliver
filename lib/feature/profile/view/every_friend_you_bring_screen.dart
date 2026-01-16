@@ -36,13 +36,23 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: const Padding(
                       padding: EdgeInsets.all(6),
-                      child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _C.text),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 18,
+                        color: Colors.green,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     "Share and earn money",
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: _C.text),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700, // Bold
+                      height: 1.1, // 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFF000000),
+                    ),
                   ),
                 ],
               ),
@@ -92,8 +102,6 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                             fit: BoxFit.contain,
                           ),
 
-
-
                           // small round avatars around (like screenshot)
                           Positioned(
                             left: 10,
@@ -131,12 +139,14 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
 
                   const _BulletRow(
                     emoji: "😁",
-                    text: "Earn ₦10 discount for each friend\nyou bring to Handynaija",
+                    text:
+                        "Earn ₦10 discount for each friend\nyou bring to Handynaija",
                   ),
                   const SizedBox(height: 10),
                   const _BulletRow(
                     emoji: "🎁",
-                    text: "By registering with your code, your\nfriends will receive an additional ₦10\nas a gift",
+                    text:
+                        "By registering with your code, your\nfriends will receive an additional ₦10\nas a gift",
                   ),
 
                   const SizedBox(height: 18),
@@ -153,7 +163,9 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFE9E9E9),
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       child: const Text(
                         "Discover code",
@@ -218,12 +230,15 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                       const SizedBox(width: 12),
                       _ShareIcon(
                         bg: const Color(0xFFE5E5E5),
-                        child: const Icon(Icons.more_horiz_rounded, color: _C.text, size: 24),
+                        child: const Icon(
+                          Icons.more_horiz_rounded,
+                          color: _C.text,
+                          size: 24,
+                        ),
                         onTap: () {},
                       ),
                     ],
-                  )
-
+                  ),
                 ],
               ),
             ),
@@ -281,17 +296,13 @@ class _ShareIcon extends StatelessWidget {
       child: Container(
         width: 48,
         height: 48,
-        decoration: BoxDecoration(
-          color: bg,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
         alignment: Alignment.center,
         child: child,
       ),
     );
   }
 }
-
 
 class _MiniUserBubble extends StatelessWidget {
   const _MiniUserBubble({this.isMasked = false});
@@ -309,15 +320,26 @@ class _MiniUserBubble extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Icon(isMasked ? Icons.person : Icons.person_outline_rounded, size: 28, color: const Color(0xFF2F2F2F)),
+          Icon(
+            isMasked ? Icons.person : Icons.person_outline_rounded,
+            size: 28,
+            color: const Color(0xFF2F2F2F),
+          ),
           Positioned(
             right: 6,
             bottom: 6,
             child: Container(
               width: 20,
               height: 20,
-              decoration: const BoxDecoration(color: _C.green, shape: BoxShape.circle),
-              child: const Icon(Icons.add_rounded, size: 14, color: Colors.white),
+              decoration: const BoxDecoration(
+                color: _C.green,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.add_rounded,
+                size: 14,
+                color: Colors.white,
+              ),
             ),
           ),
         ],

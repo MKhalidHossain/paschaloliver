@@ -1,5 +1,8 @@
+import 'package:country_picker/country_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// ------------------------------------------------------------
 /// ✅ Billing Details Screen (UI like your screenshot)
@@ -29,8 +32,57 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
   final _cityCtrl = TextEditingController();
   final _stateCtrl = TextEditingController();
 
-  String _docCountry = "Country of the documents";
   String _country = "Country";
+
+  void _pickCountry() {
+    showCountryPicker(
+      context: context,
+      showPhoneCode: false,
+      useSafeArea: true,
+      countryListTheme: CountryListThemeData(
+        borderRadius: BorderRadius.circular(18),
+        inputDecoration: InputDecoration(
+          hintText: "Search country",
+          filled: true,
+          fillColor: _C.fieldBg,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 12,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: _C.line),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: _C.line),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: _C.green.withOpacity(.6)),
+          ),
+        ),
+      ),
+      onSelect: (Country c) {
+        setState(() => _country = c.name);
+      },
+    );
+  }
+
+  PlatformFile? _docFile;
+
+  Future<void> _pickDocument() async {
+    final res = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+    );
+
+    if (res != null && res.files.isNotEmpty) {
+      setState(() => _docFile = res.files.single);
+    }
+  }
+
+  void _removeDocument() => setState(() => _docFile = null);
 
   final _countries = const [
     "Nigeria",
@@ -68,19 +120,36 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(.18), blurRadius: 22, offset: const Offset(0, 10))],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(.18),
+                blurRadius: 22,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(width: 46, height: 4, decoration: BoxDecoration(color: const Color(0xFFDADADA), borderRadius: BorderRadius.circular(999))),
+              Container(
+                width: 46,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFDADADA),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     child: Text(
                       title,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: _C.text),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: _C.text,
+                      ),
                     ),
                   ),
                   InkWell(
@@ -89,8 +158,16 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                     child: Container(
                       width: 30,
                       height: 30,
-                      decoration: BoxDecoration(color: _C.fieldBg, borderRadius: BorderRadius.circular(999), border: Border.all(color: _C.line)),
-                      child: const Icon(Icons.close_rounded, size: 16, color: _C.muted),
+                      decoration: BoxDecoration(
+                        color: _C.fieldBg,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: _C.line),
+                      ),
+                      child: const Icon(
+                        Icons.close_rounded,
+                        size: 16,
+                        color: _C.muted,
+                      ),
                     ),
                   ),
                 ],
@@ -110,10 +187,19 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                         Expanded(
                           child: Text(
                             c,
-                            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _C.text),
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w800,
+                              color: _C.text,
+                            ),
                           ),
                         ),
-                        if (sel) const Icon(Icons.check_rounded, color: _C.green, size: 20),
+                        if (sel)
+                          const Icon(
+                            Icons.check_rounded,
+                            color: _C.green,
+                            size: 20,
+                          ),
                       ],
                     ),
                   ),
@@ -140,10 +226,7 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
         child: Column(
           children: [
             const SizedBox(height: 6),
-            _TopBar(
-              title: "Billing details",
-              onBack: () => Get.back(),
-            ),
+            _TopBar(title: "Billing details", onBack: () => Get.back()),
             const SizedBox(height: 6),
 
             Expanded(
@@ -156,14 +239,13 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  _DropdownField(
-                    value: _docCountry,
-                    onTap: () => _openCountryPicker(
-                      title: "Country of the documents",
-                      current: (_docCountry == "Country of the documents") ? "" : _docCountry,
-                      onPick: (v) => setState(() => _docCountry = v),
-                    ),
+                  _UploadField(
+                    title: "Upload document",
+                    fileName: _docFile?.name,
+                    onTap: _pickDocument,
+                    onClear: _docFile == null ? null : _removeDocument,
                   ),
+
                   const SizedBox(height: 10),
 
                   _Field(
@@ -172,16 +254,10 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  _Field(
-                    controller: _streetCtrl,
-                    hint: "Street",
-                  ),
+                  _Field(controller: _streetCtrl, hint: "Street"),
                   const SizedBox(height: 10),
 
-                  _Field(
-                    controller: _numberCtrl,
-                    hint: "Number",
-                  ),
+                  _Field(controller: _numberCtrl, hint: "Number"),
                   const SizedBox(height: 10),
 
                   _Field(
@@ -190,31 +266,19 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                   ),
                   const SizedBox(height: 10),
 
-                  _Field(
-                    controller: _zipCtrl,
-                    hint: "Zip/Postal Code",
-                  ),
+                  _Field(controller: _zipCtrl, hint: "Zip/Postal Code"),
                   const SizedBox(height: 10),
 
-                  _Field(
-                    controller: _cityCtrl,
-                    hint: "City",
-                  ),
+                  _Field(controller: _cityCtrl, hint: "City"),
                   const SizedBox(height: 10),
 
-                  _Field(
-                    controller: _stateCtrl,
-                    hint: "State/Country/Region",
-                  ),
+                  _Field(controller: _stateCtrl, hint: "State/Country/Region"),
                   const SizedBox(height: 10),
 
                   _DropdownField(
                     value: _country,
-                    onTap: () => _openCountryPicker(
-                      title: "Country",
-                      current: (_country == "Country") ? "" : _country,
-                      onPick: (v) => setState(() => _country = v),
-                    ),
+                    placeholder: "Country",
+                    onTap: _pickCountry,
                   ),
                 ],
               ),
@@ -233,15 +297,130 @@ class _BillingDetailsScreenState extends State<BillingDetailsScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _C.green,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                   ),
                   child: const Text(
                     "Save",
-                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DropdownField extends StatelessWidget {
+  const _DropdownField({
+    required this.value,
+    required this.onTap,
+    required this.placeholder,
+  });
+
+  final String value;
+  final String placeholder;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPlaceholder = value == placeholder;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
+      child: Container(
+        height: 44,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: _C.fieldBg,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: _C.line),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  color: isPlaceholder ? _C.muted : _C.text,
+                ),
+              ),
+            ),
+            const Icon(Icons.keyboard_arrow_down_rounded, color: _C.muted),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UploadField extends StatelessWidget {
+  const _UploadField({
+    required this.title,
+    required this.fileName,
+    required this.onTap,
+    this.onClear,
+  });
+
+  final String title;
+  final String? fileName;
+  final VoidCallback onTap;
+  final VoidCallback? onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final isEmpty = (fileName == null || fileName!.isEmpty);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(6),
+      child: Container(
+        height: 44,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: _C.fieldBg,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: _C.line),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                isEmpty ? title : fileName!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  color: isEmpty ? _C.muted : _C.text,
+                ),
+              ),
+            ),
+            if (!isEmpty && onClear != null) ...[
+              InkWell(
+                onTap: onClear,
+                borderRadius: BorderRadius.circular(999),
+                child: const Padding(
+                  padding: EdgeInsets.all(6),
+                  child: Icon(Icons.close_rounded, size: 18, color: _C.muted),
+                ),
+              ),
+              const SizedBox(width: 2),
+            ],
+            const Icon(Icons.upload_file_rounded, color: _C.muted, size: 20),
           ],
         ),
       ),
@@ -267,16 +446,27 @@ class _TopBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: const Padding(
               padding: EdgeInsets.all(6),
-              child: Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: _C.green),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 20,
+                color: _C.green,
+              ),
             ),
           ),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
-              title,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text),
+              title, // "Billing details"
+              style: GoogleFonts.urbanist(
+                fontSize: 16, // ✅ 16px
+                fontWeight: FontWeight.w700, // ✅ Bold
+                height: 1.1, // ✅ 110%
+                letterSpacing: 0,
+                color: const Color(0xFF000000), // ✅ #000000
+              ),
             ),
           ),
+
           const SizedBox(width: 18),
         ],
       ),
@@ -302,51 +492,23 @@ class _Field extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: TextField(
         controller: controller,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _C.text),
+        style: GoogleFonts.urbanist(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          height: 1.1,
+          color: const Color(0xFF18191A),
+ // if your typed text is black
+        ),
         decoration: InputDecoration(
           border: InputBorder.none,
           isDense: true,
           hintText: hint,
-          hintStyle: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: _C.muted),
-        ),
-      ),
-    );
-  }
-}
-
-class _DropdownField extends StatelessWidget {
-  const _DropdownField({required this.value, required this.onTap});
-  final String value;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final isPlaceholder = value == "Country of the documents" || value == "Country";
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(6),
-      child: Container(
-        height: 44,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: _C.fieldBg,
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: _C.line),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w700,
-                  color: isPlaceholder ? _C.muted : _C.text,
-                ),
-              ),
-            ),
-            const Icon(Icons.keyboard_arrow_down_rounded, color: _C.muted),
-          ],
+          hintStyle: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            height: 1.1,
+            color: const Color(0xFF727272), // ✅ Figma hint
+          ),
         ),
       ),
     );

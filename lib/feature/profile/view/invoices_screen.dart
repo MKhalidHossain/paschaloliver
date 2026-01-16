@@ -25,10 +25,7 @@ class InvoicesScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 6),
-            _TopBar(
-              title: "Invoices",
-              onBack: () => Get.back(),
-            ),
+            _TopBar(title: "Invoices", onBack: () => Get.back()),
             const Divider(height: 1, thickness: 1, color: _C.divider),
 
             _MenuTile(
@@ -44,7 +41,8 @@ class InvoicesScreen extends StatelessWidget {
               icon: Icons.perm_identity_outlined,
               title: "Billing Details",
               onTap: () {
-                TODO: Get.to(() => const BillingDetailsScreen());
+                TODO:
+                Get.to(() => const BillingDetailsScreen());
               },
             ),
 
@@ -75,17 +73,14 @@ class _TopBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: const Padding(
               padding: EdgeInsets.all(6),
-              child: Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: _C.green),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 18,
+                color: _C.green,
+              ),
             ),
           ),
           const SizedBox(width: 6),
-          // Expanded(
-          //   child: Text(
-          //     title,
-          //     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text),
-          //   ),
-          // ),
-
           Expanded(
             child: Text(
               title,
@@ -109,7 +104,11 @@ class _TopBar extends StatelessWidget {
 }
 
 class _MenuTile extends StatelessWidget {
-  const _MenuTile({required this.icon, required this.title, required this.onTap});
+  const _MenuTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
 
   final IconData icon;
   final String title;
@@ -129,16 +128,22 @@ class _MenuTile extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: _C.text,
-                    height: 1.2,
+                  title, // "Commission Invoices"
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16, // ✅ 16px
+                    fontWeight: FontWeight.w500, // ✅ Medium (500)
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: const Color(0xFF181919), // ✅ #181919
                   ),
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, size: 22, color: _C.chev),
+
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 22,
+                color: Color.fromARGB(255, 24, 20, 20),
+              ),
             ],
           ),
         ),
@@ -160,7 +165,8 @@ class _LeadingIcon extends StatelessWidget {
         color: _C.iconBg,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Center(child: child),
+      alignment: Alignment.center,
+      child: child,
     );
   }
 }

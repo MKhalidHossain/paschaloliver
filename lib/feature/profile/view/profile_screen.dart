@@ -9,7 +9,6 @@ import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.da
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
-import '../../user/app_ground_user.dart';
 import 'about_screen.dart';
 import 'address_screen.dart';
 import 'change_password_screen.dart';
@@ -31,9 +30,7 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: _C.bg,
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.only(
-            bottom: 18 + bottomBarHeight + bottomInset,
-          ),
+          padding: EdgeInsets.only(bottom: 18 + bottomBarHeight + bottomInset),
           children: [
             const SizedBox(height: 8),
 
@@ -47,7 +44,11 @@ class ProfileScreen extends StatelessWidget {
                   const CircleAvatar(
                     radius: 28,
                     backgroundColor: Color(0xFFD9D9D9),
-                    child: Icon(Icons.person, color: Color(0xFF666666), size: 28),
+                    child: Icon(
+                      Icons.person,
+                      color: Color(0xFF666666),
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -71,7 +72,10 @@ class ProfileScreen extends StatelessWidget {
                           },
                           borderRadius: BorderRadius.circular(6),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 2,
+                              horizontal: 2,
+                            ),
                             child: Text(
                               "View Profile",
                               style: GoogleFonts.urbanist(
@@ -128,7 +132,11 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.person_outline_rounded, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Personal details",
                     onTap: () {
@@ -138,7 +146,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.location_on_outlined, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.location_on_outlined,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "My addresses",
                     onTap: () {
@@ -148,7 +160,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.calendar_today_outlined, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.calendar_today_outlined,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Payment and refunds",
                     onTap: () {
@@ -158,7 +174,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.lock_outline_rounded, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.lock_outline_rounded,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Change password",
                     onTap: () => Get.to(() => const ChangePasswordScreen()),
@@ -166,12 +186,16 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.language_rounded, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.language_rounded,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Language",
                     onTap: () async {
                       final result = await Get.to<LanguageOption>(
-                            () => const ChooseLanguageScreen(initialLocale: "en"),
+                        () => const ChooseLanguageScreen(initialLocale: "en"),
                       );
 
                       if (result != null) {
@@ -214,7 +238,11 @@ class ProfileScreen extends StatelessWidget {
             _ShadowWrap(
               child: _TileRow(
                 leading: const _LeadingIcon(
-                  child: Icon(Icons.swap_horiz_rounded, size: 23, color: _C.green),
+                  child: Icon(
+                    Icons.swap_horiz_rounded,
+                    size: 23,
+                    color: _C.green,
+                  ),
                 ),
                 title: "Switch to Client version",
                 onTap: () {
@@ -253,7 +281,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.share_outlined, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.share_outlined,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Share the HandyNaija App",
                     onTap: () {
@@ -280,7 +312,11 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.headset_mic_outlined, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.headset_mic_outlined,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Help",
                     onTap: () {},
@@ -288,7 +324,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.lightbulb_outline, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.lightbulb_outline,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "How can we improve?",
                     onTap: () {},
@@ -296,7 +336,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.emoji_objects_outlined, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.emoji_objects_outlined,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Privacy Policy",
                     onTap: () => Get.to(() => const PrivacyPolicyScreen()),
@@ -304,7 +348,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.indeterminate_check_box_outlined, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.indeterminate_check_box_outlined,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Terms And Condition",
                     onTap: () => Get.to(() => const TermsConditionsScreen()),
@@ -312,7 +360,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.info_outline_rounded, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.info_outline_rounded,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "About HandyNaija App",
                     onTap: () => Get.to(() => const AboutHandyNaijaScreen()),
@@ -320,7 +372,11 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(Icons.logout_rounded, size: 18, color: _C.green),
+                      child: Icon(
+                        Icons.logout_rounded,
+                        size: 18,
+                        color: _C.green,
+                      ),
                     ),
                     title: "Log out",
                     onTap: () {
@@ -404,42 +460,67 @@ class _RateAppDialogState extends State<_RateAppDialog> {
             Container(
               width: 46,
               height: 46,
-              decoration: BoxDecoration(
-                color: _C.green.withOpacity(.12),
-                shape: BoxShape.circle,
+
+              child: Image.asset(
+                Images.star2Icon,
+                width: 28,
+                height: 28,
+                fit: BoxFit.contain,
               ),
-              child: const Icon(Icons.star_rounded, color: Color(0xFFF4B400), size: 28),
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               "Rate Handynaija App",
-              style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: Color(0xFF111111)),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.urbanist(
+                fontSize: 16, // ✅ 16px
+                fontWeight: FontWeight.w700, // ✅ Bold
+                height: 1.1, // ✅ 110%
+                letterSpacing: 0, // ✅ 0%
+                color: const Color(0xFF000000), // ✅ #000000
+              ),
             ),
+
             const SizedBox(height: 4),
-            const Text(
+            Text(
               "Tap a star to give your rating.",
-              style: TextStyle(fontSize: 11.2, fontWeight: FontWeight.w700, color: Color(0xFF8B8B8B)),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.urbanist(
+                fontSize: 12, // ✅ 12px
+                fontWeight: FontWeight.w400, // ✅ Regular
+                height: 1.2, // ✅ 120%
+                letterSpacing: 0, // ✅ 0%
+                color: const Color(0xFF000000), // ✅ #000000
+              ),
             ),
+
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (i) {
                 final idx = i + 1;
                 final selected = idx <= _rating;
+
                 return InkWell(
                   onTap: () => setState(() => _rating = idx),
                   borderRadius: BorderRadius.circular(10),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
                     child: Icon(
                       selected ? Icons.star_rounded : Icons.star_border_rounded,
-                      size: 26,
-                      color: selected ? const Color(0xFFF4B400) : const Color(0xFFBDBDBD),
+                      size: 32, // ✅ Figma
+                      color: selected
+                          ? const Color(0xFFFFC34D) // ✅ selected
+                          : const Color(0xFF727272), // ✅ unselected
                     ),
                   ),
                 );
               }),
             ),
+
             const SizedBox(height: 14),
             Row(
               children: [
@@ -449,12 +530,23 @@ class _RateAppDialogState extends State<_RateAppDialog> {
                     child: OutlinedButton(
                       onPressed: () => Get.back(),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: _C.green.withOpacity(.55), width: 1.2),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        side: BorderSide(
+                          color: _C.green.withOpacity(.55),
+                          width: 1.2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Cancel",
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.green),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16, // ✅ 16px
+                          fontWeight: FontWeight.w500, // ✅ Medium (500)
+                          height: 1.1, // ✅ 110%
+                          letterSpacing: 0,
+                          color: const Color(0xFF3FA96B), // ✅ #3FA96B
+                        ),
                       ),
                     ),
                   ),
@@ -476,11 +568,19 @@ class _RateAppDialogState extends State<_RateAppDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _C.green,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      child: const Text(
+                      child: Text(
                         "Submit",
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Colors.white),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16, // ✅ 16px
+                          fontWeight: FontWeight.w500, // ✅ Medium (500)
+                          height: 1.1, // ✅ 110%
+                          letterSpacing: 0, // ✅ 0%
+                          color: const Color(0xFFFFFFFF), // ✅ #FFFFFF
+                        ),
                       ),
                     ),
                   ),
@@ -611,7 +711,9 @@ class _OutlineBtn extends StatelessWidget {
         onPressed: onTap,
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Color(0xFF27AE60), width: 1.2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         child: Text(
           label,
@@ -655,7 +757,9 @@ class _GreenBtn extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF27AE60),
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       ),
     );
@@ -684,35 +788,56 @@ class _LogoutConfirmDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 46,
-                height: 46,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: _C.green.withOpacity(.12),
+                  color: const Color(0xFF3FA96B).withOpacity(.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.logout_rounded, color: _C.green, size: 24),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 2.55,
+                  ), // ✅ left & right
+                  child: SizedBox(
+                    width: 42.9, // ✅ 48 - (2.55*2)
+                    height: 48,
+                    child: Image.asset(
+                      Images.logoutIcon, // PNG
+                      fit: BoxFit.contain,
+                      // ✅ tint (only if your PNG is single-color)
+                      color: const Color(0xFF3FA96B),
+                      colorBlendMode: BlendMode.srcIn,
+                    ),
+                  ),
+                ),
               ),
+
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 "Are you sure want to Log out",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: _C.text,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16, // ✅ 16px
+                  fontWeight: FontWeight.w700, // ✅ Bold
+                  height: 1.1, // ✅ 110%
+                  letterSpacing: 0, // ✅ 0%
+                  color: const Color(0xFF000000), // ✅ #000000
                 ),
               ),
+
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 "Tap log out to Log out from this app.",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF8B8B8B),
-                  height: 1.25,
+                style: GoogleFonts.urbanist(
+                  fontSize: 12, // ✅ 12px
+                  fontWeight: FontWeight.w400, // ✅ Regular
+                  height: 1.2, // ✅ 120%
+                  letterSpacing: 0, // ✅ 0%
+                  color: const Color(0xFF000000), // ✅ #000000
                 ),
               ),
+
               const SizedBox(height: 14),
               Row(
                 children: [
@@ -723,16 +848,25 @@ class _LogoutConfirmDialog extends StatelessWidget {
                         onPressed: () => Get.back(),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: _red, width: 1.2),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           backgroundColor: Colors.white,
                           elevation: 0,
                         ),
-                        child: const Text(
+                        child: Text(
                           "Cancel",
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w800,
-                            color: _C.text,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16, // ✅ 16px
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.1, // ✅ 110%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color.fromARGB(
+                              255,
+                              16,
+                              17,
+                              16,
+                            ), // ✅ #3FA96B
                           ),
                         ),
                       ),
@@ -747,15 +881,32 @@ class _LogoutConfirmDialog extends StatelessWidget {
                           Get.back();
                           Get.offAll(() => const HandyEmailLoginScreen());
                         },
-                        icon: const Icon(Icons.logout_rounded, size: 18, color: Colors.white),
-                        label: const Text(
-                          "Log out",
-                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white),
+                        icon: Image.asset(
+                          Images.logout2Icon,
+                          width: 18,
+                          height: 18,
+                          // ✅ tint to white (works best if icon is single-color)
+                          color: Colors.white,
+                          colorBlendMode: BlendMode.srcIn,
                         ),
+
+                        label: Text(
+                          "Log out",
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16, // ✅ 16px
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.1, // ✅ 110%
+                            letterSpacing: 0, // ✅ 0%
+                            color: Colors.white, // ✅ #FFFFFF
+                          ),
+                        ),
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _red,
                           elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
@@ -811,11 +962,7 @@ class _TileRow extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                size: 24,
-                color: _C.chev,
-              ),
+              const Icon(Icons.chevron_right_rounded, size: 24, color: _C.chev),
             ],
           ),
         ),

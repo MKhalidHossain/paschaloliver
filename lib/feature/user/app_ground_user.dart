@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/profile/view/profile_screen_user.dart';
 import 'package:paschaloliver/feature/user/service/view/service_flow_user_screen.dart';
 
 import '../../core/constants/assets.dart';
 import '../inbox/view/inbox_screen.dart';
-import '../profile/view/profile_screen.dart';
 import 'favourite/view/favourite_screen.dart';
 import 'home/view/home_screen.dart';
 
@@ -31,7 +31,7 @@ class UserAppGround extends StatelessWidget {
               // _InboxPage(),
               InboxScreen(),
               // _ProfilePage(),
-              ProfileScreen(),
+              ProfileScreenUser(),
             ],
           ),
         ),

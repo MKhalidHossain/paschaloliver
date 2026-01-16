@@ -77,7 +77,11 @@ class MyCodesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   child: const Padding(
                     padding: EdgeInsets.all(6),
-                    child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _text),
+                    child: Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 18,
+                      color: Colors.green,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -91,7 +95,6 @@ class MyCodesScreen extends StatelessWidget {
                     color: const Color(0xFF000000),
                   ),
                 ),
-
               ],
             ),
 
@@ -110,12 +113,24 @@ class MyCodesScreen extends StatelessWidget {
               child: TextField(
                 controller: c.promoCtrl,
                 textInputAction: TextInputAction.done,
-                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _text),
-                decoration: const InputDecoration(
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF727272),
+                ),
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   isCollapsed: true,
                   hintText: "Enter promo code",
-                  hintStyle: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _muted),
+                  hintStyle: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500, // Medium
+                    height: 1.1,
+                    letterSpacing: 0,
+                    color: const Color(0xFF727272),
+                  ),
                 ),
               ),
             ),
@@ -134,14 +149,18 @@ class MyCodesScreen extends StatelessWidget {
                     backgroundColor: enabled ? _green : _field,
                     disabledBackgroundColor: _field,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: Text(
                     "Add",
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w900,
-                      color: enabled ? Colors.white : _muted,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
+                      letterSpacing: 0,
+                      color: enabled ? Colors.white : const Color(0xFF3D3E40),
                     ),
                   ),
                 ),
@@ -169,10 +188,9 @@ class MyCodesScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Gift icon
-                  Container(
+                  SizedBox(
                     width: 28,
                     height: 28,
-
                     child: Center(
                       child: Image.asset(
                         Images.giftIcon,
@@ -181,23 +199,34 @@ class MyCodesScreen extends StatelessWidget {
                         fit: BoxFit.contain,
                       ),
                     ),
-
                   ),
 
                   const SizedBox(width: 10),
 
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Do you want a ₦10 discount?",
-                          style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: _text),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500, // Medium
+                            height: 1.1, // 110%
+                            letterSpacing: 0,
+                            color: const Color(0xFF000000),
+                          ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           "Share the app with your friends and earn ₦10 when\nthey make their first booking!",
-                          style: TextStyle(fontSize: 10.8, fontWeight: FontWeight.w700, color: _muted, height: 1.25),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400, // Regular
+                            height: 1.1, // 110%
+                            letterSpacing: 0,
+                            color: const Color(0xFF000000),
+                          ),
                         ),
                       ],
                     ),
@@ -233,7 +262,12 @@ class MyCodesScreen extends StatelessWidget {
                   const Text(
                     "When you add a promotional code, it will\nappear here",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _text, height: 1.35),
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: _text,
+                      height: 1.35,
+                    ),
                   ),
                 ],
               ),

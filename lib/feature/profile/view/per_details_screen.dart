@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// ------------------------------------------------------------
@@ -38,7 +39,11 @@ class PersonalDetailsController extends GetxController {
       if (x == null) return;
       avatarPath.value = x.path;
     } catch (e) {
-      Get.snackbar("Camera", "Camera error: $e", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Camera",
+        "Camera error: $e",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -51,7 +56,11 @@ class PersonalDetailsController extends GetxController {
       if (x == null) return;
       avatarPath.value = x.path;
     } catch (e) {
-      Get.snackbar("Photos", "Gallery error: $e", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Photos",
+        "Gallery error: $e",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -94,10 +103,7 @@ class PerDetailsScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
           children: [
-            _TopBar(
-              title: "Personal Details",
-              onBack: () => Get.back(),
-            ),
+            _TopBar(title: "Personal Details", onBack: () => Get.back()),
             const SizedBox(height: 22),
 
             // Avatar + camera button (UI SAME, only logic changed)
@@ -118,17 +124,17 @@ class PerDetailsScreen extends StatelessWidget {
 
                         // ✅ show picked image if exists, otherwise show network fallback
                         if (path.isNotEmpty && File(path).existsSync()) {
-                          return Image.file(
-                            File(path),
-                            fit: BoxFit.cover,
-                          );
+                          return Image.file(File(path), fit: BoxFit.cover);
                         }
 
                         return Image.network(
                           "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=300&q=60",
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                          const Icon(Icons.person, size: 40, color: Color(0xFF777777)),
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.person,
+                            size: 40,
+                            color: Color(0xFF777777),
+                          ),
                         );
                       }),
                     ),
@@ -148,7 +154,11 @@ class PerDetailsScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 3),
                         ),
-                        child: const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.white),
+                        child: const Icon(
+                          Icons.camera_alt_rounded,
+                          size: 16,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -159,15 +169,16 @@ class PerDetailsScreen extends StatelessWidget {
             const SizedBox(height: 18),
 
             // Name with counter (0/50)
-            Obx(() {
-              return _Field(
-                controller: c.nameCtrl,
-                hint: "Name",
-                maxLength: 50,
-                suffixText: "${c.nameLen.value}/50",
-                keyboardType: TextInputType.name,
-              );
-            }),
+ Obx(() {
+  return _Field(
+    controller: c.nameCtrl,
+    hint: "Name",
+    maxLength: 50,
+    suffixText: "${c.nameLen.value}/50",
+    keyboardType: TextInputType.name,
+  );
+}),
+
             const SizedBox(height: 12),
 
             _Field(
@@ -192,16 +203,28 @@ class PerDetailsScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   FocusManager.instance.primaryFocus?.unfocus();
-                  Get.snackbar("Saved", "Personal details updated", snackPosition: SnackPosition.BOTTOM);
+                  Get.snackbar(
+                    "Saved",
+                    "Personal details updated",
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _C.green,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-                child: const Text(
+                child: Text(
                   "Save",
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Colors.white),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500, // Medium
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFFFFFFFF),
+                  ),
                 ),
               ),
             ),
@@ -215,19 +238,28 @@ class PerDetailsScreen extends StatelessWidget {
                     _DeleteConfirmDialog(
                       onConfirm: () {
                         Get.back();
-                        Get.snackbar("Account", "Delete requested", snackPosition: SnackPosition.BOTTOM);
+                        Get.snackbar(
+                          "Account",
+                          "Delete requested",
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
                       },
                     ),
                     barrierDismissible: true,
                   );
                 },
-                child: const Text(
+                child: Text(
                   "Delete account permanently",
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                    color: _C.green,
+                  textAlign: TextAlign.center, // Figma: center
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500, // Medium
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: _C.green, // Primary color
                     decoration: TextDecoration.underline,
+                    decorationStyle: TextDecorationStyle.solid,
+                    decorationThickness: 1, // optional: keeps underline clean
                   ),
                 ),
               ),
@@ -241,10 +273,7 @@ class PerDetailsScreen extends StatelessWidget {
 
 /// ---------------- Photo Picker Bottom Sheet (functional only) ----------------
 class _PhotoPickerSheet extends StatelessWidget {
-  const _PhotoPickerSheet({
-    required this.onCamera,
-    required this.onGallery,
-  });
+  const _PhotoPickerSheet({required this.onCamera, required this.onGallery});
 
   final VoidCallback onCamera;
   final VoidCallback onGallery;
@@ -323,7 +352,11 @@ class _SheetItem extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               label,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _C.text),
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: _C.text,
+              ),
             ),
           ],
         ),
@@ -350,11 +383,24 @@ class _TopBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: const Padding(
               padding: EdgeInsets.all(6),
-              child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _C.text),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 18,
+                color: Colors.green,
+              ),
             ),
           ),
           const SizedBox(width: 8),
-          Text(title, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: _C.text)),
+          Text(
+            title,
+            style: GoogleFonts.urbanist(
+              fontSize: 16,
+              fontWeight: FontWeight.w700, // Bold
+              height: 1.1,
+              letterSpacing: 0,
+              color: const Color(0xFF000000),
+            ),
+          ),
         ],
       ),
     );
@@ -365,7 +411,7 @@ class _Field extends StatelessWidget {
   const _Field({
     required this.controller,
     required this.hint,
-    this.suffixText,
+    this.suffixText, // we will show it bottom-right (0/50)
     this.maxLength,
     this.keyboardType,
   });
@@ -378,38 +424,69 @@ class _Field extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasCounter = suffixText != null;
+
     return Container(
+      height: hasCounter ? 56 : 52, // ✅ name field a bit taller (has counter)
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: _C.line),
-        boxShadow: const [BoxShadow(color: Color(0x0F000000), blurRadius: 12, offset: Offset(0, 8))],
+        border: Border.all(color: const Color(0xFFF2F2F2)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000), // subtle shadow like screenshot
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
       ),
-      child: TextField(
-        controller: controller,
-        maxLength: maxLength,
-        keyboardType: keyboardType,
-        style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: _C.text),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w500, color: _C.hint),
-          border: InputBorder.none,
-          counterText: "",
-          contentPadding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-          suffixIcon: suffixText == null
-              ? null
-              : Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                suffixText!,
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: _C.hint),
+      child: Stack(
+        children: [
+          TextField(
+            controller: controller,
+            maxLength: maxLength,
+            keyboardType: keyboardType,
+            style: GoogleFonts.urbanist(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w500,
+              height: 1.1,
+              color: const Color(0xFF111111),
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: GoogleFonts.urbanist(
+                fontSize: 14.5,
+                fontWeight: FontWeight.w400,
+                height: 1.1,
+                color: const Color(0xFF9A9A9A),
+              ),
+              border: InputBorder.none,
+              counterText: "", // ✅ hide default counter
+              contentPadding: EdgeInsets.fromLTRB(
+                14,
+                16,
+                14,
+                hasCounter ? 26 : 16, // ✅ reserve space for bottom counter
               ),
             ),
           ),
-          suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-        ),
+
+          // ✅ Bottom-right counter inside the field (0/50)
+          if (hasCounter)
+            Positioned(
+              right: 14,
+              bottom: 8,
+              child: Text(
+                suffixText!,
+                style: GoogleFonts.urbanist(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  height: 1.1,
+                  color: const Color(0xFF727272),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -430,7 +507,13 @@ class _DeleteConfirmDialog extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          boxShadow: const [BoxShadow(color: Color(0x26000000), blurRadius: 22, offset: Offset(0, 12))],
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x26000000),
+              blurRadius: 22,
+              offset: Offset(0, 12),
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -439,13 +522,22 @@ class _DeleteConfirmDialog extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               "Delete account?",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: _C.text),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: _C.text,
+              ),
             ),
             const SizedBox(height: 6),
             const Text(
               "This action cannot be undone.",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: _C.hint, height: 1.25),
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: _C.hint,
+                height: 1.25,
+              ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -456,10 +548,15 @@ class _DeleteConfirmDialog extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: _C.text,
                       side: const BorderSide(color: _C.line),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text("Cancel", style: TextStyle(fontWeight: FontWeight.w700)),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -469,10 +566,18 @@ class _DeleteConfirmDialog extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _C.green,
                       elevation: 0,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text("Delete", style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white)),
+                    child: const Text(
+                      "Delete",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],

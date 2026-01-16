@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/core/constants/assets.dart';
 import 'package:paschaloliver/feature/profile/view/payment_method_screen.dart';
 
 import 'invoices_screen.dart';
@@ -20,10 +21,7 @@ class PaymentsAndRefundsScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 4),
-            _TopBar(
-              title: "Payments and Refunds",
-              onBack: () => Get.back(),
-            ),
+            _TopBar(title: "Payments and Refunds", onBack: () => Get.back()),
             const SizedBox(height: 10),
 
             // list card
@@ -45,27 +43,21 @@ class PaymentsAndRefundsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _ListTileRow(
-                      icon: Icons.bookmark_border_rounded,
+                      iconAsset: Images.bookmarkIcon,
                       title: "My Bookings",
-                      onTap: () {
-                        TODO: Get.to(() => const MyBookingsScreen());
-                      },
+                      onTap: () => Get.to(() => const MyBookingsScreen()),
                     ),
                     const _RowDivider(),
                     _ListTileRow(
-                      icon: Icons.payments_outlined,
+                      iconAsset: Images.paymentIcon,
                       title: "Payments",
-                      onTap: () {
-                        TODO: Get.to(() => const PaymentMethodsScreen());
-                      },
+                      onTap: () => Get.to(() => const PaymentMethodsScreen()),
                     ),
                     const _RowDivider(),
                     _ListTileRow(
-                      icon: Icons.receipt_long_outlined,
+                      iconAsset: Images.invoiceFileIcon,
                       title: "Invoices",
-                      onTap: () {
-                        TODO: Get.to(() => const InvoicesScreen());
-                      },
+                      onTap: () => Get.to(() => const InvoicesScreen()),
                     ),
                   ],
                 ),
@@ -97,7 +89,11 @@ class _TopBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: const Padding(
               padding: EdgeInsets.all(8),
-              child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _C.text),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 18,
+                color: Colors.green,
+              ),
             ),
           ),
           const SizedBox(width: 6),
@@ -115,7 +111,6 @@ class _TopBar extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -124,12 +119,12 @@ class _TopBar extends StatelessWidget {
 
 class _ListTileRow extends StatelessWidget {
   const _ListTileRow({
-    required this.icon,
+    required this.iconAsset,
     required this.title,
     required this.onTap,
   });
 
-  final IconData icon;
+  final String iconAsset;
   final String title;
   final VoidCallback onTap;
 
@@ -144,26 +139,40 @@ class _ListTileRow extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 34,
-                height: 34,
+                width: 40, // ✅ Figma
+                height: 40, // ✅ Figma
+                padding: const EdgeInsets.all(8), // ✅ Figma padding
                 decoration: BoxDecoration(
-                  color: _C.iconBg,
-                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xFFE4E4E4), // ✅ Figma bg
+                  borderRadius: BorderRadius.circular(4), // ✅ Figma radius
                 ),
-                child: Icon(icon, size: 18, color: _C.green),
+                child: Image.asset(
+                  iconAsset,
+                  fit: BoxFit.contain,
+                  color: _C.green, // keep tint if single-color icon
+                  colorBlendMode: BlendMode.srcIn,
+                ),
               ),
+
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 12.8,
-                    fontWeight: FontWeight.w700,
-                    color: _C.text,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    height: 1.1,
+                    letterSpacing: 0,
+                    color: const Color(0xFF181919),
                   ),
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, size: 22, color: _C.chev),
+
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 22,
+                color: Color.fromARGB(255, 27, 22, 22),
+              ),
             ],
           ),
         ),

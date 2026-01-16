@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'create_listing_screen.dart';
 
@@ -22,8 +23,16 @@ class _MyListingScreenState extends State<MyListingScreen> {
   // ---- Demo data (replace with API/state) ----
   // If this list is empty => empty state screen
   final List<ListingItem> listings = [
-    ListingItem.published(title: "Ironing", subtitle: "Listing visible", tier: "Bronze"),
-    ListingItem.inProgress(title: "Cleaning", subtitle: "Listing not visible yet", progress: 0.70),
+    ListingItem.published(
+      title: "Ironing",
+      subtitle: "Listing visible",
+      tier: "Bronze",
+    ),
+    ListingItem.inProgress(
+      title: "Cleaning",
+      subtitle: "Listing not visible yet",
+      progress: 0.70,
+    ),
   ];
   // ------------------------------------------
 
@@ -68,7 +77,10 @@ class _MyListingScreenState extends State<MyListingScreen> {
                         IconButton(
                           splashRadius: 22,
                           onPressed: () {},
-                          icon: const Icon(Icons.notifications_none_rounded, color: _text),
+                          icon: const Icon(
+                            Icons.notifications_none_rounded,
+                            color: _text,
+                          ),
                         ),
                         Positioned(
                           right: 14,
@@ -89,12 +101,14 @@ class _MyListingScreenState extends State<MyListingScreen> {
               ),
 
               Expanded(
-                child: isEmpty ? _EmptyState(onCreate: _onCreateListing) : _ListingState(
-                  items: listings,
-                  onAddNewListing: _onCreateListing,
-                  onOpenPublished: (it) {},
-                  onOpenIncomplete: (it) {},
-                ),
+                child: isEmpty
+                    ? _EmptyState(onCreate: _onCreateListing)
+                    : _ListingState(
+                        items: listings,
+                        onAddNewListing: _onCreateListing,
+                        onOpenPublished: (it) {},
+                        onOpenIncomplete: (it) {},
+                      ),
               ),
 
               // Bottom Navigation (like screenshot)
@@ -111,10 +125,13 @@ class _MyListingScreenState extends State<MyListingScreen> {
 
   void _onCreateListing() {
     // TODO: navigate to create listing flow
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateListingScreen()));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Create listing tapped")),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CreateListingScreen()),
     );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Create listing tapped")));
   }
 }
 
@@ -170,7 +187,9 @@ class _EmptyState extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: _green,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               icon: const Icon(Icons.add, color: Colors.white),
               label: const Text(
@@ -197,9 +216,7 @@ class _MegaphoneIllustration extends StatelessWidget {
     return SizedBox(
       width: 120,
       height: 120,
-      child: CustomPaint(
-        painter: _MegaphonePainter(),
-      ),
+      child: CustomPaint(painter: _MegaphonePainter()),
     );
   }
 }
@@ -218,7 +235,10 @@ class _MegaphonePainter extends CustomPainter {
     canvas.translate(size.width * .28, size.height * .68);
     canvas.rotate(-0.45);
     canvas.drawRRect(
-      RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.width * .36, size.height * .12), const Radius.circular(8)),
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width * .36, size.height * .12),
+        const Radius.circular(8),
+      ),
       grey,
     );
     canvas.restore();
@@ -242,7 +262,12 @@ class _MegaphonePainter extends CustomPainter {
     // mouth ring
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(size.width * .43, size.height * .44, size.width * .10, size.height * .18),
+        Rect.fromLTWH(
+          size.width * .43,
+          size.height * .44,
+          size.width * .10,
+          size.height * .18,
+        ),
         const Radius.circular(10),
       ),
       darkGrey,
@@ -272,8 +297,12 @@ class _ListingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final published = items.where((e) => e.type == ListingType.published).toList();
-    final progress = items.where((e) => e.type == ListingType.inProgress).toList();
+    final published = items
+        .where((e) => e.type == ListingType.published)
+        .toList();
+    final progress = items
+        .where((e) => e.type == ListingType.inProgress)
+        .toList();
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 6, 16, 18),
@@ -288,26 +317,36 @@ class _ListingState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          ...published.map((it) => Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: _PublishedCard(item: it, onTap: () => onOpenPublished(it)),
-          )),
+          ...published.map(
+            (it) => Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: _PublishedCard(item: it, onTap: () => onOpenPublished(it)),
+            ),
+          ),
         ],
 
         if (progress.isNotEmpty) ...[
-          const Text(
+          Text(
             "In progress",
-            style: TextStyle(
-              color: _muted,
-              fontSize: 12.5,
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.urbanist(
+              fontSize: 16, // ✅ 16px
+              fontWeight: FontWeight.w500, // ✅ Medium
+              height: 1.2, // ✅ 120%
+              letterSpacing: 0, // ✅ 0%
+              color: const Color(0xFF727272), // ✅ #727272
             ),
           ),
+
           const SizedBox(height: 10),
-          ...progress.map((it) => Padding(
-            padding: const EdgeInsets.only(bottom: 14),
-            child: _InProgressCard(item: it, onTapIncomplete: () => onOpenIncomplete(it)),
-          )),
+          ...progress.map(
+            (it) => Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: _InProgressCard(
+                item: it,
+                onTapIncomplete: () => onOpenIncomplete(it),
+              ),
+            ),
+          ),
         ],
 
         // Add new listing button (outlined)
@@ -360,19 +399,24 @@ class _PublishedCard extends StatelessWidget {
                       children: [
                         Text(
                           item.title,
-                          style: const TextStyle(
-                            color: _text,
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w700,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 18, // ✅ 18px
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.2, // ✅ 120%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF181919), // ✅ #181919
                           ),
                         ),
+
                         const SizedBox(height: 2),
                         Text(
                           item.subtitle,
-                          style: const TextStyle(
-                            color: Color(0xFF8B8B8B),
-                            fontSize: 11.8,
-                            fontWeight: FontWeight.w500,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14, // ✅ 14px
+                            fontWeight: FontWeight.w400, // ✅ Regular
+                            height: 1.2, // ✅ 120%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF181919), // ✅ #181919
                           ),
                         ),
                       ],
@@ -386,18 +430,21 @@ class _PublishedCard extends StatelessWidget {
             Container(
               height: 44,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(12),
+                ),
                 gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF2FA86A),
-                    const Color(0xFF67DCA0),
-                  ],
+                  colors: [const Color(0xFF2FA86A), const Color(0xFF67DCA0)],
                 ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 children: [
-                  const Icon(Icons.emoji_events_rounded, color: Colors.brown, size: 20),
+                  const Icon(
+                    Icons.emoji_events_rounded,
+                    color: Colors.brown,
+                    size: 20,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -409,7 +456,11 @@ class _PublishedCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 22),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ],
               ),
             ),
@@ -423,10 +474,7 @@ class _PublishedCard extends StatelessWidget {
 /* ---------------- In Progress Card ---------------- */
 
 class _InProgressCard extends StatelessWidget {
-  const _InProgressCard({
-    required this.item,
-    required this.onTapIncomplete,
-  });
+  const _InProgressCard({required this.item, required this.onTapIncomplete});
 
   final ListingItem item;
   final VoidCallback onTapIncomplete;
@@ -468,19 +516,24 @@ class _InProgressCard extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: const TextStyle(
-                          color: _text,
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 18, // ✅ 18px
+                          fontWeight: FontWeight.w500, // ✅ Medium (500)
+                          height: 1.2, // ✅ 120%
+                          letterSpacing: 0, // ✅ 0%
+                          color: const Color(0xFF181919), // ✅ #181919
                         ),
                       ),
+
                       const SizedBox(height: 2),
                       Text(
                         item.subtitle,
-                        style: const TextStyle(
-                          color: Color(0xFF8B8B8B),
-                          fontSize: 11.8,
-                          fontWeight: FontWeight.w500,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14, // ✅ 14px
+                          fontWeight: FontWeight.w400, // ✅ Regular (400)
+                          height: 1.2, // ✅ 120%
+                          letterSpacing: 0, // ✅ 0%
+                          color: const Color(0xFF181919), // ✅ #181919
                         ),
                       ),
                     ],
@@ -530,7 +583,9 @@ class _InProgressCard extends StatelessWidget {
               height: 44,
               decoration: const BoxDecoration(
                 color: _yellow,
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(12),
+                ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: const Row(
@@ -545,7 +600,11 @@ class _InProgressCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Icon(Icons.chevron_right_rounded, color: Colors.white, size: 22),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ],
               ),
             ),
@@ -576,9 +635,15 @@ class _AddNewListingButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
         icon: const Icon(Icons.add, size: 18),
-        label: const Text(
+        label: Text(
           "Add new listing",
-          style: TextStyle(fontSize: 13.2, fontWeight: FontWeight.w700),
+          style: GoogleFonts.urbanist(
+            fontSize: 16, // ✅ 16px
+            fontWeight: FontWeight.w500, // ✅ Medium (500)
+            height: 1.1, // ✅ 110%
+            letterSpacing: 0, // ✅ 0%
+            color: const Color(0xFF3FA96B), // ✅ #3FA96B
+          ),
         ),
       ),
     );
@@ -734,24 +799,32 @@ class ListingItem {
   final double? progress;
 
   ListingItem._(
-      this.type, {
-        required this.title,
-        required this.subtitle,
-        this.tier,
-        this.progress,
-      });
+    this.type, {
+    required this.title,
+    required this.subtitle,
+    this.tier,
+    this.progress,
+  });
 
   factory ListingItem.published({
     required String title,
     required String subtitle,
     required String tier,
-  }) =>
-      ListingItem._(ListingType.published, title: title, subtitle: subtitle, tier: tier);
+  }) => ListingItem._(
+    ListingType.published,
+    title: title,
+    subtitle: subtitle,
+    tier: tier,
+  );
 
   factory ListingItem.inProgress({
     required String title,
     required String subtitle,
     required double progress,
-  }) =>
-      ListingItem._(ListingType.inProgress, title: title, subtitle: subtitle, progress: progress);
+  }) => ListingItem._(
+    ListingType.inProgress,
+    title: title,
+    subtitle: subtitle,
+    progress: progress,
+  );
 }

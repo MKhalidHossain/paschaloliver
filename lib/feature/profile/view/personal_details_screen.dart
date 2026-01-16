@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/core/constants/assets.dart';
 
 /// ---------------------------------------------------------------------------
 /// PERSONAL DETAILS (matches your screenshot)
@@ -10,10 +12,7 @@ import 'package:flutter/material.dart';
 /// - Comments list
 /// ---------------------------------------------------------------------------
 class PersonalDetailsScreen extends StatelessWidget {
-  const PersonalDetailsScreen({
-    super.key,
-    this.onEdit,
-  });
+  const PersonalDetailsScreen({super.key, this.onEdit});
 
   final VoidCallback? onEdit;
 
@@ -36,7 +35,7 @@ class PersonalDetailsScreen extends StatelessWidget {
 
     final comments = List.generate(
       4,
-          (i) => const _CommentData(
+      (i) => const _CommentData(
         name: "Esther",
         timeAgo: "3 day ago",
         rating: 5,
@@ -116,7 +115,11 @@ class PersonalDetailsScreen extends StatelessWidget {
                         const CircleAvatar(
                           radius: 44,
                           backgroundColor: Color(0xFFE6E6E6),
-                          child: Icon(Icons.person, size: 34, color: Color(0xFF777777)),
+                          child: Icon(
+                            Icons.person,
+                            size: 34,
+                            color: Color(0xFF777777),
+                          ),
                         ),
                         // (No camera button in this screen screenshot)
                       ],
@@ -129,15 +132,18 @@ class PersonalDetailsScreen extends StatelessWidget {
                   Center(
                     child: Text(
                       userName,
-                      style: const TextStyle(
-                        fontSize: 12.8,
-                        fontWeight: FontWeight.w700,
-                        color: _C.text,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16, // ✅ 16px
+                        fontWeight: FontWeight.w700, // ✅ Bold
+                        height: 1.1, // ✅ 110%
+                        letterSpacing: 0, // ✅ 0%
+                        color: const Color(0xFF000000), // ✅ black
                       ),
                     ),
                   ),
 
                   const SizedBox(height: 14),
+                  Divider(height: 1, thickness: 1, color: _C.divider),
 
                   // Stats row (Reviews / Services)
                   Padding(
@@ -166,14 +172,16 @@ class PersonalDetailsScreen extends StatelessWidget {
                   const Divider(height: 1, thickness: 1, color: _C.divider),
 
                   // About me
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(22, 14, 22, 6),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(22, 14, 22, 6),
                     child: Text(
                       "About me",
-                      style: TextStyle(
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w800,
-                        color: _C.green,
+                      style: GoogleFonts.poppins(
+                        fontSize: 24, // ✅ 24px
+                        fontWeight: FontWeight.w500, // ✅ Medium (500)
+                        height: 1.2, // ✅ 120%
+                        letterSpacing: 0, // ✅ 0%
+                        color: const Color(0xFF3FA96B), // ✅ #3FA96B
                       ),
                     ),
                   ),
@@ -181,11 +189,12 @@ class PersonalDetailsScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(22, 0, 22, 14),
                     child: Text(
                       about,
-                      style: const TextStyle(
-                        fontSize: 11.8,
-                        fontWeight: FontWeight.w500,
-                        color: _C.subText,
-                        height: 1.35,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16, // ✅ 16px
+                        fontWeight: FontWeight.w400, // ✅ Regular
+                        height: 1.2, // ✅ 120%
+                        letterSpacing: 0, // ✅ 0%
+                        color: const Color(0xFF18191A), // ✅ #18191A
                       ),
                     ),
                   ),
@@ -196,22 +205,47 @@ class PersonalDetailsScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(22, 14, 22, 10),
                     child: Row(
-                      children: const [
+                      children: [
                         Text(
                           "5",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: _C.text),
+                          style: GoogleFonts.poppins(
+                            fontSize: 24, // ✅ 24px
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.2, // ✅ 120%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF000000), // ✅ #000000
+                          ),
                         ),
-                        SizedBox(width: 4),
-                        Icon(Icons.star, size: 16, color: _C.star),
-                        SizedBox(width: 8),
+
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.star,
+                          size: 24, // ✅ Figma
+                          color: Color(0xFFFFC34D), // ✅ #FFC34D
+                        ),
+
+                        const SizedBox(width: 8),
                         Text(
                           "Outstanding",
-                          style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: _C.text),
+                          style: GoogleFonts.poppins(
+                            fontSize: 24, // ✅ 24px
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.2, // ✅ 120%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF18191A), // ✅ #18191A
+                          ),
                         ),
-                        SizedBox(width: 6),
+
+                        const SizedBox(width: 6),
                         Text(
                           "(13 ratings)",
-                          style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: _C.subText),
+                          style: GoogleFonts.poppins(
+                            fontSize: 16, // ✅ 16px
+                            fontWeight: FontWeight.w400, // ✅ Regular
+                            height: 1.2, // ✅ 120%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF6D6F73), // ✅ #6D6F73
+                          ),
                         ),
                       ],
                     ),
@@ -224,25 +258,27 @@ class PersonalDetailsScreen extends StatelessWidget {
                       children: ratingRows
                           .map(
                             (r) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: _RatingRow(data: r),
-                        ),
-                      )
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: _RatingRow(data: r),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
 
-                  const Divider(height: 1, thickness: 1, color: _C.divider),
+                  // const Divider(height: 1, thickness: 1, color: _C.divider),
 
                   // Comments
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(22, 14, 22, 10),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(22, 14, 22, 10),
                     child: Text(
                       "Comments",
-                      style: TextStyle(
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w800,
-                        color: _C.green,
+                      style: GoogleFonts.poppins(
+                        fontSize: 24, // ✅ 24px
+                        fontWeight: FontWeight.w500, // ✅ Medium (500)
+                        height: 1.2, // ✅ 120%
+                        letterSpacing: 0, // ✅ 0%
+                        color: const Color(0xFF3FA96B), // ✅ #3FA96B
                       ),
                     ),
                   ),
@@ -276,38 +312,48 @@ class _StatCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: _C.divider, width: 1),
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(10),
+      //   border: Border.all(color: _C.divider, width: 1),
+      // ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                topText,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w900,
-                  color: _C.text,
-                  height: 1.1,
+                topText, // "5"
+                style: GoogleFonts.poppins(
+                  fontSize: 24, // ✅ 24px
+                  fontWeight: FontWeight.w500, // ✅ Medium
+                  height: 1.2, // ✅ 120%
+                  letterSpacing: 0, // ✅ 0%
+                  color: const Color(0xFF000000), // ✅ #000000
                 ),
               ),
+
               if (topIcon != null) ...[
                 const SizedBox(width: 4),
-                Icon(topIcon, size: 16, color: _C.star),
+                Icon(
+                  topIcon,
+                  size: 24, // ✅ Figma
+                  color: const Color(0xFFFFC34D), // ✅ #FFC34D
+                ),
               ],
             ],
           ),
           const SizedBox(height: 4),
           Text(
-            bottomText,
-            style: const TextStyle(
-              fontSize: 11.2,
-              fontWeight: FontWeight.w600,
-              color: _C.subText,
+            bottomText, // "13 reviews"
+            style: GoogleFonts.urbanist(
+              fontSize: 16, // ✅ 16px
+              fontWeight: FontWeight.w700, // ✅ Bold
+              height: 1.1, // ✅ 110%
+              letterSpacing: 0, // ✅ 0%
+              color: const Color(0xFF000000), // ✅ black
+              decoration: TextDecoration.underline, // ✅ underline
+              decorationStyle: TextDecorationStyle.solid,
             ),
           ),
         ],
@@ -336,37 +382,45 @@ class _RatingRow extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 108,
+          width: 171.5, // ✅ optional (Figma width)
           child: Text(
             data.label,
-            style: const TextStyle(
-              fontSize: 11.6,
-              fontWeight: FontWeight.w600,
-              color: _C.text,
+            style: GoogleFonts.poppins(
+              fontSize: 16, // ✅ 16px
+              fontWeight: FontWeight.w400, // ✅ Regular
+              height: 1.2, // ✅ 120%
+              letterSpacing: 0, // ✅ 0%
+              color: const Color(0xFF000000), // ✅ #000000
             ),
           ),
         ),
-        Expanded(
+
+        SizedBox(
+          width: 100, // ✅ Figma
+          height: 8, // ✅ Figma
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(100), // ✅ pill
             child: LinearProgressIndicator(
               value: normalized,
-              minHeight: 5,
+              minHeight: 8, // ✅ Figma height
               backgroundColor: _C.barBg,
               valueColor: const AlwaysStoppedAnimation<Color>(_C.bar),
             ),
           ),
         ),
+
         const SizedBox(width: 10),
         SizedBox(
-          width: 28,
+          width: data.value == 5 ? 11 : 24, // ✅ Figma widths
           child: Text(
             data.value == 5 ? "5" : data.value.toStringAsFixed(1),
             textAlign: TextAlign.right,
-            style: const TextStyle(
-              fontSize: 11.6,
-              fontWeight: FontWeight.w700,
-              color: _C.text,
+            style: GoogleFonts.poppins(
+              fontSize: 16, // ✅ 16px
+              fontWeight: FontWeight.w400, // ✅ Regular
+              height: 1.2, // ✅ 120%
+              letterSpacing: 0,
+              color: const Color(0xFF000000), // ✅ black
             ),
           ),
         ),
@@ -424,19 +478,40 @@ class _CommentTile extends StatelessWidget {
                       children: [
                         Text(
                           data.name,
-                          style: const TextStyle(
-                            fontSize: 12.6,
-                            fontWeight: FontWeight.w800,
-                            color: _C.text,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 18, // ✅ 18px
+                            fontWeight: FontWeight.w500, // ✅ Medium (500)
+                            height: 1.1, // ✅ 110%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF18191A), // ✅ #18191A
                           ),
                         ),
+
+                        const SizedBox(width: 6),
+
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 4,
+                          ), // aligns with first text line
+                          child: Image.asset(
+                            Images.roundIcon,
+                            width: 9,
+                            height: 9,
+                            color: const Color(
+                              0xFF727272,
+                            ), // ✅ #727272 (only works if icon is single-color)
+                          ),
+                        ),
+
                         const SizedBox(width: 8),
                         Text(
                           data.timeAgo,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: _C.subText,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14, // ✅ 14px
+                            fontWeight: FontWeight.w400, // ✅ Regular
+                            height: 1.1, // ✅ 110%
+                            letterSpacing: 0, // ✅ 0%
+                            color: const Color(0xFF727272), // ✅ #727272
                           ),
                         ),
                       ],
@@ -444,27 +519,35 @@ class _CommentTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     if (data.isVerified)
                       Row(
-                        children: const [
-                          Icon(Icons.verified, size: 14, color: _C.green),
-                          SizedBox(width: 6),
+                        children: [
+                          Icon(
+                            Icons.verified_outlined, // ✅ outline look
+                            size: 13.33, // ✅ Figma size
+                            color: const Color(0xFF18191A), // ✅ #18191A
+                          ),
+                          const SizedBox(width: 6),
                           Text(
                             "Verified service",
-                            style: TextStyle(
-                              fontSize: 11.3,
-                              fontWeight: FontWeight.w600,
-                              color: _C.subText,
+                            style: GoogleFonts.urbanist(
+                              fontSize:
+                                  14, // if your Figma text is 14 regular/medium adjust here
+                              fontWeight: FontWeight.w400,
+                              height: 1.1,
+                              color: const Color(0xFF727272),
                             ),
                           ),
                         ],
                       ),
+
                     const SizedBox(height: 6),
                     Text(
                       data.comment,
-                      style: const TextStyle(
-                        fontSize: 11.6,
-                        fontWeight: FontWeight.w500,
-                        color: _C.text,
-                        height: 1.3,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14, // ✅ 14px
+                        fontWeight: FontWeight.w400, // ✅ Regular
+                        height: 1.1, // ✅ 110%
+                        letterSpacing: 0, // ✅ 0%
+                        color: const Color(0xFF18191A), // ✅ #18191A
                       ),
                     ),
                   ],
@@ -476,20 +559,28 @@ class _CommentTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "${data.rating}",
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w900,
-                      color: _C.text,
-                      height: 1.0,
+                  SizedBox(
+                    width: 11, // ✅ optional (Figma)
+                    child: Text(
+                      "${data.rating}",
+                      textAlign: TextAlign.right,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        height: 1.2,
+                        letterSpacing: 0,
+                        color: const Color(0xFF000000),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 3),
-                  const Icon(Icons.star, size: 14, color: _C.star),
+                  const Icon(
+                    Icons.star,
+                    size: 16, // ✅ Figma
+                    color: Color(0xFFFFC34D), // ✅ #FFC34D
+                  ),
                 ],
-              )
-
+              ),
             ],
           ),
         ),

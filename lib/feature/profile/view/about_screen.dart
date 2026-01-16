@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AboutHandyNaijaScreen extends StatelessWidget {
   const AboutHandyNaijaScreen({super.key});
@@ -33,18 +34,19 @@ class AboutHandyNaijaScreen extends StatelessWidget {
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _C.border, width: 1),
-            ),
-            child: const Text(
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.circular(12),
+            //   border: Border.all(color: _C.border, width: 1),
+            // ),
+            child: Text(
               _demoAboutText,
-              style: TextStyle(
-                color: _C.text,
-                fontSize: 12.4,
-                fontWeight: FontWeight.w500,
-                height: 1.55,
+              style: GoogleFonts.poppins(
+                fontSize: 16, // ✅ 16px
+                fontWeight: FontWeight.w400, // ✅ Regular
+                height: 1.5, // ✅ 150%
+                letterSpacing: 0, // ✅ 0%
+                color: const Color(0xFF000000), // ✅ #000000
               ),
             ),
           ),
