@@ -76,6 +76,7 @@ class Images {
   static const String dollerIcon = 'assets/profile/dollerIcon.png';
   static const String shieldIcon = 'assets/profile/shield.png';
   static const String privacyIcon = 'assets/profile/file-02.png';
+  static const String offersIcon = 'assets/profile/image_126.png';
 
   //message
   static const String messageIcon = 'assets/message/message_icon.png';

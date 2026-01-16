@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 import 'onboarding1.dart';
@@ -27,10 +28,7 @@ class BecomeProfessionalScreen extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 18,
-                  ),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
                   onPressed: () => Get.back(),
                 ),
                 const SizedBox(width: 4),
@@ -46,20 +44,13 @@ class BecomeProfessionalScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Container(
-                  width: 1,
-                  height: 18,
-                  color: Colors.grey.shade300,
-                ),
+                Container(width: 1, height: 18, color: Colors.grey.shade300),
                 const SizedBox(width: 8),
                 const Expanded(
                   child: Text(
                     'Become a professional',
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -81,21 +72,25 @@ class BecomeProfessionalScreen extends StatelessWidget {
               Text(
                 'Want to offer your services\non HandyNaija?',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 24,
-                  height: 1.3,
-                  fontWeight: FontWeight.w700,
-                  color: _textColor,
+                  fontWeight: FontWeight.w500, // Medium
+                  height: 1.2, // 120%
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
+
               const SizedBox(height: 12),
               Text(
                 'Create your professional profile and start\nearning money',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: Colors.grey.shade600,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16, // Figma size: 16px
+                  fontWeight: FontWeight.w400, // Regular
+                  height: 1.1, // Line height 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
               const SizedBox(height: 24),
@@ -131,12 +126,14 @@ class BecomeProfessionalScreen extends StatelessWidget {
                     // TODO: navigate to professional profile flow
                     Get.to(() => const HandyOnboardingAtHomeScreen());
                   },
-                  child: const Text(
+                  child: Text(
                     'Become a professional',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16, // 16px
+                      fontWeight: FontWeight.w500, // Medium
+                      height: 1.1, // 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFFFFFFFF),
                     ),
                   ),
                 ),

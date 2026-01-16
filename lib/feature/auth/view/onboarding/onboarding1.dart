@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../welcome_screen.dart';
@@ -27,7 +28,9 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      Get.offAll(() => const WelcomeScreenView()); // clears stack
+                      Get.offAll(
+                        () => const WelcomeScreenView(),
+                      ); // clears stack
                     },
                     child: Text(
                       'Exit',
@@ -38,7 +41,6 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
 
@@ -52,7 +54,7 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                     SizedBox(
                       height: 220,
                       child: Image.asset(
-                        Images.men,
+                        Images.offersIcon,
                         // TODO: change to your real asset path
                         fit: BoxFit.contain,
                       ),
@@ -64,11 +66,14 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Offer your at-home\nservices',
-                        style: TextStyle(
-                          fontSize: 26,
-                          height: 1.25,
-                          fontWeight: FontWeight.w700,
-                          color: _textColor,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 32, // Figma size
+                          fontWeight: FontWeight.w700, // Bold 700
+                          height: 1.1, // 110%
+                          letterSpacing: 0,
+                          color: const Color(
+                            0xFF000000,
+                          ), // or _textColor if it's black
                         ),
                       ),
                     ),
@@ -79,11 +84,13 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Let us know where you can travel to, when you're "
-                            "available, and what services you want to offer.",
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.5,
-                          color: Colors.grey.shade700,
+                        "available, and what services you want to offer.",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16, // Figma: 16px
+                          fontWeight: FontWeight.w400, // Regular
+                          height: 1.1, // 110%
+                          letterSpacing: 0,
+                          color: const Color(0xFF000000),
                         ),
                       ),
                     ),
@@ -121,12 +128,14 @@ class HandyOnboardingAtHomeScreen extends StatelessWidget {
                     // TODO: go to next onboarding screen
                     Get.to(() => const HandyOnboardingGetCustomersScreen());
                   },
-                  child: const Text(
+                  child: Text(
                     'Next',
-                    style: TextStyle(
+                    style: GoogleFonts.urbanist(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontWeight: FontWeight.w500, // Medium 500
+                      height: 1.1, // 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFFFFFFFF),
                     ),
                   ),
                 ),

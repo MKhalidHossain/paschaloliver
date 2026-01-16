@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../welcome_screen.dart';
@@ -27,7 +28,9 @@ class HandyOnboardingGetCustomersScreen extends StatelessWidget {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      Get.offAll(() => const WelcomeScreenView()); // clears stack
+                      Get.offAll(
+                        () => const WelcomeScreenView(),
+                      ); // clears stack
                     },
                     child: Text(
                       'Exit',
@@ -38,7 +41,6 @@ class HandyOnboardingGetCustomersScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
 
@@ -64,14 +66,16 @@ class HandyOnboardingGetCustomersScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Get Customers',
-                        style: TextStyle(
-                          fontSize: 26,
-                          height: 1.25,
-                          fontWeight: FontWeight.w700,
-                          color: _textColor,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 32, // Figma size
+                          fontWeight: FontWeight.w700, // Bold 700
+                          height: 1.1, // 110%
+                          letterSpacing: 0,
+                          color: _textColor, // or Color(0xFF000000)
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 12),
 
                     // -------------- SUBTITLE --------------
@@ -79,11 +83,13 @@ class HandyOnboardingGetCustomersScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Service requests for customers or actively apply\n'
-                            'for job leads.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.5,
-                          color: Colors.grey.shade700,
+                        'for job leads.',
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16, // Figma size
+                          fontWeight: FontWeight.w400, // Regular 400
+                          height: 1.1, // 110% line height
+                          letterSpacing: 0,
+                          color: const Color(0xFF000000),
                         ),
                       ),
                     ),
@@ -97,9 +103,11 @@ class HandyOnboardingGetCustomersScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildDot(isActive: false),            // step 1
-                  _buildDot(isActive: true,               // step 2 active
-                      color: _brandGreen),
+                  _buildDot(isActive: false), // step 1
+                  _buildDot(
+                    isActive: true, // step 2 active
+                    color: _brandGreen,
+                  ),
                   _buildDot(isActive: false),
                   _buildDot(isActive: false),
                 ],
@@ -122,12 +130,14 @@ class HandyOnboardingGetCustomersScreen extends StatelessWidget {
                     // TODO: go to next onboarding screen
                     Get.to(() => const HandyOnboardingPerformServicesScreen());
                   },
-                  child: const Text(
+                  child: Text(
                     'Next',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16, // 16px
+                      fontWeight: FontWeight.w500, // Medium
+                      height: 1.1, // 110%
+                      letterSpacing: 0,
+                      color: const Color(0xFFFFFFFF),
                     ),
                   ),
                 ),
