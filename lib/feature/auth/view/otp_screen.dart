@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/reset_password_screen.dart';
 
@@ -17,8 +16,10 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
   Color get _brandGreen => const Color(0xFF27AE60);
   Color get _textColor => const Color(0xFF222222);
 
-  final List<TextEditingController> _controllers =
-  List.generate(4, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   @override
@@ -89,7 +90,7 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
                     style: GoogleFonts.urbanist(
                       fontSize: 28,
                       fontWeight: FontWeight.w600, // ✅ SemiBold
-                      height: 1.1,                 // ✅ 110%
+                      height: 1.1, // ✅ 110%
                       letterSpacing: 0,
                       color: const Color(0xFF123055), // ✅ #123055
                     ),

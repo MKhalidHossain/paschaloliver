@@ -508,7 +508,6 @@ class _ActionButton extends StatelessWidget {
     required this.onTap,
     required this.background,
     required this.textColor,
-    super.key,
   });
 
   final String label;
@@ -1232,7 +1231,11 @@ class _TinyCircle extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
           border: Border.all(color: AddressUI.line),
         ),
-        child: Icon(icon, size: 18, color: const Color.fromARGB(255, 17, 16, 16)),
+        child: Icon(
+          icon,
+          size: 18,
+          color: const Color.fromARGB(255, 17, 16, 16),
+        ),
       ),
     );
   }

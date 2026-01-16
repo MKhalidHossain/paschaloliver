@@ -172,8 +172,9 @@ class _FurnitureAssemblyScreenState extends State<FurnitureAssemblyScreen> {
 
 class _RowItem {
   final String title;
-  bool checked;
-  _RowItem(this.title, {this.checked = false});
+  bool checked = false;
+
+  _RowItem(this.title);
 }
 
 /// ✅ progress bar like screenshot (grey track + small green pill)

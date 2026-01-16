@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:paschaloliver/feature/user/home/view/address/address_flow_screens.dart';
-import 'package:paschaloliver/feature/user/home/view/search/search_services_find_screen.dart';
 import 'package:paschaloliver/feature/user/home/view/subcateogry/available_schedule_screen.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -97,7 +96,11 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     SizedBox(width: 6),
                     Text(
                       "Back",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -143,11 +146,20 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     icon: const Icon(Icons.add, size: 18, color: Colors.white),
                     label: const Text(
                       "Add address",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.white.withOpacity(.85), width: 1.2),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      side: BorderSide(
+                        color: Colors.white.withOpacity(.85),
+                        width: 1.2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       backgroundColor: Colors.transparent,
                     ),
                   ),
@@ -201,14 +213,23 @@ class SubCategoryData {
           SubCategoryItem(title: "Painting", icon: Images.paintIcon),
           SubCategoryItem(title: "Interior\nDesign", icon: Images.interiorIcon),
           SubCategoryItem(title: "Pest Control", icon: Images.pestIcon),
-          SubCategoryItem(title: "Kitchen\nInstallation", icon: Images.kitchenIcon),
+          SubCategoryItem(
+            title: "Kitchen\nInstallation",
+            icon: Images.kitchenIcon,
+          ),
         ];
 
       case HomeCategory.beauty:
         return [
           SubCategoryItem(title: "Salon at\nHome", icon: Images.salonIcon),
-          SubCategoryItem(title: "Manicure &\nPedicure", icon: Images.manicureIcon),
-          SubCategoryItem(title: "Haircut &\nStyling", icon: Images.haircutIcon),
+          SubCategoryItem(
+            title: "Manicure &\nPedicure",
+            icon: Images.manicureIcon,
+          ),
+          SubCategoryItem(
+            title: "Haircut &\nStyling",
+            icon: Images.haircutIcon,
+          ),
         ];
 
       case HomeCategory.mediaEvents:
@@ -225,7 +246,10 @@ class SubCategoryData {
         return [
           SubCategoryItem(title: "Computer\nRepair", icon: Images.mcIcon),
           SubCategoryItem(title: "Mobile\nRepair", icon: Images.comedianIcon),
-          SubCategoryItem(title: "Software\nInstallation", icon: Images.birthdayIcon),
+          SubCategoryItem(
+            title: "Software\nInstallation",
+            icon: Images.birthdayIcon,
+          ),
           SubCategoryItem(title: "Internet\nSetup", icon: Images.comedianIcon1),
         ];
 
@@ -248,7 +272,10 @@ class SubCategoryData {
       case HomeCategory.others:
         return [
           SubCategoryItem(title: "House\nShifting", icon: Images.comedianIcon1),
-          SubCategoryItem(title: "Pickup and\nDelivery", icon: Images.birthdayIcon),
+          SubCategoryItem(
+            title: "Pickup and\nDelivery",
+            icon: Images.birthdayIcon,
+          ),
         ];
     }
   }
@@ -296,7 +323,12 @@ class _CategoryCircle extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(iconPath, width: 30, height: 30, fit: BoxFit.contain),
+                Image.asset(
+                  iconPath,
+                  width: 30,
+                  height: 30,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 6),
                 Text(
                   title,
@@ -402,14 +434,35 @@ class _BottomNav extends StatelessWidget {
         backgroundColor: Colors.white,
         selectedItemColor: activeColor,
         unselectedItemColor: const Color(0xFF8B8B8B),
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 11,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+        ),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.search_rounded), label: "Search"),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border_rounded), label: "Favorites"),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month_outlined), label: "Services"),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline_rounded), label: "Inbox"),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: "Profile"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search_rounded),
+            label: "Search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border_rounded),
+            label: "Favorites",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_outlined),
+            label: "Services",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble_outline_rounded),
+            label: "Inbox",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_rounded),
+            label: "Profile",
+          ),
         ],
       ),
     );

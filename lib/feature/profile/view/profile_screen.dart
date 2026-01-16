@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/feature/profile/view/my_balance_screen.dart';
 import 'package:paschaloliver/feature/profile/view/payment_and_refund_screen.dart';
 import 'package:paschaloliver/feature/profile/view/per_details_screen.dart';
 import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart';
 import 'package:paschaloliver/feature/profile/view/privacy_policy_screen.dart';
 import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.dart';
+import 'package:paschaloliver/feature/user/app_ground_user.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
 import 'about_screen.dart';
-import 'address_screen.dart';
 import 'change_password_screen.dart';
 import 'choose_language_screen.dart';
 import 'coupon_code_screen.dart';
@@ -146,31 +147,31 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(
-                        Icons.location_on_outlined,
-                        size: 18,
-                        color: _C.green,
+                      child: Image(
+                        image: AssetImage(Images.dollerIcon),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    title: "My addresses",
-                    onTap: () {
-                      Get.to(() => const MyAddressesLikeScreen());
-                    },
+                    title: "My Balance",
+                    onTap: () => Get.to(() => const MyBalanceScreen()),
                   ),
+
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(
-                        Icons.calendar_today_outlined,
-                        size: 18,
-                        color: _C.green,
+                      child: Image(
+                        image: AssetImage(Images.paymentIcon),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     title: "Payment and refunds",
-                    onTap: () {
-                      Get.to(() => const PaymentsAndRefundsScreen());
-                    },
+                    onTap: () => Get.to(() => const PaymentsAndRefundsScreen()),
                   ),
+
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
@@ -246,7 +247,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: "Switch to Client version",
                 onTap: () {
-                  // Get.to(()=>const UserAppGround());
+                  Get.to(() => const UserAppGround());
                 },
               ),
             ),
@@ -324,51 +325,62 @@ class ProfileScreen extends StatelessWidget {
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(
-                        Icons.lightbulb_outline,
-                        size: 18,
-                        color: _C.green,
+                      child: Image(
+                        image: AssetImage(Images.aboutIcon),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     title: "How can we improve?",
                     onTap: () {},
                   ),
+
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
-                      child: Icon(
-                        Icons.emoji_objects_outlined,
-                        size: 18,
+                      child: Image(
+                        image: AssetImage(Images.helpIcon),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    title: "About HandyNaija App",
+                    onTap: () => Get.to(() => const AboutHandyNaijaScreen()),
+                  ),
+
+                  const _ThinDivider(),
+                  _TileRow(
+                    leading: _LeadingIcon(
+                      child: Image.asset(
+                        Images.shieldIcon,
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
+                        // if you want it tinted green like the icon:
                         color: _C.green,
                       ),
                     ),
                     title: "Privacy Policy",
                     onTap: () => Get.to(() => const PrivacyPolicyScreen()),
                   ),
+
                   const _ThinDivider(),
                   _TileRow(
-                    leading: const _LeadingIcon(
-                      child: Icon(
-                        Icons.indeterminate_check_box_outlined,
-                        size: 18,
-                        color: _C.green,
+                    leading: _LeadingIcon(
+                      child: Image.asset(
+                        Images.privacyIcon,
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
+                        color: _C.green, // tint like the old icon
                       ),
                     ),
-                    title: "Terms And Condition",
+                    title: "Terms And Condition", // or "Terms and Conditions"
                     onTap: () => Get.to(() => const TermsConditionsScreen()),
                   ),
-                  const _ThinDivider(),
-                  _TileRow(
-                    leading: const _LeadingIcon(
-                      child: Icon(
-                        Icons.info_outline_rounded,
-                        size: 18,
-                        color: _C.green,
-                      ),
-                    ),
-                    title: "About HandyNaija App",
-                    onTap: () => Get.to(() => const AboutHandyNaijaScreen()),
-                  ),
+
                   const _ThinDivider(),
                   _TileRow(
                     leading: const _LeadingIcon(
@@ -457,7 +469,7 @@ class _RateAppDialogState extends State<_RateAppDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
+            SizedBox(
               width: 46,
               height: 46,
 
@@ -929,7 +941,6 @@ class _TileRow extends StatelessWidget {
     required this.leading,
     required this.title,
     required this.onTap,
-    super.key,
   });
 
   final Widget leading;
@@ -962,7 +973,14 @@ class _TileRow extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, size: 24, color: _C.chev),
+              Transform.rotate(
+                angle: 3.1415926535, // 180° (same as -180°)
+                child: const Icon(
+                  Icons.chevron_left_rounded,
+                  size: 24,
+                  color: _C.chev,
+                ),
+              ),
             ],
           ),
         ),

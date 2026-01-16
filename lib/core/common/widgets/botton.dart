@@ -38,8 +38,9 @@ class StatusManager {
 
     if (status == StatusType.loading) {
       Future.delayed(loadingDuration, () {
-        if (Navigator.canPop(context))
+        if (Navigator.canPop(context)) {
           Navigator.pop(context, StatusType.loading);
+        }
       });
     }
 

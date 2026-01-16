@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:paschaloliver/app_ground.dart';
 import 'package:paschaloliver/core/constants/app_colors.dart';
 import 'package:paschaloliver/feature/user/app_ground_user.dart';
 

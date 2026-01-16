@@ -12,7 +12,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType keyboardType;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     this.prefixWidget,
@@ -20,7 +20,7 @@ class CustomTextField extends StatefulWidget {
     this.isEmail = false,
     this.isStrongPassword = false,
     this.keyboardType = TextInputType.text,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -50,7 +50,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _debounce = Timer(const Duration(seconds: 3), () {
       // EMAIL
       if (widget.isEmail && value.isNotEmpty && !isValidEmail(value)) {
-        if (!Get.isSnackbarOpen!) {
+        if (!Get.isSnackbarOpen) {
           Get.snackbar(
             "Invalid Email",
             "Please enter a valid email format",
@@ -65,7 +65,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       if (widget.isStrongPassword &&
           value.isNotEmpty &&
           !isStrongPassword(value)) {
-        if (!Get.isSnackbarOpen!) {
+        if (!Get.isSnackbarOpen) {
           Get.snackbar(
             "Weak Password",
             "Password must contain:\n• Uppercase\n• Lowercase\n• Number\n• Special Character",
@@ -131,7 +131,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
-            borderSide: const BorderSide(color: Color(0xFFFFF6B00), width: 1),
+            borderSide: const BorderSide(color: Color(0xfffff6b00), width: 1),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -139,7 +139,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFFFF6B00), width: 1),
+            borderSide: const BorderSide(color: Color(0xfffff6b00), width: 1),
           ),
         ),
       ),

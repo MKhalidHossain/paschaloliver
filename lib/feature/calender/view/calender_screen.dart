@@ -41,24 +41,22 @@ class _CalendarHomeShellState extends State<CalendarHomeShell> {
   Widget build(BuildContext context) {
     final pages = <Widget>[
       widget.isListingEmpty
-          ? _CalendarEmptyListing(
-        onCompleteListing: _onCompleteListing,
-      )
+          ? _CalendarEmptyListing(onCompleteListing: _onCompleteListing)
           : _CalendarMonthView(
-        month: _month,
-        selectedDay: _selectedDay,
-        onPrevMonth: () => setState(() {
-          _month = DateTime(_month.year, _month.month - 1, 1);
-          _selectedDay = 13;
-        }),
-        onNextMonth: () => setState(() {
-          _month = DateTime(_month.year, _month.month + 1, 1);
-          _selectedDay = 13;
-        }),
-        onSelectDay: (d) => setState(() => _selectedDay = d),
-        onUpdateCalendar: _openUpdateScheduleSheet,
-        onSync: () {},
-      ),
+              month: _month,
+              selectedDay: _selectedDay,
+              onPrevMonth: () => setState(() {
+                _month = DateTime(_month.year, _month.month - 1, 1);
+                _selectedDay = 13;
+              }),
+              onNextMonth: () => setState(() {
+                _month = DateTime(_month.year, _month.month + 1, 1);
+                _selectedDay = 13;
+              }),
+              onSelectDay: (d) => setState(() => _selectedDay = d),
+              onUpdateCalendar: _openUpdateScheduleSheet,
+              onSync: () {},
+            ),
       const _PlaceholderTab(title: "Requests"),
       const _PlaceholderTab(title: "Inbox"),
       const _PlaceholderTab(title: "Listings"),
@@ -211,11 +209,12 @@ class _CalendarEmptyListing extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Padding(
-                      padding: const EdgeInsets.only(top: 2),
+                      padding: EdgeInsets.only(top: 2),
                       child: Icon(
-                        Icons.warning_amber_outlined, // outlined = closer to 2px stroke look
+                        Icons
+                            .warning_amber_outlined, // outlined = closer to 2px stroke look
                         size: 21,
-                        color: const Color(0xFF000000),
+                        color: Color(0xFF000000),
                       ),
                     ),
 
@@ -246,7 +245,6 @@ class _CalendarEmptyListing extends StatelessWidget {
                               color: const Color(0xFF000000),
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -275,7 +273,6 @@ class _CalendarEmptyListing extends StatelessWidget {
                         color: const Color(0xFFFFFFFF),
                       ),
                     ),
-
                   ),
                 ),
               ],
@@ -352,7 +349,11 @@ class _CalendarMonthView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: const Padding(
                   padding: EdgeInsets.all(6),
-                  child: Icon(Icons.chevron_left_rounded, size: 24, color: _muted),
+                  child: Icon(
+                    Icons.chevron_left_rounded,
+                    size: 24,
+                    color: _muted,
+                  ),
                 ),
               ),
               const Spacer(),
@@ -370,7 +371,11 @@ class _CalendarMonthView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: const Padding(
                   padding: EdgeInsets.all(6),
-                  child: Icon(Icons.chevron_right_rounded, size: 24, color: _muted),
+                  child: Icon(
+                    Icons.chevron_right_rounded,
+                    size: 24,
+                    color: _muted,
+                  ),
                 ),
               ),
             ],
@@ -411,7 +416,11 @@ class _CalendarMonthView extends StatelessWidget {
               width: 36,
               height: 22,
               alignment: Alignment.center,
-              child: const Icon(Icons.keyboard_arrow_up_rounded, size: 22, color: Color(0xFF9B9B9B)),
+              child: const Icon(
+                Icons.keyboard_arrow_up_rounded,
+                size: 22,
+                color: Color(0xFF9B9B9B),
+              ),
             ),
           ),
           Container(
@@ -449,7 +458,9 @@ class _CalendarMonthView extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _green,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 child: const Text(
                   "Update Calendar",
@@ -566,30 +577,32 @@ class _CalendarGrid extends StatelessWidget {
                   child: Center(
                     child: isSelected
                         ? Container(
-                      width: 28,
-                      height: 28,
-                      decoration: const BoxDecoration(
-                        color: _green,
-                        shape: BoxShape.circle,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "$current",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    )
+                            width: 28,
+                            height: 28,
+                            decoration: const BoxDecoration(
+                              color: _green,
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "$current",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )
                         : Text(
-                      "$current",
-                      style: TextStyle(
-                        color: isSunday ? Colors.red : const Color(0xFF8B8B8B),
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                            "$current",
+                            style: TextStyle(
+                              color: isSunday
+                                  ? Colors.red
+                                  : const Color(0xFF8B8B8B),
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
               );
@@ -621,7 +634,10 @@ class _SyncButton extends StatelessWidget {
         children: const [
           _GoogleG(),
           SizedBox(width: 6),
-          Text("Sync", style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
+          Text(
+            "Sync",
+            style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );
@@ -703,7 +719,11 @@ class _UpdateScheduleSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                   child: const Padding(
                     padding: EdgeInsets.all(6),
-                    child: Icon(Icons.close_rounded, size: 20, color: Color(0xFF4A4A4A)),
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 20,
+                      color: Color(0xFF4A4A4A),
+                    ),
                   ),
                 ),
               ],
@@ -719,7 +739,11 @@ class _UpdateScheduleSheet extends StatelessWidget {
                 color: _green.withOpacity(.12),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(Icons.event_busy_rounded, color: _green, size: 28),
+              child: const Icon(
+                Icons.event_busy_rounded,
+                color: _green,
+                size: 28,
+              ),
             ),
 
             const SizedBox(height: 14),
@@ -740,9 +764,9 @@ class _UpdateScheduleSheet extends StatelessWidget {
 
             const Text(
               "It’s been a while since you created an event, keeping\n"
-                  "your schedule up to date will help you avoid declining\n"
-                  "requests. Otherwise, you may lose visibility and miss out\n"
-                  "on new clients.",
+              "your schedule up to date will help you avoid declining\n"
+              "requests. Otherwise, you may lose visibility and miss out\n"
+              "on new clients.",
               style: TextStyle(
                 color: Color(0xFF6B6B6B),
                 fontSize: 12.4,
@@ -763,11 +787,16 @@ class _UpdateScheduleSheet extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: _green, width: 1),
                         foregroundColor: _green,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       child: const Text(
                         "Cancel",
-                        style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -781,11 +810,17 @@ class _UpdateScheduleSheet extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _green,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       child: const Text(
                         "Update",
-                        style: TextStyle(color: Colors.white, fontSize: 13.5, fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -834,7 +869,11 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                     borderRadius: BorderRadius.circular(999),
                     child: const Padding(
                       padding: EdgeInsets.all(6),
-                      child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: Color(0xFF1F1F1F)),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 18,
+                        color: Color(0xFF1F1F1F),
+                      ),
                     ),
                   ),
                   const Spacer(),
@@ -842,7 +881,10 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                     onPressed: () {},
                     style: TextButton.styleFrom(
                       foregroundColor: _muted,
-                      textStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                      textStyle: const TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     child: const Text("my schedule"),
                   ),
@@ -918,7 +960,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                         ),
                         Switch(
                           value: _allDay,
-                          activeColor: _green,
+                          activeThumbColor: _green,
                           onChanged: (v) => setState(() => _allDay = v),
                         ),
                       ],
@@ -944,11 +986,17 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _green,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: const Text(
                     "Update Event",
-                    style: TextStyle(color: Colors.white, fontSize: 14.5, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -961,7 +1009,11 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
 }
 
 class _TopTab extends StatelessWidget {
-  const _TopTab({required this.text, required this.selected, required this.onTap});
+  const _TopTab({
+    required this.text,
+    required this.selected,
+    required this.onTap,
+  });
   final String text;
   final bool selected;
   final VoidCallback onTap;
@@ -1032,11 +1084,11 @@ class _GreyField extends StatelessWidget {
 
 class _LabelStyle extends TextStyle {
   const _LabelStyle()
-      : super(
-    // color: Color(0xFF1F1F1F),
-    fontSize: 12.5,
-    fontWeight: FontWeight.w700,
-  );
+    : super(
+        // color: Color(0xFF1F1F1F),
+        fontSize: 12.5,
+        fontWeight: FontWeight.w700,
+      );
 }
 
 /// ====================== Bottom Nav item ======================
@@ -1093,7 +1145,10 @@ class _PlaceholderTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+      ),
     );
   }
 }

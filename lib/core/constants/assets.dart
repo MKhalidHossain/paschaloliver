@@ -2,12 +2,10 @@ class Images {
   static const String appLogo = 'assets/message/logo.png';
   static const String wellcomeappLogo = 'assets/images/image_133.png';
 
-
   static const String welcome = 'assets/images/Wellcome.png';
   static const String google = 'assets/icons/google.png';
   static const String apple = 'assets/icons/apple.png';
   static const String facebook = 'assets/icons/facebook.png';
-
 
   //calender
   static const String homeIcon = 'assets/calender/home.png';
@@ -19,8 +17,6 @@ class Images {
   static const String othersIcon = 'assets/calender/Layer_1.png';
   static const String backbonIcon = 'assets/calender/backbon.png';
   static const String servicesIcon = 'assets/icons/services.png';
-
-
 
   static const String floorDoorIcon = 'assets/images/image_161.png';
   static const String addressIcon = 'assets/images/address_2021.png';
@@ -41,10 +37,6 @@ class Images {
   static const String paymentEmptyIcon = 'assets/icons/payment.png';
   static const String arrowIcon = 'assets/icons/arrow.png';
 
-
-
-
-
   //listing
   static const String cleaningIcon = 'assets/calender/cleaning.png';
   static const String ironingIcon = 'assets/calender/ironing.png';
@@ -55,12 +47,10 @@ class Images {
   static const String kitchenIcon = 'assets/calender/kitchen_icon.png';
   static const String cleaningAndhandymanIcon = 'assets/calender/image _01.png';
 
-
   //haircut
   static const String salonIcon = 'assets/icons/salon.png';
   static const String manicureIcon = 'assets/icons/manicure.png';
   static const String haircutIcon = 'assets/icons/haircut.png';
-
 
   //
   static const String photoIcon = 'assets/icons/photo.png';
@@ -72,23 +62,20 @@ class Images {
   static const String offerIcon = 'assets/images/servicer.png';
   static const String clientIcon = 'assets/images/client.png';
 
-
-
-
-
-
-
   //create account
   static const String men = 'assets/images/image 162.png';
   static const String onboarding2 = 'assets/images/image_127.png';
   static const String onboarding3 = 'assets/images/image_128.png';
   static const String onboarding4 = 'assets/images/image_129.png';
 
-
   static const String bookmarkIcon = 'assets/images/bookmark-add.png';
   static const String paymentIcon = 'assets/images/paymentIcon.png';
   static const String invoiceFileIcon = 'assets/images/invoices-file-06.png';
-
+  static const String helpIcon = 'assets/profile/help-circle.png';
+  static const String aboutIcon = 'assets/profile/lightbulb-05.png';
+  static const String dollerIcon = 'assets/profile/dollerIcon.png';
+  static const String shieldIcon = 'assets/profile/shield.png';
+  static const String privacyIcon = 'assets/profile/file-02.png';
 
   //message
   static const String messageIcon = 'assets/message/message_icon.png';
@@ -104,17 +91,13 @@ class Images {
   static const String refreshIcon = 'assets/message/refresh_icon.png';
 
   static const String congratulationsIcon = 'assets/images/Icon.png';
-  static const String addressLocIcon = 'assets/images/Locationm_ marker-pin-06.png';
+  static const String addressLocIcon =
+      'assets/images/Locationm_ marker-pin-06.png';
   static const String roundIcon = 'assets/images/round.png';
   static const String logoutIcon = 'assets/images/logout.png';
   static const String logout2Icon = 'assets/images/log-out-02.png';
   static const String star2Icon = 'assets/images/star.png';
-
-
-
-
-
-
+  static const String locIcon = 'assets/information/locationIcon.png';
 
   // profile ====================
 
@@ -130,10 +113,7 @@ class Images {
   //information-------------------------------
   static const String bulb = 'assets/information/bulb.png';
   static const String idFront = 'assets/image_20.png';
-  static const String idBack  = 'assets/images/image_20.png';
-
-
-
+  static const String idBack = 'assets/images/image_20.png';
 
   static const String account = 'assets/images/account.png';
 

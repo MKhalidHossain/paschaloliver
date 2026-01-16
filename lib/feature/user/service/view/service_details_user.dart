@@ -494,7 +494,7 @@ class _PaymentChevronRow extends StatelessWidget {
 /* ----------------------------- DOT + META ----------------------------- */
 
 class _DotRow extends StatelessWidget {
-  const _DotRow({super.key, required this.text});
+  const _DotRow({required this.text});
 
   final String text;
 
@@ -586,7 +586,6 @@ class _MetaRow extends StatelessWidget {
 
 class _SmallStatCard extends StatelessWidget {
   const _SmallStatCard({
-    super.key,
     required this.icon,
     required this.title,
     required this.value,
@@ -942,7 +941,11 @@ class _PriceRow extends StatelessWidget {
                 ),
                 if (showInfo) ...[
                   const SizedBox(width: 6),
-                  const Icon(Icons.info_outline_rounded, size: 16, color: _muted),
+                  const Icon(
+                    Icons.info_outline_rounded,
+                    size: 16,
+                    color: _muted,
+                  ),
                 ],
               ],
             ),
@@ -962,4 +965,3 @@ class _PriceRow extends StatelessWidget {
     );
   }
 }
-

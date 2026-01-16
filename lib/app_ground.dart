@@ -44,10 +44,7 @@ class _AppGroundState extends State<AppGround> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: IndexedStack(
-              index: _index,
-              children: _pages,
-            ),
+            child: IndexedStack(index: _index, children: _pages),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -111,6 +108,7 @@ class _BottomBar extends StatelessWidget {
                   label: "Requests",
                   icon: Images.requestsIcon,
                   activeIcon: Images.requestsIcon,
+                  activeIconColor: favRed,
                   isActive: currentIndex == 1,
                   activeColor: activeGreen,
                   inactiveColor: inactive,
@@ -120,7 +118,8 @@ class _BottomBar extends StatelessWidget {
                 /// ✅ Inbox icon: works for IconData OR asset path String OR widget
                 _NavItem(
                   label: "Inbox",
-                  icon: Images.messageIcon, // can be IconData OR String(asset path) OR Widget
+                  icon: Images
+                      .messageIcon, // can be IconData OR String(asset path) OR Widget
                   activeIcon: Images.messageIcon,
                   isActive: currentIndex == 3,
                   activeColor: activeGreen,
@@ -137,11 +136,10 @@ class _BottomBar extends StatelessWidget {
                   onTap: () => onChanged(2),
                 ),
 
-
-
                 _NavItem(
                   label: "Profile",
-                  icon: Images.userIcon, // can be IconData OR String(asset path) OR Widget
+                  icon: Images
+                      .userIcon, // can be IconData OR String(asset path) OR Widget
                   activeIcon: Images.userIcon,
                   isActive: currentIndex == 4,
                   activeColor: activeGreen,
@@ -159,35 +157,40 @@ class _BottomBar extends StatelessWidget {
 
 class _NavItem extends StatelessWidget {
   const _NavItem({
+    super.key,
     required this.label,
     required this.icon,
     this.activeIcon,
+    this.activeIconColor,
     required this.isActive,
     required this.activeColor,
     required this.inactiveColor,
     required this.onTap,
-    this.activeIconColor,
   });
 
   final String label;
 
-  /// ✅ icon can be:
-  /// - IconData (Material icons)
-  /// - String (asset path: png/jpg/svg)
-  /// - Widget (SvgPicture.asset / Image.asset / etc.)
+  /// Can be:
+  /// - IconData
+  /// - String (asset path)
+  /// - Widget (Image, SvgPicture, etc.)
   final dynamic icon;
   final dynamic activeIcon;
 
   final bool isActive;
   final Color activeColor;
   final Color inactiveColor;
+
+  /// Optional: use a different color for the active icon (e.g. red heart)
   final Color? activeIconColor;
 
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final Color iconColor = isActive ? (activeIconColor ?? activeColor) : inactiveColor;
+    final Color iconColor = isActive
+        ? (activeIconColor ?? activeColor)
+        : inactiveColor;
     final Color textColor = isActive ? activeColor : inactiveColor;
 
     final dynamic picked = isActive ? (activeIcon ?? icon) : icon;
@@ -200,11 +203,7 @@ class _NavItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _SmartIcon(
-                value: picked,
-                color: iconColor,
-                size: 22,
-              ),
+              _SmartIcon(value: picked, color: iconColor, size: 22),
               const SizedBox(height: 4),
               Text(
                 label,
@@ -227,11 +226,7 @@ class _NavItem extends StatelessWidget {
 
 /// ✅ This widget makes ANY icon type colorable
 class _SmartIcon extends StatelessWidget {
-  const _SmartIcon({
-    required this.value,
-    required this.color,
-    this.size = 22,
-  });
+  const _SmartIcon({required this.value, required this.color, this.size = 22});
 
   final dynamic value;
   final Color color;
@@ -261,7 +256,6 @@ class _SmartIcon extends StatelessWidget {
     if (value is String) {
       final path = value.toLowerCase();
 
-
       // PNG/JPG -> colorize using ColorFiltered
       return SizedBox(
         width: size,
@@ -283,7 +277,7 @@ class _SmartIcon extends StatelessWidget {
 /// ------------------------
 class _StubPage extends StatelessWidget {
   final String title;
-  const _StubPage({required this.title, super.key});
+  const _StubPage({required this.title});
 
   @override
   Widget build(BuildContext context) {

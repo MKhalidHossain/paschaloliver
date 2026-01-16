@@ -79,7 +79,11 @@ class BookingDetailsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: const Padding(
                       padding: EdgeInsets.all(8),
-                      child: Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: _C.text),
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 18,
+                        color: _C.text,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -88,7 +92,11 @@ class BookingDetailsScreen extends StatelessWidget {
                       "Booking details",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: _C.text),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w900,
+                        color: _C.text,
+                      ),
                     ),
                   ),
                 ],
@@ -103,7 +111,14 @@ class BookingDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Select Date", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text)),
+                    const Text(
+                      "Select Date",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: _C.text,
+                      ),
+                    ),
                     const SizedBox(height: 12),
 
                     // Month row
@@ -115,14 +130,21 @@ class BookingDetailsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             child: const Padding(
                               padding: EdgeInsets.all(6),
-                              child: Icon(Icons.chevron_left_rounded, color: _C.muted),
+                              child: Icon(
+                                Icons.chevron_left_rounded,
+                                color: _C.muted,
+                              ),
                             ),
                           ),
                           Expanded(
                             child: Text(
                               _monthTitle(c.viewMonth.value),
                               textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: _C.text),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                                color: _C.text,
+                              ),
                             ),
                           ),
                           InkWell(
@@ -130,7 +152,10 @@ class BookingDetailsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             child: const Padding(
                               padding: EdgeInsets.all(6),
-                              child: Icon(Icons.chevron_right_rounded, color: _C.muted),
+                              child: Icon(
+                                Icons.chevron_right_rounded,
+                                color: _C.muted,
+                              ),
                             ),
                           ),
                         ],
@@ -160,10 +185,11 @@ class BookingDetailsScreen extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: days.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 7,
-                          mainAxisExtent: 32,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 7,
+                              mainAxisExtent: 32,
+                            ),
                         itemBuilder: (_, i) {
                           final d = days[i];
                           if (d == null) return const SizedBox.shrink();
@@ -185,7 +211,9 @@ class BookingDetailsScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w800,
                                       color: isSunday
                                           ? Colors.red
-                                          : (isSel ? _C.green : _C.text.withOpacity(.70)),
+                                          : (isSel
+                                                ? _C.green
+                                                : _C.text.withOpacity(.70)),
                                     ),
                                   ),
                                   const SizedBox(height: 3),
@@ -194,7 +222,9 @@ class BookingDetailsScreen extends StatelessWidget {
                                     width: 5,
                                     height: 5,
                                     decoration: BoxDecoration(
-                                      color: isSel ? _C.green : Colors.transparent,
+                                      color: isSel
+                                          ? _C.green
+                                          : Colors.transparent,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -212,10 +242,21 @@ class BookingDetailsScreen extends StatelessWidget {
                     Obx(() {
                       return Row(
                         children: [
-                          const Text("Duration ", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text)),
+                          const Text(
+                            "Duration ",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              color: _C.text,
+                            ),
+                          ),
                           Text(
                             _durationLabel(c.durationMinutes.value),
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.green),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              color: _C.green,
+                            ),
                           ),
                         ],
                       );
@@ -231,7 +272,9 @@ class BookingDetailsScreen extends StatelessWidget {
                           thumbColor: Colors.white,
                           overlayColor: _C.green.withOpacity(.12),
                           trackHeight: 6,
-                          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+                          thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 8,
+                          ),
                         ),
                         child: Slider(
                           value: c.durationMinutes.value.toDouble(),
@@ -244,7 +287,14 @@ class BookingDetailsScreen extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-                    const Text("Start time", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: _C.text)),
+                    const Text(
+                      "Start time",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: _C.text,
+                      ),
+                    ),
                     const SizedBox(height: 10),
 
                     // Segmented (Flexible/Exact)
@@ -309,16 +359,22 @@ class BookingDetailsScreen extends StatelessWidget {
             height: 46,
             child: ElevatedButton(
               onPressed: () {
-                Get.to(()=>const ConfirmAndPayScreen());
+                Get.to(() => const ConfirmAndPayScreen());
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: _C.green,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: const Text(
                 "Continue with ₦145",
-                style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -339,7 +395,14 @@ class _FlexibleSlots extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Morning", style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted)),
+        const Text(
+          "Morning",
+          style: TextStyle(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w900,
+            color: _C.muted,
+          ),
+        ),
         const SizedBox(height: 8),
 
         Obx(() {
@@ -355,7 +418,14 @@ class _FlexibleSlots extends StatelessWidget {
         }),
 
         const SizedBox(height: 14),
-        const Text("Evening", style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.muted)),
+        const Text(
+          "Evening",
+          style: TextStyle(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w900,
+            color: _C.muted,
+          ),
+        ),
         const SizedBox(height: 8),
 
         Obx(() {
@@ -381,7 +451,11 @@ class _Slot {
 }
 
 class _SlotGrid extends StatelessWidget {
-  const _SlotGrid({required this.slots, required this.selected, required this.onPick});
+  const _SlotGrid({
+    required this.slots,
+    required this.selected,
+    required this.onPick,
+  });
   final List<_Slot> slots;
   final String selected;
   final ValueChanged<String> onPick;
@@ -523,7 +597,14 @@ class _TimeColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.text)),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w900,
+            color: _C.text,
+          ),
+        ),
         const SizedBox(height: 8),
         Expanded(
           child: Obx(() {
@@ -561,7 +642,6 @@ class _TimeColumn extends StatelessWidget {
             );
           }),
         ),
-
       ],
     );
   }
@@ -570,7 +650,11 @@ class _TimeColumn extends StatelessWidget {
 /// ------------------------------ SEGMENT ------------------------------
 
 class _Segment extends StatelessWidget {
-  const _Segment({required this.label, required this.selected, required this.onTap});
+  const _Segment({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -590,7 +674,11 @@ class _Segment extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           label,
-          style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w900, color: _C.text),
+          style: const TextStyle(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w900,
+            color: _C.text,
+          ),
         ),
       ),
     );
@@ -641,7 +729,8 @@ String _monthTitle(DateTime d) {
   return "${names[d.month - 1]} ${d.year}";
 }
 
-bool _sameDate(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
+bool _sameDate(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
 
 String _durationLabel(int m) {
   final h = m ~/ 60;
@@ -659,8 +748,14 @@ List<DateTime?> _buildMonthDays(DateTime month) {
   final trailing = (7 - (total % 7)) % 7;
 
   final out = <DateTime?>[];
-  for (int i = 0; i < leading; i++) out.add(null);
-  for (int d = 1; d <= last.day; d++) out.add(DateTime(month.year, month.month, d));
-  for (int i = 0; i < trailing; i++) out.add(null);
+  for (int i = 0; i < leading; i++) {
+    out.add(null);
+  }
+  for (int d = 1; d <= last.day; d++) {
+    out.add(DateTime(month.year, month.month, d));
+  }
+  for (int i = 0; i < trailing; i++) {
+    out.add(null);
+  }
   return out;
 }

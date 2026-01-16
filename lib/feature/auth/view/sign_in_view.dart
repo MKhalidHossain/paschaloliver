@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app_ground.dart';
@@ -68,7 +67,6 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,10 +74,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
         children: [
           // background illustration
           Positioned.fill(
-            child: Image.asset(
-              Images.welcome,
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset(Images.welcome, fit: BoxFit.cover),
           ),
 
           // gradient overlay for readability
@@ -103,10 +98,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
             top: true,
             bottom: false,
             child: Column(
-              children: [
-                const Spacer(),
-                _buildBottomSheet(context),
-              ],
+              children: [const Spacer(), _buildBottomSheet(context)],
             ),
           ),
         ],
@@ -165,7 +157,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                       style: GoogleFonts.urbanist(
                         fontSize: 24,
                         fontWeight: FontWeight.w500, // ✅ Medium (500)
-                        height: 1.1,                 // ✅ 110%
+                        height: 1.1, // ✅ 110%
                         letterSpacing: 0,
                         color: const Color(0xFF181919), // ✅ #181919
                       ),
@@ -179,11 +171,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                   onTap: () => Navigator.of(context).maybePop(),
                   child: const Padding(
                     padding: EdgeInsets.all(4.0),
-                    child: Icon(
-                      Icons.close,
-                      size: 22,
-                      color: Colors.black54,
-                    ),
+                    child: Icon(Icons.close, size: 22, color: Colors.black54),
                   ),
                 ),
               ],
@@ -209,8 +197,10 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
               autofillHints: const [AutofillHints.email],
               decoration: InputDecoration(
                 hintText: 'you@gmail.com',
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 border: _outlineBorder(),
                 enabledBorder: _outlineBorder(),
                 focusedBorder: _outlineBorder(
@@ -245,8 +235,10 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
               obscureText: _obscurePassword,
               decoration: InputDecoration(
                 hintText: '****************',
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 border: _outlineBorder(),
                 enabledBorder: _outlineBorder(),
                 focusedBorder: _outlineBorder(
@@ -284,7 +276,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                   value: _rememberMe,
                   visualDensity: VisualDensity.compact,
                   activeColor: const Color(0xFF3FA96B), // ✅ green when checked
-                  checkColor: Colors.white,             // ✅ tick color
+                  checkColor: Colors.white, // ✅ tick color
                   onChanged: (v) {
                     if (v == null) return;
                     setState(() => _rememberMe = v);
@@ -294,10 +286,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                 const SizedBox(width: 2),
                 const Text(
                   'Remember me',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.black87,
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.black87),
                 ),
                 const Spacer(),
                 TextButton(
@@ -306,7 +295,8 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                     minimumSize: const Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  onPressed: () {                       // 👈 change here
+                  onPressed: () {
+                    // 👈 change here
                     Get.to(() => const HandyForgotPasswordScreen());
                   },
 
@@ -341,14 +331,13 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                   style: GoogleFonts.urbanist(
                     fontSize: 16,
                     fontWeight: FontWeight.w500, // ✅ Figma 500
-                    height: 1.1,                 // ✅ 110%
-                    letterSpacing: 0,            // ✅ 0%
-                    color: Colors.white,         // ✅ #FFFFFF
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: Colors.white, // ✅ #FFFFFF
                   ),
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -358,10 +347,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
   OutlineInputBorder _outlineBorder({Color? color}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(
-        color: color ?? const Color(0xFFDDDDDD),
-        width: 1,
-      ),
+      borderSide: BorderSide(color: color ?? const Color(0xFFDDDDDD), width: 1),
     );
   }
 }

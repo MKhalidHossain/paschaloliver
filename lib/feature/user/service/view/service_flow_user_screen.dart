@@ -962,7 +962,7 @@ class _CanceledServiceCard extends StatelessWidget {
 /* ============================ SMALL WIDGETS ============================ */
 
 class _VerifiedDot extends StatelessWidget {
-  const _VerifiedDot({super.key});
+  const _VerifiedDot();
 
   @override
   Widget build(BuildContext context) {

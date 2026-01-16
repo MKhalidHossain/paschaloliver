@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:paschaloliver/feature/splash/splash_view.dart';
 
-import 'feature/user/app_ground_user.dart';
 
 void main() {
   runApp(const MyApp());

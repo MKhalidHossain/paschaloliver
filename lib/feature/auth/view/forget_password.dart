@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 
 import '../../../core/constants/assets.dart';
-import 'handy_login_screen.dart';
 import 'otp_screen.dart';
 
 class HandyForgotPasswordScreen extends StatefulWidget {
@@ -67,7 +65,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                     style: GoogleFonts.urbanist(
                       fontSize: 28,
                       fontWeight: FontWeight.w600, // ✅ SemiBold
-                      height: 1.1,                 // ✅ 110%
+                      height: 1.1, // ✅ 110%
                       letterSpacing: 0,
                       color: const Color(0xFF123055), // ✅ #123055
                     ),
@@ -82,7 +80,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                 child: Center(
                   child: Text(
                     'Select which contact details should we used to reset\n'
-                        'your password',
+                    'your password',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
@@ -104,8 +102,10 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -118,7 +118,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                         blurRadius: 8,
                         offset: const Offset(0, 3),
                         color: Colors.black.withOpacity(0.03),
-                      )
+                      ),
                     ],
                   ),
                   child: Row(
@@ -151,7 +151,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                                 style: GoogleFonts.urbanist(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400, // ✅ Regular
-                                  height: 1.1,                 // ✅ 110%
+                                  height: 1.1, // ✅ 110%
                                   letterSpacing: 0,
                                   color: const Color(0xFF727272), // ✅ #727272
                                 ),
@@ -167,18 +167,18 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                                 style: GoogleFonts.urbanist(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500, // ✅ 500 Medium
-                                  height: 1.1,                 // ✅ 110%
+                                  height: 1.1, // ✅ 110%
                                   letterSpacing: 0,
-                                  color: const Color(0xFF181919), // ✅ Black Text
+                                  color: const Color(
+                                    0xFF181919,
+                                  ), // ✅ Black Text
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ),
                       const SizedBox(width: 8),
-                      
                     ],
                   ),
                 ),
@@ -209,7 +209,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                         style: GoogleFonts.urbanist(
                           fontSize: 16,
                           fontWeight: FontWeight.w500, // ✅ Medium 500
-                          height: 1.1,                 // ✅ 110%
+                          height: 1.1, // ✅ 110%
                           letterSpacing: 0,
                           color: Colors.white,
                         ),

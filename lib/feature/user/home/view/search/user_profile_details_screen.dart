@@ -452,14 +452,16 @@ class NicolasProfileScreen extends StatelessWidget {
                       isScrollControlled: true,
                       backgroundColor: Colors.white, // ✅ not transparent
                       barrierColor: Colors.black.withOpacity(.35),
-                      useSafeArea: false, // ✅ allows sheet to reach screen bottom
+                      useSafeArea:
+                          false, // ✅ allows sheet to reach screen bottom
                       shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)), // ✅ only top rounded
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ), // ✅ only top rounded
                       ),
                       clipBehavior: Clip.antiAlias,
                       builder: (_) => const _InformationOfInterestSheet(),
                     );
-
                   },
 
                   style: OutlinedButton.styleFrom(
@@ -592,7 +594,7 @@ class NicolasProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 8),
-                  Container(
+                  SizedBox(
                     width: 86,
                     height: 86,
                     child: Image.asset(
@@ -603,7 +605,6 @@ class NicolasProfileScreen extends StatelessWidget {
                       // if your asset is a PNG and you want it green:
                       // color: _C.green,
                     ),
-
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -896,7 +897,12 @@ class _InformationOfInterestSheet extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: Container(
           width: double.infinity, // ✅ fill left/right
-          padding: EdgeInsets.fromLTRB(16, 12, 16, 16 + bottom), // ✅ fill bottom area
+          padding: EdgeInsets.fromLTRB(
+            16,
+            12,
+            16,
+            16 + bottom,
+          ), // ✅ fill bottom area
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -1137,7 +1143,6 @@ class _InformationOfInterestSheet extends StatelessWidget {
   }
 }
 
-
 class _SheetCheckList extends StatelessWidget {
   const _SheetCheckList({required this.items});
 
@@ -1188,7 +1193,9 @@ void _openContactUsSheet(BuildContext context) {
     backgroundColor: Colors.white, // ✅ not transparent
     barrierColor: Colors.black.withOpacity(.35),
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(22)), // ✅ only top radius
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(22),
+      ), // ✅ only top radius
     ),
     clipBehavior: Clip.antiAlias,
     builder: (ctx) {
@@ -1225,7 +1232,11 @@ class _ContactUsContent extends StatelessWidget {
             const Expanded(
               child: Text(
                 "Contact us",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: _C.green),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: _C.green,
+                ),
               ),
             ),
             InkWell(
@@ -1239,7 +1250,11 @@ class _ContactUsContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(color: _C.line),
                 ),
-                child: const Icon(Icons.close_rounded, size: 16, color: _C.muted),
+                child: const Icon(
+                  Icons.close_rounded,
+                  size: 16,
+                  color: _C.muted,
+                ),
               ),
             ),
           ],
@@ -1251,7 +1266,12 @@ class _ContactUsContent extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             "If you need to contact us, please write an email to",
-            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: _C.muted, height: 1.35),
+            style: TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+              color: _C.muted,
+              height: 1.35,
+            ),
           ),
         ),
         const SizedBox(height: 6),
@@ -1260,7 +1280,11 @@ class _ContactUsContent extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             "contact@apphandynaija.com",
-            style: TextStyle(fontSize: 11.8, fontWeight: FontWeight.w900, color: _C.green),
+            style: TextStyle(
+              fontSize: 11.8,
+              fontWeight: FontWeight.w900,
+              color: _C.green,
+            ),
           ),
         ),
 
@@ -1270,7 +1294,12 @@ class _ContactUsContent extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             "Feel free to share any doubts or suggestions you have.\nWe will be happy to help you.",
-            style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: _C.muted, height: 1.35),
+            style: TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+              color: _C.muted,
+              height: 1.35,
+            ),
           ),
         ),
 
@@ -1284,11 +1313,17 @@ class _ContactUsContent extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: _C.green,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: const Text(
               "Got it",
-              style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w900, color: Colors.white),
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -1296,7 +1331,6 @@ class _ContactUsContent extends StatelessWidget {
     );
   }
 }
-
 
 /// ------------------------------ SMALL WIDGETS ------------------------------
 

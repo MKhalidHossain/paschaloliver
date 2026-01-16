@@ -63,7 +63,7 @@ class ApiClient {
           }
 
           // Token expired → refresh and retry
-          if (e.response?.statusCode == 401 && token != null) {
+          if (e.response?.statusCode == 401) {
             try {
               await _refreshToken();
               final retryResponse = await _dio.fetch(e.requestOptions);

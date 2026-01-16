@@ -241,7 +241,8 @@ class _ProgressBar extends StatelessWidget {
 /* --------------------------- Models/Colors --------------------------- */
 
 class _OptionItem {
-  _OptionItem(this.title, {this.selected = false});
+  _OptionItem(this.title, {this.selected = false}); // ✅ default false
+
   final String title;
   bool selected;
 }

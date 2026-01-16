@@ -115,21 +115,25 @@ class HandyServicesController extends GetxController {
     );
     if (res == null) return;
     if (res["top"] is String) selectedTopCategory.value = res["top"] as String;
-    if (res["items"] is Set<String>)
+    if (res["items"] is Set<String>) {
       selectedServiceItems.value = (res["items"] as Set<String>);
+    }
   }
 
   Future<void> openFilters() async {
     final res = await Get.to<Map<String, dynamic>>(() => const FiltersScreen());
     if (res == null) return;
 
-    if (res["price"] is RangeValues)
+    if (res["price"] is RangeValues) {
       priceRange.value = res["price"] as RangeValues;
+    }
     if (res["exp"] is String) experience.value = res["exp"] as String;
-    if (res["types"] is Set<String>)
+    if (res["types"] is Set<String>) {
       typeServices.value = (res["types"] as Set<String>);
-    if (res["tasks"] is Set<String>)
+    }
+    if (res["tasks"] is Set<String>) {
       otherTasks.value = (res["tasks"] as Set<String>);
+    }
     if (res["biz"] is bool) businessProfilesOnly.value = res["biz"] as bool;
   }
 
@@ -140,8 +144,9 @@ class HandyServicesController extends GetxController {
     if (res["freq"] is String) frequency.value = res["freq"] as String;
     if (res["dur"] is int) durationMinutes.value = res["dur"] as int;
     if (res["date"] is DateTime) selectedDate.value = res["date"] as DateTime;
-    if (res["startType"] is String)
+    if (res["startType"] is String) {
       startType.value = res["startType"] as String;
+    }
     if (res["from"] is String) fromTime.value = res["from"] as String;
     if (res["until"] is String) untilTime.value = res["until"] as String;
   }
@@ -458,7 +463,7 @@ class _GuaranteeCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 80,
             height: 80,
             // decoration: BoxDecoration(
@@ -513,7 +518,7 @@ class _GuaranteeCard extends StatelessWidget {
 }
 
 class _RecommendedBar extends StatelessWidget {
-  const _RecommendedBar({super.key, this.iconPath});
+  const _RecommendedBar({this.iconPath});
 
   final String? iconPath; // e.g. Images.checkBadgeIcon
 
@@ -1358,7 +1363,7 @@ class FiltersScreen extends StatelessWidget {
                     Switch(
                       value: biz.value,
                       onChanged: (v) => biz.value = v,
-                      activeColor: _C.green,
+                      activeThumbColor: _C.green,
                     ),
                   ],
                 );
@@ -2458,10 +2463,15 @@ class _ServiceDateSheetState extends State<ServiceDateSheet> {
     final trailing = (7 - (total % 7)) % 7;
 
     final list = <DateTime?>[];
-    for (int i = 0; i < leading; i++) list.add(null);
-    for (int d = 1; d <= last.day; d++)
+    for (int i = 0; i < leading; i++) {
+      list.add(null);
+    }
+    for (int d = 1; d <= last.day; d++) {
       list.add(DateTime(month.year, month.month, d));
-    for (int i = 0; i < trailing; i++) list.add(null);
+    }
+    for (int i = 0; i < trailing; i++) {
+      list.add(null);
+    }
     return list;
   }
 

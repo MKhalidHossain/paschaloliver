@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 
@@ -52,7 +51,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-
 
               const SizedBox(height: 24),
 
@@ -121,7 +119,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscure: _obscureConfirmPassword,
                 onToggle: () {
                   setState(
-                          () => _obscureConfirmPassword = !_obscureConfirmPassword);
+                    () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                  );
                 },
               ),
               const SizedBox(height: 24),
@@ -165,10 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'or',
-                      style: TextStyle(fontSize: 12),
-                    ),
+                    child: Text('or', style: TextStyle(fontSize: 12)),
                   ),
                   Expanded(
                     child: Container(
@@ -277,7 +273,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
@@ -295,7 +290,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           letterSpacing: 0,
           color: const Color(0xFF727272),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
           borderSide: BorderSide(color: _fieldBorder),
@@ -308,7 +306,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
   Widget _buildPasswordField({
     required TextEditingController controller,
     required bool obscure,
@@ -319,12 +316,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       obscureText: obscure,
       decoration: InputDecoration(
         hintText: '***************',
-        hintStyle: TextStyle(
-          fontSize: 13,
-          color: _hintColor,
+        hintStyle: TextStyle(fontSize: 13, color: _hintColor),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
         ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         suffixIcon: IconButton(
           icon: Icon(
             obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -404,4 +400,3 @@ class _SocialButton extends StatelessWidget {
     );
   }
 }
-

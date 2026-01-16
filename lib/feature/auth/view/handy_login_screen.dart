@@ -22,10 +22,7 @@ class HandyLoginScreen extends StatelessWidget {
         children: [
           // Background illustration
           Positioned.fill(
-            child: Image.asset(
-              Images.welcome,
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset(Images.welcome, fit: BoxFit.cover),
           ),
 
           // Dark overlay
@@ -121,11 +118,7 @@ class _BottomSheet extends StatelessWidget {
                 onTap: () => Navigator.of(context).maybePop(),
                 child: const Padding(
                   padding: EdgeInsets.all(4.0),
-                  child: Icon(
-                    Icons.close,
-                    size: 22,
-                    color: Colors.black87,
-                  ),
+                  child: Icon(Icons.close, size: 22, color: Colors.black87),
                 ),
               ),
             ],
@@ -300,40 +293,25 @@ class _SocialLoginButton extends StatelessWidget {
   }
 }
 
-
-
 class _DividerLine extends StatelessWidget {
   const _DividerLine();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 1,
-      color: const Color.fromARGB(255, 22, 16, 16),
-    );
+    return Container(height: 1, color: const Color.fromARGB(255, 22, 16, 16));
   }
 }
 
-
-
-
-
 class _TermsAndPrivacyText extends StatefulWidget {
-  const _TermsAndPrivacyText({
-    this.onTermsTap,
-    this.onPrivacyTap,
-  });
-
-  final VoidCallback? onTermsTap;
-  final VoidCallback? onPrivacyTap;
+  const _TermsAndPrivacyText({super.key});
 
   @override
   State<_TermsAndPrivacyText> createState() => _TermsAndPrivacyTextState();
 }
 
 class _TermsAndPrivacyTextState extends State<_TermsAndPrivacyText> {
-  late final TapGestureRecognizer _terms;
-  late final TapGestureRecognizer _privacy;
+  late final TapGestureRecognizer _termsRecognizer;
+  late final TapGestureRecognizer _privacyRecognizer;
 
   static const Color _grey = Color(0xFF727272); // Figma Gray
   static const Color _green = Color(0xFF3FA96B); // Green Primary
@@ -341,30 +319,22 @@ class _TermsAndPrivacyTextState extends State<_TermsAndPrivacyText> {
   @override
   void initState() {
     super.initState();
-    _terms = TapGestureRecognizer()..onTap = _handleTerms;
-    _privacy = TapGestureRecognizer()..onTap = _handlePrivacy;
-  }
 
-  @override
-  void didUpdateWidget(covariant _TermsAndPrivacyText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // keep recognizers, just update callbacks behavior
-    _terms.onTap = _handleTerms;
-    _privacy.onTap = _handlePrivacy;
-  }
+    _termsRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        Get.to(() => const TermsConditionsScreen());
+      };
 
-  void _handleTerms() {
-    if (widget.onTermsTap != null) widget.onTermsTap!();
-  }
-
-  void _handlePrivacy() {
-    if (widget.onPrivacyTap != null) widget.onPrivacyTap!();
+    _privacyRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        Get.to(() => const PrivacyPolicyScreen());
+      };
   }
 
   @override
   void dispose() {
-    _terms.dispose();
-    _privacy.dispose();
+    _termsRecognizer.dispose();
+    _privacyRecognizer.dispose();
     super.dispose();
   }
 
@@ -388,17 +358,14 @@ class _TermsAndPrivacyTextState extends State<_TermsAndPrivacyText> {
           TextSpan(
             text: 'Terms and Conditions',
             style: linkStyle,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => Get.to(() => const TermsConditionsScreen()),
+            recognizer: _termsRecognizer,
           ),
           const TextSpan(text: ' and confirm that I have read the '),
           TextSpan(
             text: 'Privacy policy.',
             style: linkStyle,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => Get.to(() => const PrivacyPolicyScreen()),
+            recognizer: _privacyRecognizer,
           ),
-
         ],
       ),
       textAlign: TextAlign.center,
@@ -406,5 +373,3 @@ class _TermsAndPrivacyTextState extends State<_TermsAndPrivacyText> {
     );
   }
 }
-
-

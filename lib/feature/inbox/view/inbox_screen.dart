@@ -134,16 +134,17 @@ class _Tabs extends StatelessWidget {
 /// ===========================================================================
 /// CHAT TAB
 /// ===========================================================================
+
 class _ChatList extends StatelessWidget {
   const _ChatList({
     required this.items,
     required this.onTapChat,
-    this.emptyText,
+    this.emptyText, // ✅ optional param
   });
 
   final List<_ChatItem> items;
   final ValueChanged<_ChatItem> onTapChat;
-  final String? emptyText;
+  final String? emptyText; // ✅ now initialized via ctor
 
   @override
   Widget build(BuildContext context) {
@@ -453,7 +454,7 @@ class _AlertItem {
     required this.title,
     required this.subtitle,
     required this.timeLabel,
-    this.onTap,
+    this.onTap, // ✅ optional
   });
 }
 
@@ -622,7 +623,7 @@ class _ChatItem {
     required this.jobTitle,
     required this.lastMessage,
     required this.timeLabel,
-    this.avatarUrl,
+    this.avatarUrl, // ✅ optional
   });
 }
 
