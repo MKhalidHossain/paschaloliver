@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -26,15 +28,16 @@ class _InformationScreenState extends State<InformationScreen> {
 
   final _picker = ImagePicker();
 
-  // Front ID image used in back-side flow
-  //    (this comes from your saved asset, matching your Figma front card)
-  final ImageProvider _frontImage = const AssetImage(Images.idFront);
-
   // Personal details
   final _nameCtrl = TextEditingController();
   final _surnameCtrl = TextEditingController();
-  String? _gender; // dropdown
-  String? _dob; // you can swap to date picker
+  String? _gender;
+
+  // ✅ DOB (date picker)
+  final _dobCtrl = TextEditingController();
+  DateTime? _dobDate;
+
+  // ✅ Countries (ALL countries)
   String? _countryOfBirth;
   final _cityOfBirthCtrl = TextEditingController();
 
@@ -58,6 +61,7 @@ class _InformationScreenState extends State<InformationScreen> {
   void dispose() {
     _nameCtrl.dispose();
     _surnameCtrl.dispose();
+    _dobCtrl.dispose();
     _cityOfBirthCtrl.dispose();
     _documentNumberCtrl.dispose();
     _streetCtrl.dispose();
@@ -67,10 +71,6 @@ class _InformationScreenState extends State<InformationScreen> {
     _streetRegionCtrl.dispose();
     super.dispose();
   }
-
-  // ---------------------------------------------------------------------------
-  // BUILD
-  // ---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +89,10 @@ class _InformationScreenState extends State<InformationScreen> {
                   children: [
                     _buildImportantCard(),
                     const SizedBox(height: 16),
+
                     _sectionTitle('Personal details'),
                     const SizedBox(height: 8),
+
                     _textField(
                       controller: _nameCtrl,
                       label: 'Name',
@@ -99,9 +101,9 @@ class _InformationScreenState extends State<InformationScreen> {
                     _textField(
                       controller: _surnameCtrl,
                       label: 'Surname',
-                      showError:
-                      _submitted && _surnameCtrl.text.trim().isEmpty,
+                      showError: _submitted && _surnameCtrl.text.trim().isEmpty,
                     ),
+
                     _dropdownField<String>(
                       value: _gender,
                       label: 'Gender',
@@ -109,48 +111,57 @@ class _InformationScreenState extends State<InformationScreen> {
                       showError: _submitted && _gender == null,
                       onChanged: (v) => setState(() => _gender = v),
                     ),
-                    _dropdownField<String>(
-                      value: _dob,
+
+                    // ✅ Date picker (calendar)
+                    _datePickerField(
+                      controller: _dobCtrl,
                       label: 'Date of birth',
-                      // for now simple list, swap to real date-picker in onTap if you want
-                      items: const ['01/01/1990', '01/01/1995', '01/01/2000'],
-                      showError: _submitted && _dob == null,
-                      onChanged: (v) => setState(() => _dob = v),
+                      showError: _submitted && _dobDate == null,
+                      onPick: () => _pickDob(context),
                     ),
-                    _dropdownField<String>(
-                      value: _countryOfBirth,
+
+                    // ✅ Country of birth (ALL)
+                    _countryPickerField(
                       label: 'Country of birth',
-                      items: const ['Nigeria', 'Ghana', 'Kenya', 'Other'],
+                      value: _countryOfBirth,
                       showError: _submitted && _countryOfBirth == null,
-                      onChanged: (v) => setState(() => _countryOfBirth = v),
+                      onTap: () => _openCountryPicker(
+                        onSelect: (c) =>
+                            setState(() => _countryOfBirth = c.name),
+                      ),
                     ),
+
                     _textField(
                       controller: _cityOfBirthCtrl,
                       label: 'City of birth',
-                      showError: _submitted &&
-                          _cityOfBirthCtrl.text.trim().isEmpty,
+                      showError:
+                          _submitted && _cityOfBirthCtrl.text.trim().isEmpty,
                     ),
 
                     const SizedBox(height: 18),
-                    _sectionTitle('Identify Documents'),
-                    const SizedBox(height: 8),
-                    _buildDocTypeSelector(),
-                    const SizedBox(height: 8),
-                    _buildUploadButton(),
 
-                    const SizedBox(height: 4),
-                    _dropdownField<String>(
-                      value: _countryOfDocument,
+                    // ===================== IDENTIFY DOCUMENTS (MATCHES YOUR IMAGE) =====================
+                    _sectionTitle('Identify Documents'),
+                    const SizedBox(height: 10),
+                    _buildDocSelectorWithUpload(), // ✅ Government -> Upload -> Passport
+                    const SizedBox(height: 12),
+
+                    // ✅ Country of the document (ALL countries)
+                    _countryPickerField(
                       label: 'Country of the document',
-                      items: const ['Nigeria', 'Ghana', 'Kenya', 'Other'],
+                      value: _countryOfDocument,
                       showError: _submitted && _countryOfDocument == null,
-                      onChanged: (v) => setState(() => _countryOfDocument = v),
+                      onTap: () => _openCountryPicker(
+                        onSelect: (c) =>
+                            setState(() => _countryOfDocument = c.name),
+                      ),
                     ),
+
                     _textField(
                       controller: _documentNumberCtrl,
                       label: 'Document number',
-                      showError: _submitted &&
-                          _documentNumberCtrl.text.trim().isEmpty,
+                      showError:
+                          _submitted && _documentNumberCtrl.text.trim().isEmpty,
                     ),
 
                     const SizedBox(height: 8),
@@ -159,6 +170,7 @@ class _InformationScreenState extends State<InformationScreen> {
                     const SizedBox(height: 18),
                     _sectionTitle('Address'),
                     const SizedBox(height: 8),
+
                     _textField(
                       controller: _streetCtrl,
                       label: 'Street',
@@ -167,8 +179,8 @@ class _InformationScreenState extends State<InformationScreen> {
                     _textField(
                       controller: _streetNumberCtrl,
                       label: 'Street number',
-                      showError: _submitted &&
-                          _streetNumberCtrl.text.trim().isEmpty,
+                      showError:
+                          _submitted && _streetNumberCtrl.text.trim().isEmpty,
                     ),
                     _textField(
                       controller: _zipCtrl,
@@ -184,15 +196,19 @@ class _InformationScreenState extends State<InformationScreen> {
                     _textField(
                       controller: _streetRegionCtrl,
                       label: 'Street/Country/Region',
-                      showError: _submitted &&
-                          _streetRegionCtrl.text.trim().isEmpty,
+                      showError:
+                          _submitted && _streetRegionCtrl.text.trim().isEmpty,
                     ),
-                    _dropdownField<String>(
-                      value: _countryAddress,
+
+                    // ✅ Country (address) (ALL)
+                    _countryPickerField(
                       label: 'Country',
-                      items: const ['Nigeria', 'Ghana', 'Kenya', 'Other'],
+                      value: _countryAddress,
                       showError: _submitted && _countryAddress == null,
-                      onChanged: (v) => setState(() => _countryAddress = v),
+                      onTap: () => _openCountryPicker(
+                        onSelect: (c) =>
+                            setState(() => _countryAddress = c.name),
+                      ),
                     ),
 
                     const SizedBox(height: 24),
@@ -218,13 +234,18 @@ class _InformationScreenState extends State<InformationScreen> {
         children: [
           IconButton(
             onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+            icon: const Icon(Icons.arrow_back, size: 20),
           ),
           const SizedBox(width: 4),
-          const Expanded(
+          Expanded(
             child: Text(
               'Information about your profile',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                height: 1.1,
+                color: _textDark,
+              ),
             ),
           ),
         ],
@@ -237,42 +258,44 @@ class _InformationScreenState extends State<InformationScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
+        color: const Color.fromARGB(255, 219, 219, 217),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ✅ Bulb from your assets
           Image.asset(
             Images.bulb,
             width: 24,
             height: 24,
+            errorBuilder: (_, __, ___) =>
+                const Icon(Icons.lightbulb_outline, size: 24),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Text(
                   'Important',
-                  style: TextStyle(
+                  style: GoogleFonts.urbanist(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF333333),
+                    height: 1.1,
+                    color: const Color(0xFF333333),
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   'Check that the information is correct so that you can charge for the services correctly.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.4,
-                    color: Color(0xFF777777),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    height: 1.1,
+                    letterSpacing: 0,
+                    color: const Color(0xFF000000),
                   ),
-                  textAlign: TextAlign.left,
-                  softWrap: true,
                 ),
               ],
             ),
@@ -283,19 +306,25 @@ class _InformationScreenState extends State<InformationScreen> {
   }
 
   // ---------------------------------------------------------------------------
-  // PERSONAL/DOC/ADDRESS FIELDS
+  // SECTION TITLE
   // ---------------------------------------------------------------------------
 
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
-        color: _brandGreen,
-        fontSize: 16,
-        fontWeight: FontWeight.w700,
+      style: GoogleFonts.urbanist(
+        color: _brandGreen, // #3FA96B
+        fontSize: 24, // ✅ Figma 24px
+        fontWeight: FontWeight.w600, // ✅ SemiBold
+        height: 1.1, // ✅ 110%
+        letterSpacing: 0, // ✅ 0%
       ),
     );
   }
+
+  // ---------------------------------------------------------------------------
+  // TEXT FIELD
+  // ---------------------------------------------------------------------------
 
   Widget _textField({
     required TextEditingController controller,
@@ -315,12 +344,19 @@ class _InformationScreenState extends State<InformationScreen> {
             keyboardType: keyboardType,
             decoration: InputDecoration(
               labelText: label,
-              labelStyle: TextStyle(
-                color: hasError ? _errorRed : _hintText,
-                fontSize: 13,
+              labelStyle: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 1.1,
+                letterSpacing: 0,
+                color: hasError ? _errorRed : const Color(0xFF3B3B3B),
               ),
               filled: true,
               fillColor: _bg,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: _borderGrey),
@@ -337,10 +373,13 @@ class _InformationScreenState extends State<InformationScreen> {
                   color: hasError ? _errorRed : _brandGreen,
                 ),
               ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 10,
-              ),
+            ),
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              height: 1.1,
+              letterSpacing: 0,
+              color: const Color(0xFF000000),
             ),
           ),
           if (hasError)
@@ -355,6 +394,10 @@ class _InformationScreenState extends State<InformationScreen> {
       ),
     );
   }
+
+  // ---------------------------------------------------------------------------
+  // NORMAL DROPDOWN (used only for Gender)
+  // ---------------------------------------------------------------------------
 
   Widget _dropdownField<T>({
     required T? value,
@@ -367,18 +410,100 @@ class _InformationScreenState extends State<InformationScreen> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
+      child: DropdownButtonFormField<T>(
+        value: value,
+        isExpanded: true,
+        icon: const Icon(
+          Icons.keyboard_arrow_down_rounded,
+          size: 22,
+          color: Color(0xFF3B3B3B),
+        ),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            height: 1.1,
+            letterSpacing: 0,
+            color: hasError ? _errorRed : const Color(0xFF3B3B3B),
+          ),
+          filled: true,
+          fillColor: _bg,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 14,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: _borderGrey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: hasError ? _errorRed : _borderGrey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: hasError ? _errorRed : _brandGreen),
+          ),
+        ),
+        style: GoogleFonts.urbanist(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          height: 1.1,
+          letterSpacing: 0,
+          color: const Color(0xFF000000),
+        ),
+        items: items
+            .map(
+              (e) => DropdownMenuItem<T>(value: e, child: Text(e.toString())),
+            )
+            .toList(),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // DATE PICKER FIELD
+  // ---------------------------------------------------------------------------
+
+  Widget _datePickerField({
+    required TextEditingController controller,
+    required String label,
+    required VoidCallback onPick,
+    bool showError = false,
+  }) {
+    final hasError = showError;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputDecorator(
+          TextField(
+            controller: controller,
+            readOnly: true,
+            onTap: onPick,
             decoration: InputDecoration(
               labelText: label,
-              labelStyle: TextStyle(
-                color: hasError ? _errorRed : _hintText,
-                fontSize: 13,
+              labelStyle: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 1.1,
+                letterSpacing: 0,
+                color: hasError ? _errorRed : const Color(0xFF3B3B3B),
               ),
               filled: true,
               fillColor: _bg,
+              suffixIcon: const Icon(
+                Icons.calendar_month_outlined,
+                size: 20,
+                color: Color(0xFF3B3B3B),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: _borderGrey),
@@ -395,31 +520,154 @@ class _InformationScreenState extends State<InformationScreen> {
                   color: hasError ? _errorRed : _brandGreen,
                 ),
               ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 2,
+            ),
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              height: 1.1,
+              letterSpacing: 0,
+              color: const Color(0xFF000000),
+            ),
+          ),
+          if (hasError)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 4),
+              child: Text(
+                'Please fill in the field',
+                style: TextStyle(color: _errorRed, fontSize: 11),
               ),
             ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<T>(
-                isExpanded: true,
-                value: value,
-                hint: Text(
-                  label,
-                  style: TextStyle(color: _hintText, fontSize: 13),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickDob(BuildContext context) async {
+    final now = DateTime.now();
+
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _dobDate ?? DateTime(now.year - 20, now.month, now.day),
+      firstDate: DateTime(1900, 1, 1),
+      lastDate: now,
+      builder: (ctx, child) {
+        return Theme(
+          data: Theme.of(ctx).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: _brandGreen,
+              onPrimary: Colors.white,
+              onSurface: _textDark,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: _brandGreen),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked == null) return;
+
+    setState(() {
+      _dobDate = picked;
+      _dobCtrl.text = _formatDate(picked);
+    });
+  }
+
+  String _formatDate(DateTime d) {
+    final dd = d.day.toString().padLeft(2, '0');
+    final mm = d.month.toString().padLeft(2, '0');
+    return '$dd/$mm/${d.year}';
+  }
+
+  // ---------------------------------------------------------------------------
+  // COUNTRY PICKER (ALL COUNTRIES)
+  // ---------------------------------------------------------------------------
+
+  void _openCountryPicker({required ValueChanged<Country> onSelect}) {
+    FocusScope.of(context).unfocus();
+
+    showCountryPicker(
+      context: context,
+      showPhoneCode: false,
+      onSelect: onSelect,
+      countryListTheme: CountryListThemeData(
+        borderRadius: BorderRadius.circular(16),
+        inputDecoration: InputDecoration(
+          hintText: 'Search country',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      ),
+    );
+  }
+
+  Widget _countryPickerField({
+    required String label,
+    required String? value,
+    required bool showError,
+    required VoidCallback onTap,
+  }) {
+    final hasError = showError;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            child: InputDecorator(
+              isEmpty: value == null,
+              decoration: InputDecoration(
+                labelText: label,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                labelStyle: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  height: 1.1,
+                  letterSpacing: 0,
+                  color: hasError ? _errorRed : const Color(0xFF3B3B3B),
                 ),
-                items: items
-                    .map(
-                      (e) => DropdownMenuItem<T>(
-                    value: e,
-                    child: Text(
-                      e.toString(),
-                      style: const TextStyle(fontSize: 13),
-                    ),
+                filled: true,
+                fillColor: _bg,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 14,
+                ),
+                suffixIcon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 22,
+                  color: Color(0xFF3B3B3B),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: _borderGrey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: hasError ? _errorRed : _borderGrey,
                   ),
-                )
-                    .toList(),
-                onChanged: onChanged,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: hasError ? _errorRed : _brandGreen,
+                  ),
+                ),
+              ),
+              child: Text(
+                value ?? 'Select',
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 1.1,
+                  letterSpacing: 0,
+                  color: value == null ? _hintText : const Color(0xFF000000),
+                ),
               ),
             ),
           ),
@@ -436,47 +684,79 @@ class _InformationScreenState extends State<InformationScreen> {
     );
   }
 
-  Widget _buildDocTypeSelector() {
+  // ---------------------------------------------------------------------------
+  // ✅ IDENTIFY DOCUMENTS UI (MATCHES YOUR SCREENSHOT)
+  // Government card -> Upload button -> Passport card
+  // ---------------------------------------------------------------------------
+
+  Widget _buildDocSelectorWithUpload() {
+    final isGov = _docType == 'government_id';
+    final isPass = _docType == 'passport';
+
     return Column(
       children: [
-        _docTypeTile(title: 'Government ID', value: 'government_id'),
-        const SizedBox(height: 6),
-        _docTypeTile(title: 'Passport', value: 'passport'),
+        _docCardTile(title: 'Government ID', value: 'government_id'),
+
+        if (isGov) ...[const SizedBox(height: 14), _uploadPillButton()],
+
+        const SizedBox(height: 14),
+        _docCardTile(title: 'Passport', value: 'passport'),
+
+        if (isPass) ...[const SizedBox(height: 14), _uploadPillButton()],
+
+        const SizedBox(height: 14),
       ],
     );
   }
 
-  Widget _docTypeTile({required String title, required String value}) {
+  // ✅ Figma doc card:
+  // width: fill (343)
+  // height: hug (62)
+  // radius: 8
+  // border: 0.5 (top/bottom) -> we’ll apply 0.5 all around for clean UI
+  // padding: 16
+  // gap: 8
+  // shadow: x0 y2 blur8 spread0, #000 15%
+
+  Widget _docCardTile({required String title, required String value}) {
     final selected = _docType == value;
 
-    return GestureDetector(
+    return InkWell(
       onTap: () => setState(() => _docType = value),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        width: double.infinity,
+        height: 62, // ✅ Figma
+        padding: const EdgeInsets.all(16), // ✅ Figma padding
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
           color: Colors.white,
+          borderRadius: BorderRadius.circular(8), // ✅ Figma radius
           border: Border.all(
-            color: selected ? _brandGreen : _borderGrey,
-            width: selected ? 1.5 : 1,
+            color: selected ? _brandGreen : const Color(0xFFE0E0E0),
+            width: 0.5, // ✅ 0.5px
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15), // ✅ 15%
+              blurRadius: 8, // ✅ blur 8
+              offset: const Offset(0, 2), // ✅ y 2
+              spreadRadius: 0,
+            ),
+          ],
         ),
         child: Row(
           children: [
-            Icon(
-              selected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_off_outlined,
-              color: selected ? _brandGreen : _hintText,
-              size: 18,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: selected ? _brandGreen : _textDark,
+            _docSelectIcon(selected: selected),
+            const SizedBox(width: 8), // ✅ gap 8
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.urbanist(
+                  fontSize: 16, // ✅ keep normal (your 30 was too big)
+                  fontWeight: FontWeight.w500,
+                  height: 1.1,
+                  color: const Color(0xFF3B3B3B),
+                ),
               ),
             ),
           ],
@@ -485,47 +765,124 @@ class _InformationScreenState extends State<InformationScreen> {
     );
   }
 
-  Widget _buildUploadButton() {
+  Widget _docSelectIcon({required bool selected}) {
+    const double size = 30;
+
+    if (!selected) {
+      return Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: const Color(0xFFEAEAEA),
+          border: Border.all(color: const Color(0xFF7A7A7A), width: 2),
+        ),
+      );
+    }
+
+    // ✅ double-ring + green center with check (like your screenshot)
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              border: Border.all(color: _brandGreen, width: 4),
+            ),
+          ),
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              border: Border.all(color: _brandGreen, width: 3),
+            ),
+          ),
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _brandGreen,
+            ),
+            child: Center(
+              child: Image.asset(
+                Images.checkIcon,
+                width: 40,
+                height: 40,
+                color: Colors
+                    .white, // works if the asset is a PNG/SVG that supports tint
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _uploadPillButton() {
     final hasError = _submitted && _documentFile == null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: double.infinity,
-          height: 44,
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _brandGreen,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            onPressed: () {
-              // 👉 Go to back-photo flow, passing the saved front image
-              Get.to(() => UploadFrontIdScreen());
-            },
-            icon: const Icon(Icons.upload_file, size: 18, color: Colors.white),
-            label: const Text(
-              'Upload documents',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 360),
+            child: SizedBox(
+              height: 38,
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  // Keep your flow screen
+                  Get.to(() => UploadFrontIdScreen());
+
+                  // OR if you want quick pick here:
+                  // await _pickDoc(ImageSource.gallery);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _brandGreen,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                icon: Image.asset(
+                  Images.uploadIcon,
+                  width: 24,
+                  height: 24,
+                  color: Colors.white,
+                  errorBuilder: (_, __, ___) => const Icon(
+                    Icons.file_upload_outlined,
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                ),
+                label: Text(
+                  'Upload documents',
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16, // ✅ Figma
+                    fontWeight: FontWeight.w500, // ✅ Medium (500)
+                    height: 1.1, // ✅ 110%
+                    letterSpacing: 0, // ✅ 0%
+                    color: Colors.white, // ✅ #FFFFFF
+                  ),
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 4),
-        if (_documentFile != null)
-          Text(
-            'Document selected',
-            style: TextStyle(color: _brandGreen, fontSize: 11),
-          ),
         if (hasError)
           Padding(
-            padding: const EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.only(top: 6, left: 4),
             child: Text(
               'Upload the documents',
               style: TextStyle(color: _errorRed, fontSize: 11),
@@ -533,6 +890,17 @@ class _InformationScreenState extends State<InformationScreen> {
           ),
       ],
     );
+  }
+
+  // Optional: camera/gallery doc pick (if you use it)
+  Future<void> _pickDoc(ImageSource source) async {
+    try {
+      final XFile? file = await _picker.pickImage(source: source);
+      if (file == null) return;
+      setState(() => _documentFile = File(file.path));
+    } catch (e) {
+      debugPrint('Document pick error: $e');
+    }
   }
 
   Widget _dontHaveDocText() {
@@ -554,126 +922,6 @@ class _InformationScreenState extends State<InformationScreen> {
         ),
       ),
     );
-  }
-
-  // ---------------------------------------------------------------------------
-  // (Optional) OLD UPLOAD SHEET – still here if you want gallery/camera picker
-  // ---------------------------------------------------------------------------
-
-  void _openUploadBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (ctx) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-              Text(
-                'Add Documents',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: _textDark,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Upload your documents to Verified your profile',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13, height: 1.4, color: _hintText),
-              ),
-              const SizedBox(height: 20),
-              _sheetButton(
-                label: 'Camera',
-                onTap: () async {
-                  Navigator.pop(ctx);
-                  await _pickDoc(ImageSource.camera);
-                },
-              ),
-              const SizedBox(height: 8),
-              _sheetButton(
-                label: 'Gallery',
-                onTap: () async {
-                  Navigator.pop(ctx);
-                  await _pickDoc(ImageSource.gallery);
-                },
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: _brandGreen,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () => Navigator.pop(ctx),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _sheetButton({required String label, required VoidCallback onTap}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 44,
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: _borderGrey),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        onPressed: onTap,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: _brandGreen,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _pickDoc(ImageSource source) async {
-    try {
-      final XFile? file = await _picker.pickImage(source: source);
-      if (file == null) return;
-
-      setState(() {
-        _documentFile = File(file.path);
-      });
-    } catch (e) {
-      debugPrint('Document pick error: $e');
-    }
   }
 
   // ---------------------------------------------------------------------------
@@ -705,11 +953,12 @@ class _InformationScreenState extends State<InformationScreen> {
             elevation: 0,
           ),
           onPressed: _onSavePressed,
-          child: const Text(
+          child: Text(
             'Save',
-            style: TextStyle(
+            style: GoogleFonts.urbanist(
               fontSize: 16,
               fontWeight: FontWeight.w600,
+              height: 1.1,
               color: Colors.white,
             ),
           ),
@@ -722,15 +971,8 @@ class _InformationScreenState extends State<InformationScreen> {
     setState(() => _submitted = true);
 
     final allValid = _validateForm();
+    if (!allValid) return;
 
-    if (!allValid) {
-      // just show errors inline
-      return;
-    }
-
-    // TODO: send data + file to backend
-
-    // Continue KYC flow -> WorkSchedule
     Get.to(() => const WorkScheduleScreen());
   }
 
@@ -749,13 +991,14 @@ class _InformationScreenState extends State<InformationScreen> {
 
     final anyEmptyText = requiredTextCtrls.any((c) => c.text.trim().isEmpty);
 
-    final missingDropdown = _gender == null ||
-        _dob == null ||
+    final missingDropdown =
+        _gender == null ||
+        _dobDate == null ||
         _countryOfBirth == null ||
         _countryOfDocument == null ||
         _countryAddress == null;
 
-    final missingDoc = _documentFile == null;
+    final missingDoc = _documentFile == null; // if you require upload
 
     return !(anyEmptyText || missingDropdown || missingDoc);
   }

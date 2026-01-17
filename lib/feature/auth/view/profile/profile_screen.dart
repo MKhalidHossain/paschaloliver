@@ -16,47 +16,39 @@ class ProfilePictureScreen extends StatefulWidget {
 }
 
 class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
-  // Brand colors
-  Color get _brandGreen => const Color(0xFF27AE60);
-  Color get _bg => const Color(0xFFF5F5F5);
+  // ✅ Match Figma
+  Color get _brandGreen => const Color(0xFF3FA96B);
+
+  Color get _bg => Colors.white;
   Color get _textDark => const Color(0xFF333333);
   Color get _hintText => const Color(0xFF777777);
   Color get _borderGrey => const Color(0xFFE0E0E0);
 
   final ImagePicker _picker = ImagePicker();
 
-  // picked image
   ImageProvider? _selectedImage;
-
-  // track unsaved changes (for "leave without saving?")
   bool _hasChanges = false;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop, // handle system back
+      onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: _bg,
         body: SafeArea(
           child: Column(
             children: [
-              // ---------------- TOP BAR + PROGRESS ----------------
               const SizedBox(height: 10),
+
               // TOP BAR + PROGRESS (ALIGNED)
               Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  24,
-                  12,
-                  24,
-                  4,
-                ), // same as title/search
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 16,
-                      width: double
-                          .infinity, // fill inside the 24px padding => aligns perfectly
+                      width: double.infinity,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(99),
                         child: LinearProgressIndicator(
@@ -73,21 +65,23 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
                     InkWell(
                       borderRadius: BorderRadius.circular(10),
-                      onTap: () => Get.back(),
-                      child: const Padding(
-                        padding: EdgeInsets.all(0),
-                        child: Icon(Icons.arrow_back, size: 18),
+                      onTap: _handleBackPressed, // ✅ use confirm logic
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 18,
+                          color: _brandGreen,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 12),
-
               const SizedBox(height: 16),
 
-              // ---------------- TITLE & SUBTITLE ----------------
+              // TITLE & SUBTITLE
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
@@ -97,10 +91,10 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                       "Profile Picture",
                       style: GoogleFonts.urbanist(
                         fontSize: 24,
-                        fontWeight: FontWeight.w600, // SemiBold
+                        fontWeight: FontWeight.w600,
                         height: 1.1,
                         letterSpacing: 0,
-                        color: const Color(0xFF3FA96B),
+                        color: _brandGreen,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -121,7 +115,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
               const SizedBox(height: 24),
 
-              // ---------------- CIRCLE PICKER ----------------
+              // CIRCLE PICKER
               GestureDetector(
                 onTap: _openAddPhotoSheet,
                 child: Container(
@@ -148,7 +142,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                               child: Icon(
                                 Icons.add,
                                 size: 24,
-                                color: Colors.green,
+                                color: _brandGreen, // ✅
                               ),
                             ),
                           ),
@@ -164,7 +158,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
               const SizedBox(height: 24),
 
-              // ---------------- INFO CARD ----------------
+              // INFO CARD
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
@@ -193,45 +187,28 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
                             fontSize: 16,
-                            fontWeight: FontWeight.w700, // Bold
+                            fontWeight: FontWeight.w700,
                             height: 1.1,
                             letterSpacing: 0,
                             color: const Color(0xFF000000),
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 16),
 
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // good example
-                          Column(
-                            children: [
-                              CircleAvatar(
-                                radius: 28,
-                                backgroundImage: const AssetImage(Images.good),
-                                backgroundColor: Colors.grey.shade300,
-                              ),
-                              const SizedBox(height: 6),
-                              // Icon(Icons.check_circle, color: _brandGreen),
-                            ],
+                          AvatarWithBadge(
+                            image: Images.good,
+                            isGood: true,
+                            brandGreen: _brandGreen,
                           ),
-                          const SizedBox(width: 32),
-                          // bad example
-                          Column(
-                            children: [
-                              CircleAvatar(
-                                radius: 28,
-                                backgroundImage: const AssetImage(Images.bad),
-                                backgroundColor: Colors.grey.shade300,
-                              ),
-                              const SizedBox(height: 6),
-                              // const Icon(
-                              //   Icons.cancel,
-                              //   color: Color(0xFFE74C3C),
-                              // ),
-                            ],
+                          const SizedBox(width: 44),
+                          AvatarWithBadge(
+                            image: Images.bad,
+                            isGood: false,
+                            brandGreen: _brandGreen,
                           ),
                         ],
                       ),
@@ -247,7 +224,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
               const Spacer(),
 
-              // ---------------- CONTINUE BUTTON ----------------
+              // CONTINUE BUTTON
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -260,27 +237,25 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                         ? null
                         : () {
                             _hasChanges = false;
-
                             Get.off(() => const InformationScreen());
                           },
-
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _selectedImage == null
                           ? const Color(0xFFE0E0E0)
                           : _brandGreen,
                       disabledBackgroundColor: const Color(0xFFE0E0E0),
-                      disabledForegroundColor: _hintText,
-                      foregroundColor: Colors.white,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation: 0,
                     ),
-                    child: const Text(
+                    child: Text(
                       "Continue",
-                      style: TextStyle(
+                      style: GoogleFonts.urbanist(
                         fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500, // ✅ Figma Medium
+                        height: 1.1,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -293,58 +268,18 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
     );
   }
 
-  Widget _TopBarProgress({
-    required VoidCallback onBack,
-    required double progress, // 0.0 - 1.0
-    required Color brandGreen,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1) Progress bar (full width)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 10,
-              backgroundColor: const Color(0xFFE0E0E0),
-              valueColor: AlwaysStoppedAnimation<Color>(brandGreen),
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          // 2) Back button row (only)
-          SizedBox(
-            height: 40, // keep it tight like Figma
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                visualDensity: VisualDensity.compact,
-                onPressed: onBack,
-                icon: const Icon(Icons.arrow_back_ios_new, size: 18),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Helper widgets
-  // ---------------------------------------------------------------------------
-
   Widget _buildHintRow(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.check_circle, color: _brandGreen, size: 20),
+          Image.asset(
+            Images.checkIcon,
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
           const SizedBox(width: 8),
           Text(
             text,
@@ -361,10 +296,6 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Image picking
-  // ---------------------------------------------------------------------------
-
   Future<void> _pickImage(ImageSource source) async {
     try {
       final XFile? file = await _picker.pickImage(
@@ -377,16 +308,12 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
       setState(() {
         _selectedImage = FileImage(File(file.path));
-        _hasChanges = true; // user selected/changed picture
+        _hasChanges = true;
       });
     } catch (e) {
       debugPrint('Image pick error: $e');
     }
   }
-
-  // ---------------------------------------------------------------------------
-  // Bottom Sheet for picking image
-  // ---------------------------------------------------------------------------
 
   void _openAddPhotoSheet() {
     showModalBottomSheet(
@@ -431,20 +358,24 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                     const SizedBox(height: 16),
                     Text(
                       "Add Photo",
-                      style: TextStyle(
-                        color: _textDark,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400, // Regular
+                        height: 1.1,
+                        letterSpacing: 0,
+                        color: const Color(0xFF000000),
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       "Select photos from your gallery or take new ones with your camera.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: _hintText,
-                        fontSize: 13,
-                        height: 1.4,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        height: 1.1,
+                        color: const Color(0xFF000000),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -504,19 +435,19 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
         ),
         child: Text(
           label,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          style: GoogleFonts.urbanist(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            height: 1.1,
+          ),
         ),
       ),
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // LEAVE WITHOUT SAVING? (same behavior as WorkSchedule)
-  // ---------------------------------------------------------------------------
-
   void _handleBackPressed() async {
     if (!await _onWillPop()) return;
-    Get.back(); // go back to WorkScheduleScreen
+    Get.back();
   }
 
   Future<bool> _onWillPop() async {
@@ -545,12 +476,14 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               ),
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Do you want to leave without saving?',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        height: 1.1,
+                        color: _brandGreen,
                       ),
                     ),
                   ),
@@ -565,10 +498,11 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               Text(
                 'If you leave without saving, you will lose all the '
                 'information completed in this section.',
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: Colors.grey.shade700,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 1.1,
+                  color: const Color(0xFF000000),
                 ),
               ),
               const SizedBox(height: 18),
@@ -586,9 +520,11 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                           Navigator.pop<bool>(context, true), // leave anyway
                       child: Text(
                         'Leave anyway',
-                        style: TextStyle(
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.1,
                           color: _brandGreen,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -605,11 +541,12 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                       ),
                       onPressed: () =>
                           Navigator.pop<bool>(context, false), // stay
-                      child: const Text(
+                      child: Text(
                         'Stay',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.1,
                           color: Colors.white,
                         ),
                       ),
@@ -625,5 +562,64 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
     );
 
     return result ?? false;
+  }
+}
+
+/// ✅ MUST be outside State class (no nesting)
+class AvatarWithBadge extends StatelessWidget {
+  const AvatarWithBadge({
+    super.key,
+    required this.image,
+    required this.isGood,
+    required this.brandGreen,
+  });
+
+  final String image;
+  final bool isGood;
+  final Color brandGreen;
+
+  @override
+  Widget build(BuildContext context) {
+    final badgeColor = isGood ? brandGreen : const Color(0xFFE74C3C);
+
+    return SizedBox(
+      width: 62,
+      height: 62,
+      child: Stack(
+        clipBehavior: Clip.none, // ✅ avoid clipping
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: const Color(0xFFEFEFEF),
+              backgroundImage: AssetImage(image),
+            ),
+          ),
+
+          // badge bottom-right (not clipped)
+          Positioned(
+            right: 3,
+            bottom: 3,
+            child: Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFE6E6E6), width: 1),
+              ),
+              child: Center(
+                child: Icon(
+                  isGood ? Icons.check_rounded : Icons.close_rounded,
+                  size: 12,
+                  color: badgeColor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -37,6 +37,9 @@ class Images {
   static const String paymentEmptyIcon = 'assets/icons/payment.png';
   static const String arrowIcon = 'assets/icons/arrow.png';
 
+  static const String checkIcon = 'assets/icons/check-circle.png';
+  static const String uploadIcon = 'assets/icons/uploadIcon.png';
+
   //listing
   static const String cleaningIcon = 'assets/calender/cleaning.png';
   static const String ironingIcon = 'assets/calender/ironing.png';
