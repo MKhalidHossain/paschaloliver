@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../welcome_screen.dart';
@@ -27,7 +28,9 @@ class HandyOnboardingPerformServicesScreen extends StatelessWidget {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      Get.offAll(() => const WelcomeScreenView()); // clears stack
+                      Get.offAll(
+                        () => const WelcomeScreenView(),
+                      ); // clears stack
                     },
                     child: Text(
                       'Exit',
@@ -38,7 +41,6 @@ class HandyOnboardingPerformServicesScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
 
@@ -64,11 +66,12 @@ class HandyOnboardingPerformServicesScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Perform the services',
-                        style: TextStyle(
-                          fontSize: 26,
-                          height: 1.25,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 32,
                           fontWeight: FontWeight.w700,
-                          color: _textColor,
+                          height: 1.1, // 110%
+                          letterSpacing: 0, // 0%
+                          color: const Color(0xFF000000), // or _textColor
                         ),
                       ),
                     ),
@@ -78,12 +81,15 @@ class HandyOnboardingPerformServicesScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Complete the services for which you have been '
-                            'booked.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.5,
-                          color: Colors.grey.shade700,
+                        'Complete the services for which you have been booked.',
+                        maxLines: 2,
+                        overflow: TextOverflow.clip,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          height: 1.1,
+                          letterSpacing: 0,
+                          color: const Color(0xFF000000),
                         ),
                       ),
                     ),

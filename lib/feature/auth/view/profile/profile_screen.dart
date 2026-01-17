@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -40,12 +41,49 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
           child: Column(
             children: [
               // ---------------- TOP BAR + PROGRESS ----------------
-              _TopBarProgress(
-                onBack: _handleBackPressed,
-                progress: 0.4,
-                brandGreen: _brandGreen,
+              const SizedBox(height: 10),
+              // TOP BAR + PROGRESS (ALIGNED)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  24,
+                  12,
+                  24,
+                  4,
+                ), // same as title/search
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 16,
+                      width: double
+                          .infinity, // fill inside the 24px padding => aligns perfectly
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(99),
+                        child: LinearProgressIndicator(
+                          value: 0.25,
+                          minHeight: 16,
+                          backgroundColor: const Color(0xFFE4E4E4),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            _brandGreen,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () => Get.back(),
+                      child: const Padding(
+                        padding: EdgeInsets.all(0),
+                        child: Icon(Icons.arrow_back, size: 18),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
+              const SizedBox(height: 12),
 
               const SizedBox(height: 16),
 
@@ -57,20 +95,24 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   children: [
                     Text(
                       "Profile Picture",
-                      style: TextStyle(
-                        color: _brandGreen,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600, // SemiBold
+                        height: 1.1,
+                        letterSpacing: 0,
+                        color: const Color(0xFF3FA96B),
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       "This will be the picture that clients will see of you. "
-                          "Try to make it as trustworthy as possible.",
-                      style: TextStyle(
-                        color: _hintText,
+                      "Try to make it as trustworthy as possible.",
+                      style: GoogleFonts.urbanist(
                         fontSize: 14,
-                        height: 1.4,
+                        fontWeight: FontWeight.w400,
+                        height: 1.1,
+                        letterSpacing: 0,
+                        color: const Color(0xFF000000),
                       ),
                     ),
                   ],
@@ -92,28 +134,31 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   ),
                   child: _selectedImage == null
                       ? Center(
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: _borderGrey, width: 1.5),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.add,
-                          size: 24,
-                          color: _borderGrey,
-                        ),
-                      ),
-                    ),
-                  )
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: _borderGrey,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                        )
                       : ClipOval(
-                    child: Image(
-                      image: _selectedImage!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                          child: Image(
+                            image: _selectedImage!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                 ),
               ),
 
@@ -125,7 +170,9 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 16),
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(18),
@@ -140,15 +187,22 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "What makes a good profile picture?",
-                        style: TextStyle(
-                          color: _textDark,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                      Center(
+                        child: Text(
+                          "What makes a good profile picture?",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700, // Bold
+                            height: 1.1,
+                            letterSpacing: 0,
+                            color: const Color(0xFF000000),
+                          ),
                         ),
                       ),
+
                       const SizedBox(height: 16),
+
                       Row(
                         children: [
                           // good example
@@ -156,12 +210,11 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 28,
-                                backgroundImage:
-                                const AssetImage(Images.good),
+                                backgroundImage: const AssetImage(Images.good),
                                 backgroundColor: Colors.grey.shade300,
                               ),
                               const SizedBox(height: 6),
-                              Icon(Icons.check_circle, color: _brandGreen),
+                              // Icon(Icons.check_circle, color: _brandGreen),
                             ],
                           ),
                           const SizedBox(width: 32),
@@ -170,17 +223,19 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 28,
-                                backgroundImage:
-                                const AssetImage(Images.bad),
+                                backgroundImage: const AssetImage(Images.bad),
                                 backgroundColor: Colors.grey.shade300,
                               ),
                               const SizedBox(height: 6),
-                              const Icon(Icons.cancel,
-                                  color: Color(0xFFE74C3C)),
+                              // const Icon(
+                              //   Icons.cancel,
+                              //   color: Color(0xFFE74C3C),
+                              // ),
                             ],
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 20),
                       _buildHintRow("Good lighting"),
                       _buildHintRow("Good resolution"),
@@ -194,8 +249,9 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
               // ---------------- CONTINUE BUTTON ----------------
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16)
-                    .copyWith(bottom: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ).copyWith(bottom: 16),
                 child: SizedBox(
                   width: double.infinity,
                   height: 52,
@@ -203,12 +259,10 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                     onPressed: _selectedImage == null
                         ? null
                         : () {
-                      _hasChanges = false;
+                            _hasChanges = false;
 
-                      Get.off(() => const InformationScreen());
-
-
-                    },
+                            Get.off(() => const InformationScreen());
+                          },
 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _selectedImage == null
@@ -224,8 +278,10 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                     ),
                     child: const Text(
                       "Continue",
-                      style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -237,7 +293,6 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
     );
   }
 
-
   Widget _TopBarProgress({
     required VoidCallback onBack,
     required double progress, // 0.0 - 1.0
@@ -248,7 +303,6 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           // 1) Progress bar (full width)
           ClipRRect(
             borderRadius: BorderRadius.circular(99),
@@ -276,15 +330,10 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               ),
             ),
           ),
-
-
-
-
         ],
       ),
     );
   }
-
 
   // ---------------------------------------------------------------------------
   // Helper widgets
@@ -299,7 +348,13 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
           const SizedBox(width: 8),
           Text(
             text,
-            style: TextStyle(color: _hintText, fontSize: 14),
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              height: 1.1,
+              letterSpacing: 0,
+              color: const Color(0xFF000000),
+            ),
           ),
         ],
       ),
@@ -347,8 +402,9 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(24)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.12),
@@ -508,7 +564,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               const SizedBox(height: 6),
               Text(
                 'If you leave without saving, you will lose all the '
-                    'information completed in this section.',
+                'information completed in this section.',
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.4,

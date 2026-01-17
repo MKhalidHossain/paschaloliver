@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../area/select_country_screen.dart';
@@ -27,7 +28,9 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      Get.offAll(() => const WelcomeScreenView()); // clears stack
+                      Get.offAll(
+                        () => const WelcomeScreenView(),
+                      ); // clears stack
                     },
                     child: Text(
                       'Exit',
@@ -38,7 +41,6 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
 
@@ -64,11 +66,14 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Earn money',
-                        style: TextStyle(
-                          fontSize: 26,
-                          height: 1.25,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 32,
                           fontWeight: FontWeight.w700,
-                          color: _textColor,
+                          height: 1.1, // 110%
+                          letterSpacing: 0, // 0%
+                          color: const Color(
+                            0xFF000000,
+                          ), // or _textColor if it's black
                         ),
                       ),
                     ),
@@ -79,7 +84,7 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Receive the payment for the services you have\n'
-                            'provided on your account.',
+                        'provided on your account.',
                         style: TextStyle(
                           fontSize: 14,
                           height: 1.5,
@@ -120,12 +125,14 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                   onPressed: () {
                     Get.to(() => const SelectCountryScreen());
                   },
-                  child: const Text(
+                  child: Text(
                     'Next',
-                    style: TextStyle(
+                    style: GoogleFonts.urbanist(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontWeight: FontWeight.w500, // Medium (Figma)
+                      height: 1.1, // 110%
+                      letterSpacing: 0, // 0%
+                      color: const Color(0xFFFFFFFF),
                     ),
                   ),
                 ),

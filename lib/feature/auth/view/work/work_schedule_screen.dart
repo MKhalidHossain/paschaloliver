@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../profile/profile_screen.dart';
 
@@ -50,7 +51,48 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTopBar(),
+              const SizedBox(height: 10),
+              // TOP BAR + PROGRESS (ALIGNED)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  24,
+                  12,
+                  24,
+                  4,
+                ), // same as title/search
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 16,
+                      width: double
+                          .infinity, // fill inside the 24px padding => aligns perfectly
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(99),
+                        child: LinearProgressIndicator(
+                          value: 0.25,
+                          minHeight: 16,
+                          backgroundColor: const Color(0xFFE4E4E4),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            _brandGreen,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () => Get.back(),
+                      child: const Padding(
+                        padding: EdgeInsets.all(0),
+                        child: Icon(Icons.arrow_back, size: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               const SizedBox(height: 12),
               _buildTitle(),
               const SizedBox(height: 12),
@@ -116,19 +158,24 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
         children: [
           Text(
             'Work Schedule',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: _brandGreen,
+            style: GoogleFonts.urbanist(
+              fontSize: 24,
+              fontWeight: FontWeight.w600, // SemiBold
+              height: 1.1,
+              letterSpacing: 0,
+              color: const Color(0xFF3FA96B),
             ),
           ),
+
           const SizedBox(height: 6),
           Text(
             'When are you available to offer your services?',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade700,
-              height: 1.4,
+            style: GoogleFonts.urbanist(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              height: 1.1,
+              letterSpacing: 0,
+              color: const Color(0xFF000000),
             ),
           ),
         ],
@@ -378,10 +425,16 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
               ),
               Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Is your schedule correct?',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600, // SemiBold
+                        height: 1.1,
+                        letterSpacing: 0,
+                        color: const Color(0xFF3FA96B),
+                      ),
                     ),
                   ),
                   IconButton(
@@ -394,14 +447,17 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
               const SizedBox(height: 6),
               Text(
                 'You have selected very few hours as Available. '
-                    'Remember, the more hours available, the more options '
-                    'the client will have when booking your service.',
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: Colors.grey.shade700,
+                'Remember, the more hours available, the more options '
+                'the client will have when booking your service.',
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 1.1,
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
+
               const SizedBox(height: 18),
               Row(
                 children: [
@@ -494,7 +550,10 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                   const Expanded(
                     child: Text(
                       'Do you want to leave without saving?',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -507,7 +566,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
               const SizedBox(height: 6),
               Text(
                 'If you leave without saving, you will lose all the '
-                    'information completed in this section.',
+                'information completed in this section.',
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.4,
@@ -581,7 +640,7 @@ class TimeRange {
 
   bool get isValid =>
       start.hour < end.hour ||
-          (start.hour == end.hour && start.minute < end.minute);
+      (start.hour == end.hour && start.minute < end.minute);
 
   String formatStart() => _formatTimeOfDay(start);
   String formatEnd() => _formatTimeOfDay(end);
@@ -640,14 +699,18 @@ class _ScheduleBottomSheetContentState
   @override
   void initState() {
     super.initState();
-    _startHourIndex =
-        _hours.indexOf(widget.initialStart.hour).clamp(0, _hours.length - 1);
-    _endHourIndex =
-        _hours.indexOf(widget.initialEnd.hour).clamp(0, _hours.length - 1);
-    _startMinuteIndex =
-        _minutes.indexOf(widget.initialStart.minute).clamp(0, _minutes.length - 1);
-    _endMinuteIndex =
-        _minutes.indexOf(widget.initialEnd.minute).clamp(0, _minutes.length - 1);
+    _startHourIndex = _hours
+        .indexOf(widget.initialStart.hour)
+        .clamp(0, _hours.length - 1);
+    _endHourIndex = _hours
+        .indexOf(widget.initialEnd.hour)
+        .clamp(0, _hours.length - 1);
+    _startMinuteIndex = _minutes
+        .indexOf(widget.initialStart.minute)
+        .clamp(0, _minutes.length - 1);
+    _endMinuteIndex = _minutes
+        .indexOf(widget.initialEnd.minute)
+        .clamp(0, _minutes.length - 1);
   }
 
   TimeOfDay get _startTime => TimeOfDay(
@@ -655,10 +718,8 @@ class _ScheduleBottomSheetContentState
     minute: _minutes[_startMinuteIndex],
   );
 
-  TimeOfDay get _endTime => TimeOfDay(
-    hour: _hours[_endHourIndex],
-    minute: _minutes[_endMinuteIndex],
-  );
+  TimeOfDay get _endTime =>
+      TimeOfDay(hour: _hours[_endHourIndex], minute: _minutes[_endMinuteIndex]);
 
   @override
   Widget build(BuildContext context) {
@@ -688,7 +749,10 @@ class _ScheduleBottomSheetContentState
               Expanded(
                 child: Text(
                   widget.title,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               IconButton(
@@ -725,7 +789,9 @@ class _ScheduleBottomSheetContentState
               style: ElevatedButton.styleFrom(
                 backgroundColor: widget.brandGreen,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               onPressed: () {
                 final range = TimeRange(start: _startTime, end: _endTime);
@@ -834,7 +900,10 @@ class _ScheduleLine extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Text("–", style: TextStyle(color: Colors.grey.shade600, fontSize: 16)),
+          Text(
+            "–",
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: _UnderlinedCell(

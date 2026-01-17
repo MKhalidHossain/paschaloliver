@@ -5,7 +5,6 @@ import 'package:paschaloliver/feature/auth/view/area/work_area_screen.dart';
 
 import '../../data/csc_data.dart';
 
-
 class SelectStateScreen extends StatefulWidget {
   const SelectStateScreen({super.key});
 
@@ -55,32 +54,47 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // TOP BAR + PROGRESS
+            const SizedBox(height: 10),
+            // TOP BAR + PROGRESS (ALIGNED)
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
+              padding: const EdgeInsets.fromLTRB(
+                24,
+                12,
+                24,
+                4,
+              ), // same as title/search
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                        onPressed: () => Get.back(),
+                  SizedBox(
+                    height: 16,
+                    width: double
+                        .infinity, // fill inside the 24px padding => aligns perfectly
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(99),
+                      child: LinearProgressIndicator(
+                        value: 0.25,
+                        minHeight: 16,
+                        backgroundColor: const Color(0xFFE4E4E4),
+                        valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
                       ),
-                      const Spacer(),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(99),
-                    child: LinearProgressIndicator(
-                      value: 0.5, // step 2
-                      minHeight: 10,
-                      backgroundColor: Colors.grey.shade300,
-                      valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
+                  const SizedBox(height: 12),
+
+                  InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () => Get.back(),
+                    child: const Padding(
+                      padding: EdgeInsets.all(0),
+                      child: Icon(Icons.arrow_back, size: 18),
                     ),
                   ),
                 ],
               ),
             ),
+
+            const SizedBox(height: 12),
 
             const SizedBox(height: 12),
 
@@ -92,12 +106,20 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
                 children: [
                   Text(
                     'Select state',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: _brandGreen),
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: _brandGreen,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     'In which state do you want to offer your services?\nIn $titleCountry',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade700, height: 1.4),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade700,
+                      height: 1.4,
+                    ),
                   ),
                 ],
               ),
@@ -112,9 +134,15 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
                 onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: 'Search state',
-                  hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade500,
+                  ),
                   prefixIcon: const Icon(Icons.search, size: 20),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   filled: true,
                   fillColor: const Color(0xFFF5F5F5),
                   border: OutlineInputBorder(
@@ -132,7 +160,8 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
             Expanded(
               child: ListView.separated(
                 itemCount: _filtered.length,
-                separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey.shade200),
+                separatorBuilder: (_, __) =>
+                    Divider(height: 1, color: Colors.grey.shade200),
                 itemBuilder: (context, index) {
                   final state = _filtered[index];
                   final isSelected = _selected?.id == state.id;
@@ -142,24 +171,36 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
                       setState(() => _selected = state);
 
                       // Optional next step: go to city list (same style)
-                      Get.to(() => const WorkAreaScreen(), arguments: {
-                        'country': _country,
-                        'state': state,
-                      });
+                      Get.to(
+                        () => const WorkAreaScreen(),
+                        arguments: {'country': _country, 'state': state},
+                      );
                     },
                     child: Container(
-                      color: isSelected ? const Color(0xFFF2FFF7) : Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      color: isSelected
+                          ? const Color(0xFFF2FFF7)
+                          : Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
                             child: Text(
                               state.name,
-                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                           if (isSelected)
-                            Icon(Icons.check_circle, size: 18, color: _brandGreen),
+                            Icon(
+                              Icons.check_circle,
+                              size: 18,
+                              color: _brandGreen,
+                            ),
                         ],
                       ),
                     ),
@@ -172,10 +213,17 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
 
             // BOTTOM INFO
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 12,
+              ),
               child: RichText(
                 text: TextSpan(
-                  style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.5),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black87,
+                    height: 1.5,
+                  ),
                   children: [
                     const TextSpan(
                       text: "Haven't we reached your area yet?\n",
@@ -191,7 +239,8 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
                       recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                     const TextSpan(
-                      text: ' and we will do our best to reach you as soon as possible.',
+                      text:
+                          ' and we will do our best to reach you as soon as possible.',
                     ),
                   ],
                 ),

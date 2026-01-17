@@ -53,24 +53,24 @@ class _TopBar extends StatelessWidget {
           InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: onBack,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.arrow_back_ios_new_rounded,
                     size: 18,
                     color: _green,
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(
                     "Profile",
-                    style: TextStyle(
-                      fontFamily: "Urbanist",
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
-                      color: _green,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400, // Regular
                       height: 1.1,
+                      letterSpacing: 0,
+                      color: const Color(0xFF3FA96B),
                     ),
                   ),
                 ],
@@ -81,13 +81,13 @@ class _TopBar extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                title,
-                style: const TextStyle(
-                  fontFamily: "Urbanist",
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF1F1F1F),
-                  height: 1.1,
+                "Handyman",
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700, // Bold
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
             ),
@@ -330,10 +330,14 @@ class _ProfileCard extends StatelessWidget {
 
           const SizedBox(
             width: 350,
-            child: Divider(height: 0, thickness: 0.7, color: Color.fromARGB(255, 22, 17, 17)),
+            child: Divider(
+              height: 0,
+              thickness: 0.7,
+              color: Color.fromARGB(255, 22, 17, 17),
+            ),
           ),
 
-          const SizedBox(height: 4,),
+          const SizedBox(height: 4),
 
           // photos
           SizedBox(
