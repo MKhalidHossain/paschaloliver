@@ -83,7 +83,7 @@ class HandyOnboardingEarnMoneyScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Receive the payment for the services you have\n'
+                        'Receive the payment for the services you have \n'
                         'provided on your account.',
                         style: GoogleFonts.urbanist(
                           fontSize: 16,

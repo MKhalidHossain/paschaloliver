@@ -19,27 +19,22 @@ class UserAppGround extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Obx(
-              () => IndexedStack(
+          () => IndexedStack(
             index: c.index.value,
             children: const [
               UserHomeScreen(),
-              // _SearchPage(),
-              // _FavoritesPage(),
               FavoritesScreen(),
-              // _ServicesPage(),
               UserServicesScreen(),
-              // _InboxPage(),
               InboxScreen(),
-              // _ProfilePage(),
               ProfileScreenUser(),
             ],
           ),
         ),
       ),
       bottomNavigationBar: Obx(
-            () => _UserBottomNav(
-          index: c.index.value,
-          onTap: c.setIndex,
+        () => SafeArea(
+          top: false,
+          child: _UserBottomNav(index: c.index.value, onTap: c.setIndex),
         ),
       ),
     );
@@ -56,10 +51,7 @@ class UserShellController extends GetxController {
 /* ============================ BOTTOM NAV ============================ */
 
 class _UserBottomNav extends StatelessWidget {
-  const _UserBottomNav({
-    required this.index,
-    required this.onTap,
-  });
+  const _UserBottomNav({required this.index, required this.onTap});
 
   final int index;
   final ValueChanged<int> onTap;
@@ -72,11 +64,11 @@ class _UserBottomNav extends StatelessWidget {
   Color _labelColor(bool selected) => selected ? _green : _grey;
 
   Color _iconColorForTab(int tab, bool selected) {
-    if (!selected) return _grey;
+    if (!selected) return Colors.black;
 
     // Favorites + Services are red in your design
     if (tab == 1) return _red;
-    if (tab == 2) return _red;
+    // if (tab == 2) return _red;
 
     // Search + Inbox + Profile are green
     return _green;
@@ -84,8 +76,11 @@ class _UserBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewPadding.bottom;
+
     return Container(
-      height: 74,
+      height: 74 + (bottomInset > 0 ? bottomInset : 0),
+      padding: EdgeInsets.only(bottom: bottomInset),
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(top: BorderSide(color: _line, width: 1)),
@@ -104,11 +99,7 @@ class _UserBottomNav extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _NavIcon(
-                      tab: i,
-                      selected: selected,
-                      color: iconColor,
-                    ),
+                    _NavIcon(tab: i, selected: selected, color: iconColor),
                     const SizedBox(height: 6),
                     Text(
                       _labelFor(i),
@@ -171,7 +162,7 @@ class _NavIcon extends StatelessWidget {
 
     final String asset = switch (tab) {
       0 => Images.searchIcon,
-      2 => Images.servicesIcon,
+      2 => Images.serviceIcon,
       3 => Images.messageIcon,
       4 => Images.userIcon,
       _ => Images.searchIcon,
@@ -179,12 +170,7 @@ class _NavIcon extends StatelessWidget {
 
     // ✅ Special rule: Search icon stays original (black) when NOT selected.
     if (tab == 0 && !selected) {
-      return Image.asset(
-        asset,
-        width: 24,
-        height: 24,
-        fit: BoxFit.contain,
-      );
+      return Image.asset(asset, width: 24, height: 24, fit: BoxFit.contain);
     }
 
     // ✅ Selected (or other tabs): apply tint
@@ -193,10 +179,8 @@ class _NavIcon extends StatelessWidget {
       width: 24,
       height: 24,
       fit: BoxFit.contain,
-      // color: color,
+      color: color,
       colorBlendMode: BlendMode.srcIn,
     );
   }
 }
-
-

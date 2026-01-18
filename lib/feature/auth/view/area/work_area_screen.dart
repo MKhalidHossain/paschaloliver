@@ -166,6 +166,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
               ),
               _buildViewToggle(),
               const SizedBox(height: 12),
+
               _buildContinueButton(),
             ],
           ),
@@ -542,14 +543,20 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
   void _showFewAreasSheet() {
     showModalBottomSheet(
       context: context,
+      useSafeArea: true, // ✅ important (keeps above system nav)
       isScrollControlled: false,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (context) {
+        final bottomInset = MediaQuery.of(
+          context,
+        ).viewPadding.bottom; // ✅ nav bar
+
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+          // ✅ add bottomInset so button never goes under system nav
+          padding: EdgeInsets.fromLTRB(24, 18, 24, 18 + bottomInset),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -569,14 +576,12 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                       'Few selected areas',
                       style: GoogleFonts.urbanist(
                         fontSize: 24,
-                        fontWeight: FontWeight.w600, // SemiBold
+                        fontWeight: FontWeight.w600,
                         height: 1.1,
-                        letterSpacing: 0,
                         color: const Color(0xFF3FA96B),
                       ),
                     ),
                   ),
-
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close, size: 18),
@@ -592,12 +597,13 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   height: 1.1,
-                  letterSpacing: 0,
                   color: const Color(0xFF000000),
                 ),
               ),
-
               const SizedBox(height: 16),
+
+              const Divider(height: 1, thickness: 1, color: Color(0xFFEDEDED)),
+
               SizedBox(
                 width: double.infinity,
                 height: 48,
@@ -613,17 +619,17 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
                     Navigator.pop(context);
                     _goToSchedule();
                   },
-                  child: const Text(
+                  child: Text(
                     'Continue',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
                       color: Colors.white,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
             ],
           ),
         );

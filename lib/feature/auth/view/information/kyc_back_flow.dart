@@ -73,8 +73,10 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (ctx) {
+        final safeBottom = MediaQuery.of(ctx).padding.bottom;
+
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: EdgeInsets.fromLTRB(24, 16, 24, 16 + safeBottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -265,79 +267,162 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
               ),
             ),
           ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-            ).copyWith(bottom: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _brandGreen,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        Get.to(() => const TakeFrontPhotoScreen());
-                      },
-                      icon: const Icon(
-                        Icons.photo_camera_outlined,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      label: const Text(
-                        'Take Photo',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: _brandGreen),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: _openUploadSheet,
-                      icon: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: Image.asset(
-                          Images.upload2Icon,
-                          fit: BoxFit.contain,
-                          // If the icon is single-color and needs to be green:
-                          color: Colors.green,
-                          colorBlendMode: BlendMode.srcIn,
-                        ),
-                      ),
 
-                      label: const Text(
-                        'Upload',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: _brandGreen,
+          // const Spacer(),
+
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 16,
+          //   ).copyWith(bottom: 24),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //         child: SizedBox(
+          //           height: 48,
+          //           child: ElevatedButton.icon(
+          //             style: ElevatedButton.styleFrom(
+          //               backgroundColor: _brandGreen,
+          //               elevation: 0,
+          //               shape: RoundedRectangleBorder(
+          //                 borderRadius: BorderRadius.circular(8),
+          //               ),
+          //             ),
+          //             onPressed: () {
+          //               Get.to(() => const TakeFrontPhotoScreen());
+          //             },
+          //             icon: const Icon(
+          //               Icons.photo_camera_outlined,
+          //               color: Colors.white,
+          //               size: 20,
+          //             ),
+          //             label: const Text(
+          //               'Take Photo',
+          //               style: TextStyle(
+          //                 fontSize: 14,
+          //                 fontWeight: FontWeight.w600,
+          //                 color: Colors.white,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //       const SizedBox(width: 12),
+          //       Expanded(
+          //         child: SizedBox(
+          //           height: 48,
+          //           child: OutlinedButton.icon(
+          //             style: OutlinedButton.styleFrom(
+          //               side: const BorderSide(color: _brandGreen),
+          //               shape: RoundedRectangleBorder(
+          //                 borderRadius: BorderRadius.circular(8),
+          //               ),
+          //             ),
+          //             onPressed: _openUploadSheet,
+          //             icon: SizedBox(
+          //               width: 20,
+          //               height: 20,
+          //               child: Image.asset(
+          //                 Images.upload2Icon,
+          //                 fit: BoxFit.contain,
+          //                 // If the icon is single-color and needs to be green:
+          //                 color: Colors.green,
+          //                 colorBlendMode: BlendMode.srcIn,
+          //               ),
+          //             ),
+
+          //             label: const Text(
+          //               'Upload',
+          //               style: TextStyle(
+          //                 fontSize: 14,
+          //                 fontWeight: FontWeight.w600,
+          //                 color: _brandGreen,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          const Spacer(),
+
+          // ✅ FIXED: bottom safe area padding so buttons don't go under nav bar
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                16,
+                0,
+                16,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _brandGreen,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Get.to(() => const TakeFrontPhotoScreen());
+                        },
+                        icon: const Icon(
+                          Icons.photo_camera_outlined,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        label: const Text(
+                          'Take Photo',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: _brandGreen),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: _openUploadSheet,
+                        icon: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Image.asset(
+                            Images.upload2Icon,
+                            fit: BoxFit.contain,
+                            color: _brandGreen,
+                            colorBlendMode: BlendMode.srcIn,
+                          ),
+                        ),
+                        label: const Text(
+                          'Upload',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: _brandGreen,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -619,57 +704,119 @@ class UploadedFrontIdScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ).copyWith(bottom: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: _brandGreen),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                24,
+                0,
+                24,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: _brandGreen),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(0, 48),
                       ),
-                    ),
-                    onPressed: () => Get.back(),
-                    child: const Text(
-                      'Return',
-                      style: TextStyle(
-                        color: _brandGreen,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _brandGreen,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      // 👉 Continue to back-side capture flow AND pass the front image
-                      Get.to(() => UploadBackIdScreen(frontImage: frontImage));
-                    },
-                    child: const Text(
-                      'Continue',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                      onPressed: () => Get.back(),
+                      child: const Text(
+                        'Return',
+                        style: TextStyle(
+                          color: _brandGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _brandGreen,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(0, 48),
+                      ),
+                      onPressed: () {
+                        Get.to(
+                          () => UploadBackIdScreen(frontImage: frontImage),
+                        );
+                      },
+                      child: const Text(
+                        'Continue',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 24,
+          //   ).copyWith(bottom: 24),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //         child: OutlinedButton(
+          //           style: OutlinedButton.styleFrom(
+          //             side: const BorderSide(color: _brandGreen),
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(10),
+          //             ),
+          //           ),
+          //           onPressed: () => Get.back(),
+          //           child: const Text(
+          //             'Return',
+          //             style: TextStyle(
+          //               color: _brandGreen,
+          //               fontWeight: FontWeight.w600,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //       const SizedBox(width: 12),
+          //       Expanded(
+          //         child: ElevatedButton(
+          //           style: ElevatedButton.styleFrom(
+          //             backgroundColor: _brandGreen,
+          //             elevation: 0,
+          //             shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.circular(10),
+          //             ),
+          //           ),
+          //           onPressed: () {
+          //             // 👉 Continue to back-side capture flow AND pass the front image
+          //             Get.to(() => UploadBackIdScreen(frontImage: frontImage));
+          //           },
+          //           child: const Text(
+          //             'Continue',
+          //             style: TextStyle(
+          //               color: Colors.white,
+          //               fontSize: 15,
+          //               fontWeight: FontWeight.w600,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

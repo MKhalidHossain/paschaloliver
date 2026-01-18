@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../search/search_services_find_screen.dart';
+import '../search/loading_screen.dart';
 
 /// ---------------------------------------------------------------------------
 /// ✅ AVAILABILITY / SCHEDULE (FULL REPLACEABLE + CORRECTED)
@@ -275,6 +275,8 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: enabled
                               ? () => Get.to(
+                                  // () => const SearchTimeLoadingScreen(),
+                                  // () => const HandyManServicesScreen(),
                                   () => const SearchTimeLoadingScreen(),
                                 )
                               : null,

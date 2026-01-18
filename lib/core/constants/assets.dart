@@ -17,6 +17,7 @@ class Images {
   static const String othersIcon = 'assets/calender/Layer_1.png';
   static const String backbonIcon = 'assets/calender/backbon.png';
   static const String servicesIcon = 'assets/icons/services.png';
+  static const String serviceIcon = 'assets/icons/calendar-tick.png';
 
   static const String floorDoorIcon = 'assets/images/image_161.png';
   static const String addressIcon = 'assets/images/address_2021.png';
@@ -40,6 +41,8 @@ class Images {
   static const String checkIcon = 'assets/icons/check-circle.png';
   static const String uploadIcon = 'assets/icons/uploadIcon.png';
   static const String upload2Icon = 'assets/images/upload-01.png';
+
+  static const String men2Icon = 'assets/icons/Frame 2147230338.png';
 
   //listing
   static const String cleaningIcon = 'assets/calender/cleaning.png';

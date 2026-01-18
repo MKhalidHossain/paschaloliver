@@ -334,6 +334,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
@@ -404,13 +405,16 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
   Future<void> _showScheduleCheckSheet() async {
     await showModalBottomSheet(
       context: context,
+      useSafeArea: true, // ✅ important
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (context) {
+        final safeBottom = MediaQuery.of(context).padding.bottom;
+
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+          padding: EdgeInsets.fromLTRB(24, 18, 24, 18 + safeBottom), // ✅ FIX
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -430,7 +434,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                       'Is your schedule correct?',
                       style: GoogleFonts.urbanist(
                         fontSize: 24,
-                        fontWeight: FontWeight.w600, // SemiBold
+                        fontWeight: FontWeight.w600,
                         height: 1.1,
                         letterSpacing: 0,
                         color: const Color(0xFF3FA96B),
@@ -457,7 +461,6 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                   color: const Color(0xFF000000),
                 ),
               ),
-
               const SizedBox(height: 18),
               Row(
                 children: [
@@ -468,6 +471,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
+                        minimumSize: const Size(0, 48),
                       ),
                       onPressed: () => Navigator.pop(context),
                       child: Text(
@@ -488,6 +492,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
+                        minimumSize: const Size(0, 48),
                       ),
                       onPressed: () {
                         Navigator.pop(context);
@@ -531,8 +536,11 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (context) {
+        final safeBottom = MediaQuery.of(context).padding.bottom;
+
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+          padding: EdgeInsets.fromLTRB(24, 18, 24, 18 + safeBottom),
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -723,14 +731,15 @@ class _ScheduleBottomSheetContentState
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    final keyboard = MediaQuery.of(context).viewInsets.bottom;
+    final safeBottom = MediaQuery.of(context).viewPadding.bottom;
 
     return Padding(
       padding: EdgeInsets.only(
         left: 24,
         right: 24,
         top: 18,
-        bottom: bottomPadding + 18,
+        bottom: 18 + (keyboard > 0 ? keyboard : safeBottom), // ✅ FIX
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

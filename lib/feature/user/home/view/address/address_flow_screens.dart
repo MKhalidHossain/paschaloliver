@@ -451,50 +451,105 @@ class ServiceAddressMapScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Obx(() {
-                      final target = c.selectedLatLng.value;
-                      return GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: target,
-                          zoom: 15,
+              child: LayoutBuilder(
+                builder: (context, _) {
+                  final safeBottom = MediaQuery.of(context).viewPadding.bottom;
+
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Obx(() {
+                          final target = c.selectedLatLng.value;
+                          return GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: target,
+                              zoom: 15,
+                            ),
+                            onMapCreated: c.onMapCreated,
+                            markers: c.markers,
+                            myLocationEnabled: c.hasLocationPermission.value,
+                            myLocationButtonEnabled: false,
+                            zoomControlsEnabled: false,
+                            onTap: c.pickOnMap,
+                          );
+                        }),
+                      ),
+
+                      // ✅ Use location pill stays above system bar too
+                      Positioned(
+                        right: 14,
+                        bottom: 78 + safeBottom, // ✅ FIX
+                        child: _MapPillButton(
+                          icon: Icons.near_me_outlined,
+                          label: "Use location",
+                          onTap: () async => c.useCurrentLocation(),
                         ),
-                        onMapCreated: c.onMapCreated,
-                        markers: c.markers,
-                        myLocationEnabled: c.hasLocationPermission.value,
-                        myLocationButtonEnabled: false,
-                        zoomControlsEnabled: false,
-                        onTap: c.pickOnMap,
-                      );
-                    }),
-                  ),
+                      ),
 
-                  Positioned(
-                    right: 14,
-                    bottom: 78,
-                    child: _MapPillButton(
-                      icon: Icons.near_me_outlined,
-                      label: "Use location",
-                      onTap: () async => c.useCurrentLocation(),
-                    ),
-                  ),
-
-                  Positioned(
-                    left: 18,
-                    right: 18,
-                    bottom: 18,
-                    child: _ActionButton(
-                      label: "Confirm address",
-                      background: const Color(0xFF27AE60),
-                      textColor: Colors.white,
-                      onTap: () => Get.to(() => const AddressDetailsScreen()),
-                    ),
-                  ),
-                ],
+                      // ✅ Confirm button stays above system nav bar
+                      Positioned(
+                        left: 18,
+                        right: 18,
+                        bottom: 18 + safeBottom, // ✅ FIX
+                        child: _ActionButton(
+                          label: "Confirm address",
+                          background: const Color(0xFF27AE60),
+                          textColor: Colors.white,
+                          onTap: () =>
+                              Get.to(() => const AddressDetailsScreen()),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
+
+            // Expanded(
+            //   child: Stack(
+            //     children: [
+            //       Positioned.fill(
+            //         child: Obx(() {
+            //           final target = c.selectedLatLng.value;
+            //           return GoogleMap(
+            //             initialCameraPosition: CameraPosition(
+            //               target: target,
+            //               zoom: 15,
+            //             ),
+            //             onMapCreated: c.onMapCreated,
+            //             markers: c.markers,
+            //             myLocationEnabled: c.hasLocationPermission.value,
+            //             myLocationButtonEnabled: false,
+            //             zoomControlsEnabled: false,
+            //             onTap: c.pickOnMap,
+            //           );
+            //         }),
+            //       ),
+
+            //       Positioned(
+            //         right: 14,
+            //         bottom: 78,
+            //         child: _MapPillButton(
+            //           icon: Icons.near_me_outlined,
+            //           label: "Use location",
+            //           onTap: () async => c.useCurrentLocation(),
+            //         ),
+            //       ),
+
+            //       Positioned(
+            //         left: 18,
+            //         right: 18,
+            //         bottom: 18,
+            //         child: _ActionButton(
+            //           label: "Confirm address",
+            //           background: const Color(0xFF27AE60),
+            //           textColor: Colors.white,
+            //           onTap: () => Get.to(() => const AddressDetailsScreen()),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -813,7 +868,6 @@ class AddressDetailsScreen extends StatelessWidget {
                     ),
 
                     const Spacer(),
-
                     _GreenButton(
                       label: "Confirm address",
                       onTap: () {
@@ -824,6 +878,10 @@ class AddressDetailsScreen extends StatelessWidget {
                         );
                       },
                     ),
+
+                    const SizedBox(height: 30),
+
+                    // const Spacer(),
                   ],
                 ),
               ),

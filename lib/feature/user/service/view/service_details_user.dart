@@ -458,13 +458,22 @@ class _PaymentChevronRow extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 26,
-                height: 26,
-                decoration: BoxDecoration(
-                  color: _green.withOpacity(.10),
-                  borderRadius: BorderRadius.circular(8),
+                width: 28,
+                height: 28,
+                // decoration: BoxDecoration(
+                //   color: _green.withOpacity(.10),
+                //   borderRadius: BorderRadius.circular(8),
+                // ),
+                child: SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: Image.asset(
+                    Images.viewPaymenIcon,
+                    fit: BoxFit.contain,
+                    // color: _green, // remove if the PNG is multi-color
+                    colorBlendMode: BlendMode.srcIn,
+                  ),
                 ),
-                child: const Icon(Icons.payment, size: 16, color: _green),
               ),
               const SizedBox(width: 10),
 

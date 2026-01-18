@@ -85,13 +85,16 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
   void _openUploadSheet() {
     showModalBottomSheet(
       context: context,
+      useSafeArea: true, // ✅ FIX
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (ctx) {
+        final safeBottom = MediaQuery.of(ctx).padding.bottom;
+
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: EdgeInsets.fromLTRB(24, 16, 24, 16 + safeBottom), // ✅ FIX
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -115,7 +118,6 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                   color: const Color(0xFF181919),
                 ),
               ),
-
               const SizedBox(height: 6),
               Text(
                 'Select documents from your gallery or take new ones \nwith your camera',
@@ -128,7 +130,6 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                   color: const Color(0xFF181919),
                 ),
               ),
-
               const SizedBox(height: 20),
               _sheetButton(
                 label: 'Camera',
@@ -213,7 +214,6 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
           ),
         ),
       ),
-
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -239,7 +239,7 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
                 color: Colors.white,
-                border: Border.all(color: Color(0xFFE0E0E0)),
+                border: Border.all(color: const Color(0xFFE0E0E0)),
               ),
               child: AspectRatio(
                 aspectRatio: 16 / 9,
@@ -262,11 +262,10 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                           ),
                         ),
                       ),
-
                       SizedBox(height: 8),
                       Text(
                         'Position you ID within the frame',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'SF Pro',
                           fontSize: 16,
                           fontWeight: FontWeight.w600, // closest to 510
@@ -281,82 +280,88 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-            ).copyWith(bottom: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _brandGreen,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        Get.to(
-                          () => TakeBackPhotoScreen(
-                            frontImage: widget.frontImage,
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.photo_camera_outlined,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      label: const Text(
-                        'Take Photo',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SizedBox(
-                    height: 48,
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: _brandGreen),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: _openUploadSheet,
-                      icon: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: Image.asset(
-                          Images.upload2Icon,
-                          fit: BoxFit.contain,
-                          color:
-                              _brandGreen, // remove if icon already green / multi-color
-                          colorBlendMode: BlendMode.srcIn,
-                        ),
-                      ),
 
-                      label: const Text(
-                        'Upload',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: _brandGreen,
+          // ✅ FIXED: bottom safe area so it never goes under navigation bar
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                16,
+                0,
+                16,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _brandGreen,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          Get.to(
+                            () => TakeBackPhotoScreen(
+                              frontImage: widget.frontImage,
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.photo_camera_outlined,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        label: const Text(
+                          'Take Photo',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: _brandGreen),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: _openUploadSheet,
+                        icon: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: Image.asset(
+                            Images.upload2Icon,
+                            fit: BoxFit.contain,
+                            color: _brandGreen,
+                            colorBlendMode: BlendMode.srcIn,
+                          ),
+                        ),
+                        label: const Text(
+                          'Upload',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: _brandGreen,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -510,33 +515,40 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
                   ),
                 ),
                 const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 24,
-                  ).copyWith(bottom: 24),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton.icon(
-                      onPressed: _captureBack,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _brandGreen,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+
+                // ✅ FIXED: bottom safe area for Capture button
+                SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      24,
+                      0,
+                      24,
+                      16 + MediaQuery.of(context).padding.bottom,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton.icon(
+                        onPressed: _captureBack,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _brandGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
                         ),
-                        elevation: 0,
-                      ),
-                      icon: const Icon(
-                        Icons.photo_camera_outlined,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        'Capture',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        icon: const Icon(
+                          Icons.photo_camera_outlined,
                           color: Colors.white,
+                        ),
+                        label: const Text(
+                          'Capture',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -642,59 +654,69 @@ class UploadedBackIdScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ).copyWith(bottom: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: _brandGreen),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () => Get.back(),
-                    child: const Text(
-                      'Return',
-                      style: TextStyle(
-                        color: _brandGreen,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _brandGreen,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      Get.to(
-                        () => ReviewDocumentScreen(
-                          frontImage: frontImage,
-                          backImage: backImage,
+
+          // ✅ FIXED: bottom safe area for Return / Continue
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                24,
+                0,
+                24,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: _brandGreen),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      );
-                    },
-                    child: const Text(
-                      'Continue',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                        minimumSize: const Size(0, 48),
+                      ),
+                      onPressed: () => Get.back(),
+                      child: const Text(
+                        'Return',
+                        style: TextStyle(
+                          color: _brandGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _brandGreen,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(0, 48),
+                      ),
+                      onPressed: () {
+                        Get.to(
+                          () => ReviewDocumentScreen(
+                            frontImage: frontImage,
+                            backImage: backImage,
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Continue',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -765,54 +787,64 @@ class ReviewDocumentScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ).copyWith(bottom: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: _brandGreen),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+
+          // ✅ FIXED: bottom safe area for Return / Continue
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                24,
+                0,
+                24,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: _brandGreen),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(0, 48),
                       ),
-                    ),
-                    onPressed: () => Get.back(),
-                    child: const Text(
-                      'Return',
-                      style: TextStyle(
-                        color: _brandGreen,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _brandGreen,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      Get.to(() => const VerificationUnderReviewScreen());
-                    },
-                    child: const Text(
-                      'Continue',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                      onPressed: () => Get.back(),
+                      child: const Text(
+                        'Return',
+                        style: TextStyle(
+                          color: _brandGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _brandGreen,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(0, 48),
+                      ),
+                      onPressed: () {
+                        Get.to(() => const VerificationUnderReviewScreen());
+                      },
+                      child: const Text(
+                        'Continue',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -852,7 +884,6 @@ class ReviewDocumentScreen extends StatelessWidget {
               color: const Color(0xFF060807),
             ),
           ),
-
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
@@ -904,25 +935,21 @@ class VerificationUnderReviewScreen extends StatelessWidget {
         surfaceTintColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, size: 20),
           onPressed: () => Get.back(),
         ),
-
         actions: [
           Padding(
-            padding: const EdgeInsets.only(
-              right: 16,
-            ), // ✅ right margin like Figma
+            padding: const EdgeInsets.only(right: 16),
             child: Center(
               child: SizedBox(
-                height: 34, // ✅ compact height like screenshot
+                height: 34,
                 child: OutlinedButton(
                   onPressed: () =>
                       Get.to(() => const VerificationSuccessScreen()),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: _brandGreen, width: 1),
+                    side: const BorderSide(color: _brandGreen, width: 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -949,7 +976,6 @@ class VerificationUnderReviewScreen extends StatelessWidget {
           ),
         ],
       ),
-
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -973,7 +999,6 @@ class VerificationUnderReviewScreen extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -1003,27 +1028,35 @@ class VerificationUnderReviewScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ).copyWith(bottom: 24),
-            child: SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE0E0E0),
-                  disabledBackgroundColor: const Color(0xFFE0E0E0),
-                  disabledForegroundColor: _hintText,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+
+          // ✅ FIXED: bottom safe area for disabled button
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                24,
+                0,
+                24,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
+                  onPressed: null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE0E0E0),
+                    disabledBackgroundColor: const Color(0xFFE0E0E0),
+                    disabledForegroundColor: _hintText,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Waiting for admin approval',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  child: const Text(
+                    'Waiting for admin approval',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
             ),
@@ -1091,7 +1124,7 @@ class VerificationSuccessScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          icon: const Icon(Icons.arrow_back, size: 20),
           onPressed: () => Get.back(),
         ),
         elevation: 0,
@@ -1144,31 +1177,38 @@ class VerificationSuccessScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ).copyWith(bottom: 24),
-            child: SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _brandGreen,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+
+          // ✅ FIXED: bottom safe area for Continue
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                24,
+                0,
+                24,
+                16 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _brandGreen,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  // TODO: navigate to home / dashboard
-                  Get.back();
-                },
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

@@ -70,7 +70,7 @@ class BecomeProfessionalScreen extends StatelessWidget {
 
               // ----------- TITLE & SUBTITLE -----------
               Text(
-                'Want to offer your services\non HandyNaija?',
+                'Want to offer your services \non HandyNaija?',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   fontSize: 24,
@@ -83,7 +83,7 @@ class BecomeProfessionalScreen extends StatelessWidget {
 
               const SizedBox(height: 12),
               Text(
-                'Create your professional profile and start\nearning money',
+                'Create your professional profile and start \nearning money',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.urbanist(
                   fontSize: 16, // Figma size: 16px

@@ -134,39 +134,85 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               ),
 
               // ✅ Add address
-              Padding(
-                padding: const EdgeInsets.fromLTRB(18, 8, 18, 14),
-                child: SizedBox(
-                  height: 46,
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      Get.to(() => const MyAddressesScreen());
-                    },
-                    icon: const Icon(Icons.add, size: 18, color: Colors.white),
-                    label: const Text(
-                      "Add address",
-                      style: TextStyle(
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(18, 8, 18, 14),
+              //   child: SizedBox(
+              //     height: 46,
+              //     width: double.infinity,
+              //     child: OutlinedButton.icon(
+              //       onPressed: () {
+              //         Get.to(() => const MyAddressesScreen());
+              //       },
+              //       icon: const Icon(Icons.add, size: 18, color: Colors.white),
+              //       label: const Text(
+              //         "Add address",
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //           fontWeight: FontWeight.w700,
+              //           fontSize: 14,
+              //         ),
+              //       ),
+              //       style: OutlinedButton.styleFrom(
+              //         side: BorderSide(
+              //           color: Colors.white.withOpacity(.85),
+              //           width: 1.2,
+              //         ),
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(10),
+              //         ),
+              //         backgroundColor: Colors.transparent,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              // ✅ Add address (FIXED: stays above system navigation bar)
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    18,
+                    8,
+                    18,
+                    14 +
+                        MediaQuery.of(context).viewPadding.bottom, // ✅ key line
+                  ),
+                  child: SizedBox(
+                    height: 46,
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Get.to(() => const MyAddressesScreen());
+                      },
+                      icon: const Icon(
+                        Icons.add,
+                        size: 18,
                         color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
                       ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        color: Colors.white.withOpacity(.85),
-                        width: 1.2,
+                      label: const Text(
+                        "Add address",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: Colors.white.withOpacity(.85),
+                          width: 1.2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: Colors.transparent,
                       ),
-                      backgroundColor: Colors.transparent,
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 8),
+              // const SizedBox(height: 8),
             ],
           ),
         ),
