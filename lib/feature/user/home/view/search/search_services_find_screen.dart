@@ -370,11 +370,7 @@ class _TopSearchBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: const Padding(
               padding: EdgeInsets.all(6),
-              child: Icon(
-                Icons.arrow_back_ios_new_rounded,
-                size: 16,
-                color: _C.text,
-              ),
+              child: Icon(Icons.arrow_back, size: 20, color: _C.text),
             ),
           ),
           const SizedBox(width: 6),

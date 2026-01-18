@@ -93,7 +93,7 @@ class AvailabilityController extends GetxController {
 
   bool get isWeeklyOrOnce =>
       repeatType.value == RepeatType.weekly ||
-          repeatType.value == RepeatType.once;
+      repeatType.value == RepeatType.once;
 
   bool get isButtonEnabled => selectedStartTime.value != null;
 
@@ -119,12 +119,7 @@ class AvailabilityScheduleScreen extends StatelessWidget {
   static const Color _line = Color(0xFFEDEDED);
   static const Color _pill = Color(0xFFF3F3F3);
 
-  TextStyle _u({
-    double? size,
-    FontWeight? w,
-    Color? c,
-    double? h,
-  }) {
+  TextStyle _u({double? size, FontWeight? w, Color? c, double? h}) {
     return GoogleFonts.urbanist(
       fontSize: size,
       fontWeight: w,
@@ -200,17 +195,24 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                         data: SliderTheme.of(context).copyWith(
                           activeTrackColor: _green,
                           inactiveTrackColor: _line,
-                          trackHeight: 5,
-                          thumbColor: Colors.white,
-                          overlayColor: _green.withOpacity(.12),
-                          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
-                          overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+                          trackHeight: 10,
+
+                          // ✅ remove dot (thumb) + ripple
+                          thumbShape: SliderComponentShape.noThumb,
+                          overlayShape: SliderComponentShape.noOverlay,
+
+                          // ✅ remove small dots on the line
+                          tickMarkShape: SliderTickMarkShape.noTickMark,
+
+                          // ✅ make track full-width (align with "Duration" text)
+                          trackShape: const _FullWidthTrackShape(),
                         ),
                         child: Slider(
                           value: c.durationMin.value,
                           min: 60,
                           max: 240,
-                          divisions: ((240 - 60) ~/ 15),
+                          divisions:
+                              ((240 - 60) ~/ 15), // keep steps (no dots now)
                           onChanged: (v) => c.durationMin.value = v,
                         ),
                       );
@@ -236,7 +238,8 @@ class AvailabilityScheduleScreen extends StatelessWidget {
 
                     // Start time section
                     Obx(() {
-                      final showStart = c.isWeeklyOrOnce || c.showBiweeklyStartTime.value;
+                      final showStart =
+                          c.isWeeklyOrOnce || c.showBiweeklyStartTime.value;
                       if (!showStart) return const SizedBox.shrink();
 
                       return Column(
@@ -261,8 +264,6 @@ class AvailabilityScheduleScreen extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-
-
                     const SizedBox(height: 10),
 
                     // Button
@@ -273,12 +274,18 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: enabled
-                              ? () => Get.to(() => const SearchTimeLoadingScreen())
+                              ? () => Get.to(
+                                  () => const SearchTimeLoadingScreen(),
+                                )
                               : null,
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            backgroundColor: enabled ? _green : const Color(0xFFE6E6E6),
-                            foregroundColor: enabled ? Colors.white : const Color(0xFF8B8B8B),
+                            backgroundColor: enabled
+                                ? _green
+                                : const Color(0xFFE6E6E6),
+                            foregroundColor: enabled
+                                ? Colors.white
+                                : const Color(0xFF8B8B8B),
                             disabledBackgroundColor: const Color(0xFFE6E6E6),
                             disabledForegroundColor: const Color(0xFF8B8B8B),
                             shape: RoundedRectangleBorder(
@@ -292,10 +299,11 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500, // Medium
                               height: 1.1, // 110%
                               letterSpacing: 0,
-                              color: enabled ? Colors.white : const Color(0xFF3D3E40),
+                              color: enabled
+                                  ? Colors.white
+                                  : const Color(0xFF3D3E40),
                             ),
                           ),
-
                         ),
                       );
                     }),
@@ -303,11 +311,29 @@ class AvailabilityScheduleScreen extends StatelessWidget {
                 ),
               ),
             ),
-
           ],
         ),
       ),
     );
+  }
+}
+
+class _FullWidthTrackShape extends RoundedRectSliderTrackShape {
+  const _FullWidthTrackShape();
+
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final trackHeight = sliderTheme.trackHeight ?? 2;
+    final trackLeft = offset.dx; // ✅ no inset
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackWidth = parentBox.size.width; // ✅ full width
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
 
@@ -460,7 +486,6 @@ class _RepeatTile extends StatelessWidget {
             color: const Color(0xFF181919),
           ),
         ),
-
       ),
     );
   }
@@ -488,7 +513,11 @@ class _CircleBtn extends StatelessWidget {
           color: _pill,
           borderRadius: BorderRadius.circular(999),
         ),
-        child: const Icon(Icons.close_rounded, size: 18, color: Color(0xFF1F1F1F)),
+        child: const Icon(
+          Icons.close_rounded,
+          size: 18,
+          color: Color(0xFF1F1F1F),
+        ),
       ),
     );
   }
@@ -525,7 +554,6 @@ class _MonthSection extends StatelessWidget {
               ),
             ),
 
-
             const Spacer(),
             InkWell(
               onTap: () {
@@ -553,9 +581,7 @@ class _MonthSection extends StatelessWidget {
                   ),
                 ),
               ),
-            )
-
-
+            ),
           ],
         ),
         const SizedBox(height: 10),
@@ -581,7 +607,9 @@ class _MonthSection extends StatelessWidget {
                     width: 56,
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     decoration: BoxDecoration(
-                      color: isSelected ? _green.withOpacity(.12) : Colors.white,
+                      color: isSelected
+                          ? _green.withOpacity(.12)
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSelected ? _green.withOpacity(.55) : _line,
@@ -597,8 +625,9 @@ class _MonthSection extends StatelessWidget {
                             fontWeight: FontWeight.w500, // Medium
                             height: 1.1, // 110%
                             letterSpacing: 0,
-                            color:
-                            isSelected ? _green : const Color(0xFF6E6E6E),
+                            color: isSelected
+                                ? _green
+                                : const Color(0xFF6E6E6E),
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -607,8 +636,9 @@ class _MonthSection extends StatelessWidget {
                           style: GoogleFonts.urbanist(
                             fontSize: 11,
                             fontWeight: FontWeight.w900,
-                            color:
-                            isSelected ? _green : const Color(0xFF1F1F1F),
+                            color: isSelected
+                                ? _green
+                                : const Color(0xFF1F1F1F),
                             height: 1.0,
                           ),
                         ),
@@ -654,7 +684,8 @@ class _BiweeklyDays extends StatelessWidget {
                     style: GoogleFonts.urbanist(
                       fontSize: 18,
                       fontWeight: FontWeight.w500, // Medium
-                      height: 1.1, // use 1.1 if your day row is like other labels (110%)
+                      height:
+                          1.1, // use 1.1 if your day row is like other labels (110%)
                       letterSpacing: 0,
                       color: const Color(0xFF181919),
                     ),
@@ -672,7 +703,6 @@ class _BiweeklyDays extends StatelessWidget {
                         color: const Color(0xFF6D6F73),
                       ),
                     )
-
                   else
                     InkWell(
                       onTap: c.openBiweeklyTimes,

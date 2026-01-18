@@ -207,8 +207,8 @@ class SubCategoryData {
     switch (c) {
       case HomeCategory.home:
         return [
-          const SubCategoryItem(title: "Cleaning", icon: Images.cleaningIcon),
-          const SubCategoryItem(title: "Ironing", icon: Images.ironingIcon),
+          SubCategoryItem(title: "Cleaning", icon: Images.cleaningIcon),
+          SubCategoryItem(title: "Ironing", icon: Images.ironingIcon),
           SubCategoryItem(title: "Handyman", icon: Images.handyIcon),
           SubCategoryItem(title: "Painting", icon: Images.paintIcon),
           SubCategoryItem(title: "Interior\nDesign", icon: Images.interiorIcon),
@@ -403,68 +403,68 @@ class _WhiteCircleIcon extends StatelessWidget {
   }
 }
 
-class _BottomNav extends StatelessWidget {
-  const _BottomNav({
-    required this.currentIndex,
-    required this.onTap,
-    required this.activeColor,
-  });
+// class _BottomNav extends StatelessWidget {
+//   const _BottomNav({
+//     required this.currentIndex,
+//     required this.onTap,
+//     required this.activeColor,
+//   });
 
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-  final Color activeColor;
+//   final int currentIndex;
+//   final ValueChanged<int> onTap;
+//   final Color activeColor;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 12,
-            offset: const Offset(0, -2),
-            color: Colors.black.withOpacity(.08),
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: activeColor,
-        unselectedItemColor: const Color(0xFF8B8B8B),
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 11,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 11,
-        ),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_rounded),
-            label: "Search",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border_rounded),
-            label: "Favorites",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
-            label: "Services",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline_rounded),
-            label: "Inbox",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_rounded),
-            label: "Profile",
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         boxShadow: [
+//           BoxShadow(
+//             blurRadius: 12,
+//             offset: const Offset(0, -2),
+//             color: Colors.black.withOpacity(.08),
+//           ),
+//         ],
+//       ),
+//       child: BottomNavigationBar(
+//         currentIndex: currentIndex,
+//         onTap: onTap,
+//         type: BottomNavigationBarType.fixed,
+//         backgroundColor: Colors.white,
+//         selectedItemColor: activeColor,
+//         unselectedItemColor: const Color(0xFF8B8B8B),
+//         selectedLabelStyle: const TextStyle(
+//           fontWeight: FontWeight.w700,
+//           fontSize: 11,
+//         ),
+//         unselectedLabelStyle: const TextStyle(
+//           fontWeight: FontWeight.w600,
+//           fontSize: 11,
+//         ),
+//         items: const [
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.search_rounded),
+//             label: "Search",
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.favorite_border_rounded),
+//             label: "Favorites",
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.calendar_month_outlined),
+//             label: "Services",
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.chat_bubble_outline_rounded),
+//             label: "Inbox",
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.person_outline_rounded),
+//             label: "Profile",
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

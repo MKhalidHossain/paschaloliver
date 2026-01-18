@@ -566,7 +566,7 @@ class UploadedFrontIdScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          icon: const Icon(Icons.arrow_back, size: 20),
           onPressed: () => Get.back(),
         ),
         centerTitle: false,
