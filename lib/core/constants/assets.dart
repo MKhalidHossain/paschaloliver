@@ -39,6 +39,7 @@ class Images {
 
   static const String checkIcon = 'assets/icons/check-circle.png';
   static const String uploadIcon = 'assets/icons/uploadIcon.png';
+  static const String upload2Icon = 'assets/images/upload-01.png';
 
   //listing
   static const String cleaningIcon = 'assets/calender/cleaning.png';

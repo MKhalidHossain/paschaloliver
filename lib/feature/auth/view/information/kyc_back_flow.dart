@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -21,11 +22,8 @@ TextStyle get _titleStyle => const TextStyle(
   color: _textDark,
 );
 
-TextStyle get _subtitleStyle => const TextStyle(
-  fontSize: 14,
-  height: 1.4,
-  color: _hintText,
-);
+TextStyle get _subtitleStyle =>
+    const TextStyle(fontSize: 14, height: 1.4, color: _hintText);
 
 /// ---------------------------------------------------------------------------
 /// 1) UPLOAD FRONT ID SCREEN
@@ -89,24 +87,31 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
-              const Text(
+              Text(
                 'Add Documents',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: _textDark,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'Select documents from your gallery or take new ones with your camera',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: _hintText,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400, // Regular
+                  height: 1.2, // 120%
+                  letterSpacing: 0,
+                  color: const Color(0xFF181919),
                 ),
               ),
+
+              const SizedBox(height: 6),
+              Text(
+                'Select documents from your gallery or take new ones \nwith your camera',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400, // Regular
+                  height: 1.2, // 120%
+                  letterSpacing: 0,
+                  color: const Color(0xFF181919),
+                ),
+              ),
+
               const SizedBox(height: 20),
               _sheetButton(
                 label: 'Camera',
@@ -138,10 +143,7 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
                   onPressed: () => Navigator.pop(ctx),
                   child: const Text(
                     'Cancel',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -158,36 +160,63 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-          onPressed: () => Get.back(),
-        ),
-        elevation: 0,
         backgroundColor: Colors.white,
-        foregroundColor: _textDark,
-        title: const Text(
-          'Upload ID (Front Side)',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        toolbarHeight: 120, // ✅ enough for arrow + title + subtitle
+
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // ✅ Arrow only (top row)
+              IconButton(
+                onPressed: () => Get.back(),
+                icon: const Icon(Icons.arrow_back, size: 20),
+                color: const Color(0xFF181919),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                splashRadius: 22,
+                alignment: Alignment.centerLeft,
+              ),
+
+              const SizedBox(height: 6),
+
+              // ✅ Title under arrow
+              Text(
+                'Upload ID (Front Side)',
+                style: GoogleFonts.urbanist(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                  color: const Color(0xFF181919),
+                ),
+              ),
+
+              const SizedBox(height: 6),
+
+              // ✅ Subtitle under title
+              Text(
+                'Take a clear photo of the front side of your ID',
+                style: GoogleFonts.urbanist(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  height: 1.2,
+                  color: const Color(0xFF181919),
+                ),
+              ),
+            ],
           ),
         ),
-        centerTitle: false,
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              'Take a clear photo of the front side of your ID',
-              style: TextStyle(
-                fontSize: 13,
-                color: _hintText,
-              ),
-            ),
-          ),
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -207,15 +236,27 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.photo_camera_outlined,
-                          size: 32, color: _brandGreen),
-                      SizedBox(height: 8),
+                    children: [
+                      SizedBox(
+                        width: 40,
+                        height: 38,
+                        child: const Center(
+                          child: Icon(
+                            Icons.photo_camera_outlined,
+                            size: 26, // ✅ closer to Figma than 32
+                            color: Color(0xFF181919),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       Text(
                         'Position you ID within the frame',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: _hintText,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500, // Medium
+                          height: 1.2, // 120%
+                          letterSpacing: 0,
+                          color: const Color(0xFF181919),
                         ),
                       ),
                     ],
@@ -226,8 +267,9 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ).copyWith(bottom: 24),
             child: Row(
               children: [
                 Expanded(
@@ -244,8 +286,11 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
                       onPressed: () {
                         Get.to(() => const TakeFrontPhotoScreen());
                       },
-                      icon: const Icon(Icons.photo_camera_outlined,
-                          color: Colors.white, size: 18),
+                      icon: const Icon(
+                        Icons.photo_camera_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                       label: const Text(
                         'Take Photo',
                         style: TextStyle(
@@ -269,8 +314,18 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
                         ),
                       ),
                       onPressed: _openUploadSheet,
-                      icon: const Icon(Icons.upload_file,
-                          size: 18, color: _brandGreen),
+                      icon: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: Image.asset(
+                          Images.upload2Icon,
+                          fit: BoxFit.contain,
+                          // If the icon is single-color and needs to be green:
+                          color: Colors.green,
+                          colorBlendMode: BlendMode.srcIn,
+                        ),
+                      ),
+
                       label: const Text(
                         'Upload',
                         style: TextStyle(
@@ -361,8 +416,10 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   child: Row(
                     children: [
                       IconButton(
@@ -407,10 +464,7 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
                     borderRadius: BorderRadius.circular(14),
                     child: AspectRatio(
                       aspectRatio: 16 / 9,
-                      child: Image.asset(
-                        Images.idFront,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.asset(Images.idFront, fit: BoxFit.cover),
                     ),
                   ),
                 ),
@@ -430,8 +484,9 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
                 const Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 24)
-                      .copyWith(bottom: 24),
+                    horizontal: 24,
+                    vertical: 24,
+                  ).copyWith(bottom: 24),
                   child: SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -444,8 +499,10 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
                         ),
                         elevation: 0,
                       ),
-                      icon: const Icon(Icons.photo_camera_outlined,
-                          color: Colors.white),
+                      icon: const Icon(
+                        Icons.photo_camera_outlined,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Capture',
                         style: TextStyle(
@@ -470,7 +527,17 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: _brandGreen, size: 18),
+          SizedBox(
+            width: 16,
+            height: 16,
+            child: Image.asset(
+              Images.checkIcon,
+              fit: BoxFit.contain,
+              // color: _brandGreen, // remove if already green / multi-color
+              colorBlendMode: BlendMode.srcIn,
+            ),
+          ),
+
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -491,10 +558,7 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
 class UploadedFrontIdScreen extends StatelessWidget {
   final ImageProvider frontImage;
 
-  const UploadedFrontIdScreen({
-    super.key,
-    required this.frontImage,
-  });
+  const UploadedFrontIdScreen({super.key, required this.frontImage});
 
   @override
   Widget build(BuildContext context) {
@@ -536,10 +600,7 @@ class UploadedFrontIdScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: Image(
-                    image: frontImage,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image(image: frontImage, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -559,8 +620,9 @@ class UploadedFrontIdScreen extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(bottom: 24),
             child: Row(
               children: [
                 Expanded(
@@ -627,13 +689,7 @@ class _CheckRowGreen extends StatelessWidget {
         children: [
           const Icon(Icons.check_circle, color: _brandGreen, size: 18),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 13,
-              color: _hintText,
-            ),
-          ),
+          Text(text, style: const TextStyle(fontSize: 13, color: _hintText)),
         ],
       ),
     );

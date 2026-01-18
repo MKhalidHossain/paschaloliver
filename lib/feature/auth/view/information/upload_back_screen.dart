@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
@@ -20,10 +21,12 @@ TextStyle get _titleStyle => const TextStyle(
   color: _textDark,
 );
 
-TextStyle get _subtitleStyle => const TextStyle(
-  fontSize: 14,
-  height: 1.4,
-  color: _hintText,
+final _subtitleStyle = GoogleFonts.urbanist(
+  fontSize: 16,
+  fontWeight: FontWeight.w400,
+  height: 1.2,
+  letterSpacing: 0,
+  color: const Color(0xFF060807),
 );
 
 /// ---------------------------------------------------------------------------
@@ -54,7 +57,7 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
 
     final backImage = FileImage(File(file.path));
     Get.to(
-          () => UploadedBackIdScreen(
+      () => UploadedBackIdScreen(
         frontImage: widget.frontImage,
         backImage: backImage,
       ),
@@ -72,7 +75,7 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
 
     final backImage = FileImage(File(file.path));
     Get.to(
-          () => UploadedBackIdScreen(
+      () => UploadedBackIdScreen(
         frontImage: widget.frontImage,
         backImage: backImage,
       ),
@@ -101,24 +104,31 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
-              const Text(
+              Text(
                 'Add Documents',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: _textDark,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'Select documents from your gallery or take new ones with your camera',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: _hintText,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 1.2,
+                  letterSpacing: 0,
+                  color: const Color(0xFF181919),
                 ),
               ),
+
+              const SizedBox(height: 6),
+              Text(
+                'Select documents from your gallery or take new ones \nwith your camera',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400, // Regular
+                  height: 1.2, // 120%
+                  letterSpacing: 0,
+                  color: const Color(0xFF181919),
+                ),
+              ),
+
               const SizedBox(height: 20),
               _sheetButton(
                 label: 'Camera',
@@ -150,10 +160,7 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                   onPressed: () => Navigator.pop(ctx),
                   child: const Text(
                     'Cancel',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -170,33 +177,57 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-          onPressed: () => Get.back(),
-        ),
-        elevation: 0,
         backgroundColor: Colors.white,
-        foregroundColor: _textDark,
-        title: const Text(
-          'Upload ID (Back Side)',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        toolbarHeight: 110, // ✅ space for arrow + title
+
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () => Get.back(),
+                icon: const Icon(Icons.arrow_back, size: 18),
+                color: _textDark,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                splashRadius: 22,
+                alignment: Alignment.centerLeft,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Upload ID (Back Side)',
+                style: GoogleFonts.urbanist(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                  color: _textDark,
+                ),
+              ),
+            ],
           ),
         ),
-        centerTitle: false,
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Text(
               'Take a clear photo of the Back side of your ID',
-              style: TextStyle(
-                fontSize: 13,
-                color: _hintText,
+              style: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w400, // Regular
+                height: 1.2, // 120%
+                letterSpacing: 0,
+                color: const Color(0xFF181919),
               ),
             ),
           ),
@@ -220,14 +251,27 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(Icons.photo_camera_outlined,
-                          size: 32, color: _brandGreen),
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Center(
+                          child: Icon(
+                            Icons.photo_camera_outlined,
+                            size: 32,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+
                       SizedBox(height: 8),
                       Text(
                         'Position you ID within the frame',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: _hintText,
+                        style: const TextStyle(
+                          fontFamily: 'SF Pro',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600, // closest to 510
+                          height: 1.2,
+                          color: Color(0xFF181919),
                         ),
                       ),
                     ],
@@ -238,8 +282,9 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ).copyWith(bottom: 24),
             child: Row(
               children: [
                 Expanded(
@@ -254,12 +299,17 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                         ),
                       ),
                       onPressed: () {
-                        Get.to(() => TakeBackPhotoScreen(
-                          frontImage: widget.frontImage,
-                        ));
+                        Get.to(
+                          () => TakeBackPhotoScreen(
+                            frontImage: widget.frontImage,
+                          ),
+                        );
                       },
-                      icon: const Icon(Icons.photo_camera_outlined,
-                          color: Colors.white, size: 18),
+                      icon: const Icon(
+                        Icons.photo_camera_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                       label: const Text(
                         'Take Photo',
                         style: TextStyle(
@@ -283,8 +333,18 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
                         ),
                       ),
                       onPressed: _openUploadSheet,
-                      icon: const Icon(Icons.upload_file,
-                          size: 18, color: _brandGreen),
+                      icon: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: Image.asset(
+                          Images.upload2Icon,
+                          fit: BoxFit.contain,
+                          color:
+                              _brandGreen, // remove if icon already green / multi-color
+                          colorBlendMode: BlendMode.srcIn,
+                        ),
+                      ),
+
                       label: const Text(
                         'Upload',
                         style: TextStyle(
@@ -358,7 +418,7 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
     final backImage = FileImage(File(file.path));
 
     Get.to(
-          () => UploadedBackIdScreen(
+      () => UploadedBackIdScreen(
         frontImage: widget.frontImage,
         backImage: backImage,
       ),
@@ -384,8 +444,10 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   child: Row(
                     children: [
                       IconButton(
@@ -430,10 +492,7 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
                     borderRadius: BorderRadius.circular(14),
                     child: AspectRatio(
                       aspectRatio: 16 / 9,
-                      child: Image.asset(
-                        Images.idBack,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.asset(Images.idBack, fit: BoxFit.cover),
                     ),
                   ),
                 ),
@@ -453,8 +512,9 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
                 const Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 24)
-                      .copyWith(bottom: 24),
+                    horizontal: 24,
+                    vertical: 24,
+                  ).copyWith(bottom: 24),
                   child: SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -467,8 +527,10 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
                         ),
                         elevation: 0,
                       ),
-                      icon: const Icon(Icons.photo_camera_outlined,
-                          color: Colors.white),
+                      icon: const Icon(
+                        Icons.photo_camera_outlined,
+                        color: Colors.white,
+                      ),
                       label: const Text(
                         'Capture',
                         style: TextStyle(
@@ -561,10 +623,7 @@ class UploadedBackIdScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: Image(
-                    image: backImage,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image(image: backImage, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -584,8 +643,9 @@ class UploadedBackIdScreen extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(bottom: 24),
             child: Row(
               children: [
                 Expanded(
@@ -618,7 +678,7 @@ class UploadedBackIdScreen extends StatelessWidget {
                     ),
                     onPressed: () {
                       Get.to(
-                            () => ReviewDocumentScreen(
+                        () => ReviewDocumentScreen(
                           frontImage: frontImage,
                           backImage: backImage,
                         ),
@@ -663,7 +723,7 @@ class ReviewDocumentScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          icon: const Icon(Icons.arrow_back, size: 18),
           onPressed: () => Get.back(),
         ),
         elevation: 0,
@@ -675,8 +735,9 @@ class ReviewDocumentScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(top: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(top: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -692,10 +753,7 @@ class ReviewDocumentScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _documentCard(
-              title: 'Front Side',
-              image: frontImage,
-            ),
+            child: _documentCard(title: 'Front Side', image: frontImage),
           ),
           const SizedBox(height: 12),
           Padding(
@@ -708,8 +766,9 @@ class ReviewDocumentScreen extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(bottom: 24),
             child: Row(
               children: [
                 Expanded(
@@ -785,12 +844,15 @@ class ReviewDocumentScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: _hintText,
+            style: GoogleFonts.urbanist(
+              fontSize: 16,
+              fontWeight: FontWeight.w500, // Medium 500
+              height: 1.2, // 120%
+              letterSpacing: 0,
+              color: const Color(0xFF060807),
             ),
           ),
+
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
@@ -804,19 +866,19 @@ class ReviewDocumentScreen extends StatelessWidget {
                 child: image != null
                     ? Image(image: image, fit: BoxFit.cover)
                     : Container(
-                  color: Colors.grey.shade200,
-                  child: Center(
-                    child: Text(
-                      isMandatoryImage
-                          ? 'No image'
-                          : 'No image (optional)',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: _hintText,
+                        color: Colors.grey.shade200,
+                        child: Center(
+                          child: Text(
+                            isMandatoryImage
+                                ? 'No image'
+                                : 'No image (optional)',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: _hintText,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ),
             ),
           ),
@@ -838,46 +900,80 @@ class VerificationUnderReviewScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          icon: const Icon(Icons.arrow_back, size: 20),
           onPressed: () => Get.back(),
         ),
+
         actions: [
-          TextButton(
-            onPressed: () {
-              Get.to(() => const VerificationSuccessScreen());
-            },
-            child: const Text(
-              'Skip',
-              style: TextStyle(
-                color: _brandGreen,
-                fontWeight: FontWeight.w600,
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 16,
+            ), // ✅ right margin like Figma
+            child: Center(
+              child: SizedBox(
+                height: 34, // ✅ compact height like screenshot
+                child: OutlinedButton(
+                  onPressed: () =>
+                      Get.to(() => const VerificationSuccessScreen()),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: _brandGreen, width: 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    minimumSize: const Size(0, 34),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    backgroundColor: Colors.white,
+                    foregroundColor: _brandGreen,
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    'Skip',
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      height: 1.2,
+                      color: _brandGreen,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
         ],
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: _textDark,
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(top: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(top: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Verification Under Review', style: _titleStyle),
                 const SizedBox(height: 4),
-                Text(
-                  'Your identity is under review. You’ll be notified once approved.',
-                  style: _subtitleStyle,
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Your identity is under review. You’ll be notified once approved.",
+                    textAlign: TextAlign.center,
+                    style: _subtitleStyle,
+                  ),
                 ),
               ],
             ),
           ),
+
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -908,8 +1004,9 @@ class VerificationUnderReviewScreen extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(bottom: 24),
             child: SizedBox(
               width: double.infinity,
               height: 52,
@@ -926,10 +1023,7 @@ class VerificationUnderReviewScreen extends StatelessWidget {
                 ),
                 child: const Text(
                   'Waiting for admin approval',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -974,10 +1068,7 @@ class _ReviewStepRow extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: _hintText,
-                ),
+                style: const TextStyle(fontSize: 12, color: _hintText),
               ),
             ],
           ),
@@ -1025,8 +1116,8 @@ class VerificationSuccessScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Your documents have been reviewed and approved.\n'
-                      'You are now a verified Professional on HandyNaija.',
+                  'Your documents have been reviewed and approved.'
+                  'You are now a verified Professional on HandyNaija.',
                   style: _subtitleStyle,
                 ),
               ],
@@ -1054,8 +1145,9 @@ class VerificationSuccessScreen extends StatelessWidget {
           ),
           const Spacer(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 24),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ).copyWith(bottom: 24),
             child: SizedBox(
               width: double.infinity,
               height: 52,
@@ -1101,13 +1193,7 @@ class _CheckRowGreen extends StatelessWidget {
         children: [
           const Icon(Icons.check_circle, color: _brandGreen, size: 18),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 13,
-              color: _hintText,
-            ),
-          ),
+          Text(text, style: const TextStyle(fontSize: 13, color: _hintText)),
         ],
       ),
     );

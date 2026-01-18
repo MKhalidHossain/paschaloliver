@@ -697,7 +697,7 @@ class _InformationScreenState extends State<InformationScreen> {
       children: [
         _docCardTile(title: 'Government ID', value: 'government_id'),
 
-        if (isGov) ...[const SizedBox(height: 14), _uploadPillButton()],
+        if (isGov) ...[const SizedBox(height: 2), _uploadPillButton()],
 
         const SizedBox(height: 14),
         _docCardTile(title: 'Passport', value: 'passport'),
