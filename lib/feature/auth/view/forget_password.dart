@@ -77,18 +77,16 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
               SizedBox(
                 width: 343,
                 height: 36,
-                child: Center(
-                  child: Text(
-                    'Select which contact details should we used to reset\n'
-                    'your password',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      height: 1.1,
-                      letterSpacing: 0,
-                      color: const Color(0xFF181919),
-                    ),
+                child: Text(
+                  'Select which contact details should we use to \nreset your password',
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFF181919),
                   ),
                 ),
               ),

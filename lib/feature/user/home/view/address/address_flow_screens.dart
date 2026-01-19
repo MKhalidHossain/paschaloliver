@@ -212,16 +212,20 @@ class MyAddressesScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Enter the address where the service will be performed\n"
-              "to show your available professionals.",
-              style: GoogleFonts.urbanist(
-                fontSize: 14,
-                fontWeight: FontWeight.w400, // Regular
-                height: 1.1, // 110%
-                color: AddressUI.muted, // or const Color(0xFF000000)
+            SizedBox(
+              width: 343, // Figma width
+              child: Text(
+                "Enter the address where the service will be performed to show your available professionals.",
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  height: 1.1,
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
+                ),
               ),
             ),
+
             const SizedBox(height: 14),
 
             _SearchField(

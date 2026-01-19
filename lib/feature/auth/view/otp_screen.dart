@@ -99,15 +99,23 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
               ),
 
               const SizedBox(height: 6),
-              Text(
-                'We have sent the verification code to your email\naddress',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
-                  height: 1.4,
+              SizedBox(
+                width: 343,
+                height: 36,
+                child: Text(
+                  'We have sent the verification code to your email \naddress',
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    height: 1.1, // 110%
+                    letterSpacing: 0,
+                    color: const Color(0xFF181919),
+                  ),
                 ),
               ),
+
               const SizedBox(height: 28),
 
               // ---------------- OTP BOXES ----------------
@@ -157,28 +165,44 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
               const SizedBox(height: 14),
 
               // ---------------- RESEND TEXT ----------------
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Didn't get the code ? ",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // TODO: trigger resend OTP
-                    },
-                    child: Text(
-                      'Resend it.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: _brandGreen,
+              SizedBox(
+                width: 343,
+                height: 15,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end, // ✅ Right
+                  crossAxisAlignment: CrossAxisAlignment.center, // ✅ Middle
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      "Didn't get the code ? ",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400, // ✅ Regular
+                        height: 1.1, // ✅ 110%
+                        letterSpacing: 0,
+                        color: const Color(0xFF181919), // use your figma color
                       ),
                     ),
-                  ),
-                ],
+                    GestureDetector(
+                      onTap: () {
+                        // TODO: resend
+                      },
+                      child: Text(
+                        "Resend it.",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
+                          fontWeight:
+                              FontWeight.w400, // ✅ Regular (Figma = 14 Regular)
+                          height: 1.1,
+                          letterSpacing: 0,
+                          color: _brandGreen, // or figma color if different
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
               const SizedBox(height: 24),
 
               // ---------------- CONTINUE BUTTON ----------------

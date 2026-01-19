@@ -263,8 +263,6 @@ class _HangingScreenState extends State<HangingScreen> {
                 ),
               ),
             ),
-          
-          
           ],
         ),
       ),
@@ -292,8 +290,8 @@ class _ProCheckbox extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 140),
         curve: Curves.easeOut,
-        width: 22,
-        height: 22,
+        width: 26,
+        height: 26,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: value ? brand : const Color(0xFFF2F2F2),

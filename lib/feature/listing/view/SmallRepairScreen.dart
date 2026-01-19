@@ -189,7 +189,7 @@ class _OptionRow extends StatelessWidget {
             ),
           ),
           child: Transform.scale(
-            scale: 1.1,
+            scale: 1.4,
             child: Checkbox(value: value, onChanged: onChanged),
           ),
         ),

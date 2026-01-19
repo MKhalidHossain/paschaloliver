@@ -19,6 +19,9 @@ class Images {
   static const String servicesIcon = 'assets/icons/services.png';
   static const String serviceIcon = 'assets/icons/calendar-tick.png';
 
+  static const String balanceIcon = 'assets/icons/balanceFrame.png';
+  static const String bankIcon = 'assets/icons/bank.png';
+
   static const String floorDoorIcon = 'assets/images/image_161.png';
   static const String addressIcon = 'assets/images/address_2021.png';
   static const String noFavIcon = 'assets/icons/Frame_no_favourite.png';

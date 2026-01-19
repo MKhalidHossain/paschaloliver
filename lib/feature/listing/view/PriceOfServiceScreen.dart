@@ -124,13 +124,14 @@ class PriceOfServiceScreen extends StatelessWidget {
               const SizedBox(height: 6),
 
               // Subtitle
-              const Text(
-                "Set the price and duration of the services you want to\noffer",
-                style: TextStyle(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w400,
-                  color: _muted,
-                  height: 1.25,
+              Text(
+                "Set the price and duration of the services you want to offer",
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400, // Regular
+                  height: 1.1, // 110%
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
 

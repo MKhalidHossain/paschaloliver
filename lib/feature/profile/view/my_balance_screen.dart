@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/core/constants/assets.dart';
 
 class MyBalanceScreen extends StatelessWidget {
   const MyBalanceScreen({
@@ -42,7 +43,7 @@ class MyBalanceScreen extends StatelessWidget {
                       child: Icon(Icons.arrow_back, size: 20, color: _C.green),
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 6),
                   Text(
                     "My Balance",
                     style: GoogleFonts.urbanist(
@@ -63,25 +64,56 @@ class MyBalanceScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  Text(
-                    "₦${balance.toStringAsFixed(2)}",
-                    style: GoogleFonts.urbanist(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
-                      color: const Color(0xFF3B3B3B),
+                  // ✅ FIXED: Center amount perfectly + icon pinned right (Figma)
+                  SizedBox(
+                    width: 343, // ✅ Figma width
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          "₦${balance.toStringAsFixed(2)}",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            height: 1.1,
+                            color: const Color(0xFF3B3B3B),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Image.asset(
+                            Images.bankIcon,
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.contain,
+                            // If icon is multi-color, remove the next 2 lines
+                            color: const Color(0xFF3B3B3B),
+                            colorBlendMode: BlendMode.srcIn,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
                   const SizedBox(height: 4),
-                  Text(
-                    "Available Balance",
-                    style: GoogleFonts.urbanist(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      height: 1.2,
-                      color: _C.subText,
+
+                  // ✅ Figma: 16 medium, 120%, center, #181919
+                  SizedBox(
+                    width: 343,
+                    child: Text(
+                      "Available Balance",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                        letterSpacing: 0,
+                        color: const Color(0xFF181919),
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 16),
 
                   /// Transfer button (green when enabled, grey when disabled)
@@ -115,15 +147,23 @@ class MyBalanceScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 8),
-                  Text(
-                    "Minimum withdrawal amount ₦${minWithdrawal.toStringAsFixed(2)}",
-                    style: GoogleFonts.urbanist(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      height: 1.2,
-                      color: _C.subText,
+
+                  // ✅ Figma: 16 medium, 120%, center, #181919
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Minimum withdrawal amount ₦${minWithdrawal.toStringAsFixed(2)}",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                        letterSpacing: 0,
+                        color: const Color(0xFF181919),
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 16),
 
                   /// Pending payments row
@@ -149,13 +189,17 @@ class MyBalanceScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      const Icon(
-                        Icons.info_outline,
-                        size: 14,
+                      Image.asset(
+                        Images.balanceIcon,
+                        width: 14,
+                        height: 14,
+                        fit: BoxFit.contain,
                         color: _C.subTextDark,
+                        colorBlendMode: BlendMode.srcIn,
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 12),
                 ],
               ),
@@ -176,7 +220,7 @@ class MyBalanceScreen extends StatelessWidget {
   }
 }
 
-/// ---------------------- Empty state (left screen) ----------------------
+/// ---------------------- Empty state ----------------------
 
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
@@ -189,7 +233,7 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Placeholder illustration – replace with your asset if needed
+            // Replace with your illustration asset if you have
             Container(
               width: 90,
               height: 90,
@@ -221,7 +265,7 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-/// ---------------------- History section (right screen) ----------------------
+/// ---------------------- History section ----------------------
 
 class _PaymentHistorySection extends StatelessWidget {
   const _PaymentHistorySection({required this.items});
@@ -276,7 +320,6 @@ class _PaymentCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon bubble
           Container(
             width: 28,
             height: 28,
@@ -284,11 +327,16 @@ class _PaymentCard extends StatelessWidget {
               color: item.iconBg,
               borderRadius: BorderRadius.circular(6),
             ),
-            child: Icon(item.icon, size: 18, color: item.iconColor),
+            child: Image.asset(
+              Images.bankIcon,
+              width: 18,
+              height: 18,
+              fit: BoxFit.contain,
+              color: item.iconColor,
+              colorBlendMode: BlendMode.srcIn,
+            ),
           ),
           const SizedBox(width: 10),
-
-          // Description
           Expanded(
             child: Text(
               item.text,
@@ -322,7 +370,7 @@ class _PaymentHistoryItem {
   final String text;
 }
 
-/// You can use these for a quick demo of the “right” state:
+/// Demo items (optional)
 const demoHistoryItems = <_PaymentHistoryItem>[
   _PaymentHistoryItem(
     icon: Icons.attach_money,
@@ -336,12 +384,6 @@ const demoHistoryItems = <_PaymentHistoryItem>[
     iconColor: Color(0xFF1E88E5),
     text:
         "You have successfully received ₦10.00 on your account via Referral & complete registration as professional in Handynaja app",
-  ),
-  _PaymentHistoryItem(
-    icon: Icons.attach_money,
-    iconBg: Color(0xFFFFE9E9),
-    iconColor: Color(0xFFE53935),
-    text: "MAD 10.00 already cut from your account as service commission",
   ),
   _PaymentHistoryItem(
     icon: Icons.account_balance_outlined,

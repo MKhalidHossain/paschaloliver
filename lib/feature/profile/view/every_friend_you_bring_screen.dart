@@ -205,7 +205,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                         ),
                         onTap: () {},
                       ),
-                      const SizedBox(width: 55),
+                      const SizedBox(width: 40),
                       _ShareIcon(
                         bg: const Color(0xFF1877F2),
                         child: Image.asset(
@@ -216,7 +216,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                         ),
                         onTap: () {},
                       ),
-                      const SizedBox(width: 55),
+                      const SizedBox(width: 40),
                       _ShareIcon(
                         bg: Colors.white,
                         child: Image.asset(
@@ -227,7 +227,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                         ),
                         onTap: () {},
                       ),
-                      const SizedBox(width: 55),
+                      const SizedBox(width: 40),
                       _ShareIcon(
                         bg: const Color(0xFFE5E5E5),
                         child: const Icon(
@@ -239,8 +239,6 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                
-                
                 ],
               ),
             ),
