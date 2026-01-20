@@ -245,7 +245,7 @@ class ProfileScreenUser extends StatelessWidget {
                     color: _C.green,
                   ),
                 ),
-                title: "Switch to Professionl version",
+                title: "Switch to Professional version",
                 onTap: () {
                   Get.to(() => const AppGround());
                 },

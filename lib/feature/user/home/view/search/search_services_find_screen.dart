@@ -491,14 +491,14 @@ class _GuaranteeCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "HandyNaija Guarantee",
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w900,
-                    color: _C.text,
-                  ),
-                ),
+                // Text(
+                //   "HandyNaija Guarantee",
+                //   style: TextStyle(
+                //     fontSize: 13,
+                //     fontWeight: FontWeight.w900,
+                //     color: _C.text,
+                //   ),
+                // ),
                 SizedBox(height: 4),
                 Text(
                   "All service are protected by HandyNaija money-\nback guarantee",

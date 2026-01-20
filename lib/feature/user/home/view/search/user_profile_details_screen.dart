@@ -299,55 +299,54 @@ class NicolasProfileScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // My Services
-            const _SectionTitle(title: "My Services"),
+            // const _SectionTitle(title: "My Services"),
             const SizedBox(height: 10),
 
             // Top chips row (like screenshot)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Obx(() {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _ServiceChip(
-                        title: "Hanging",
-                        icon: Icons.hardware_rounded,
-                        selected: c.selectedTopCategory.value == "Hanging",
-                        onTap: () => c.selectedTopCategory.value = "Hanging",
-                      ),
-                      const SizedBox(width: 10),
-                      _ServiceChip(
-                        title: "Small repairs",
-                        icon: Icons.build_circle_outlined,
-                        selected:
-                            c.selectedTopCategory.value == "Small repairs",
-                        onTap: () =>
-                            c.selectedTopCategory.value = "Small repairs",
-                      ),
-                      const SizedBox(width: 10),
-                      _ServiceChip(
-                        title: "Furniture\nassembly",
-                        icon: Icons.handyman_outlined,
-                        selected:
-                            c.selectedTopCategory.value == "Furniture assembly",
-                        onTap: () =>
-                            c.selectedTopCategory.value = "Furniture assembly",
-                      ),
-                      const SizedBox(width: 10),
-                      _ServiceChip(
-                        title: "Installation",
-                        icon: Icons.power_outlined,
-                        selected: c.selectedTopCategory.value == "Installation",
-                        onTap: () =>
-                            c.selectedTopCategory.value = "Installation",
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 16),
+            //   child: Obx(() {
+            //     return SingleChildScrollView(
+            //       scrollDirection: Axis.horizontal,
+            //       child: Row(
+            //         children: [
+            //           _ServiceChip(
+            //             title: "Hanging",
+            //             icon: Icons.hardware_rounded,
+            //             selected: c.selectedTopCategory.value == "Hanging",
+            //             onTap: () => c.selectedTopCategory.value = "Hanging",
+            //           ),
+            //           const SizedBox(width: 10),
+            //           _ServiceChip(
+            //             title: "Small repairs",
+            //             icon: Icons.build_circle_outlined,
+            //             selected:
+            //                 c.selectedTopCategory.value == "Small repairs",
+            //             onTap: () =>
+            //                 c.selectedTopCategory.value = "Small repairs",
+            //           ),
+            //           const SizedBox(width: 10),
+            //           _ServiceChip(
+            //             title: "Furniture\nassembly",
+            //             icon: Icons.handyman_outlined,
+            //             selected:
+            //                 c.selectedTopCategory.value == "Furniture assembly",
+            //             onTap: () =>
+            //                 c.selectedTopCategory.value = "Furniture assembly",
+            //           ),
+            //           const SizedBox(width: 10),
+            //           _ServiceChip(
+            //             title: "Installation",
+            //             icon: Icons.power_outlined,
+            //             selected: c.selectedTopCategory.value == "Installation",
+            //             onTap: () =>
+            //                 c.selectedTopCategory.value = "Installation",
+            //           ),
+            //         ],
+            //       ),
+            //     );
+            //   }),
+            // ),
             const SizedBox(height: 10),
             const Divider(height: 1, thickness: 1, color: _C.line),
 
