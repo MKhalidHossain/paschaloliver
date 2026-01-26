@@ -54,7 +54,11 @@ class _AddHanScreenState extends State<AddHanScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _TopProgressBar(value: _progress, track: _track, fill: _green),
+                    _TopProgressBar(
+                      value: _progress,
+                      track: _track,
+                      fill: _green,
+                    ),
                     const SizedBox(height: 12),
 
                     // Back + Save and exit
@@ -65,7 +69,11 @@ class _AddHanScreenState extends State<AddHanScreen> {
                           borderRadius: BorderRadius.circular(10),
                           child: const Padding(
                             padding: EdgeInsets.all(6),
-                            child: Icon(Icons.arrow_back, size: 22, color: _green),
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 22,
+                              color: _green,
+                            ),
                           ),
                         ),
                         const Spacer(),
@@ -73,8 +81,14 @@ class _AddHanScreenState extends State<AddHanScreen> {
                           onPressed: () => Navigator.pop(context),
                           style: TextButton.styleFrom(
                             foregroundColor: _muted,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                            textStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           child: const Text("Save and exit"),
                         ),
@@ -136,55 +150,58 @@ class _AddHanScreenState extends State<AddHanScreen> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        child: const Text("How much you will i make for my services?"),
+                        child: const Text(
+                          "How much you will i make for my services?",
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 4),
-
-                    const Text(
-                      "We recommend that you start with a lower price to get\nyour first reviews , you can edit this price anytime.",
-                      style: TextStyle(
-                        color: _text,
-                        fontSize: 12.8,
-                        fontWeight: FontWeight.w400,
-                        height: 1.35,
+                    Center(
+                      child: Text(
+                        "We recommend that you start with a lower price to get\nyour first reviews, You can edit this price anytime.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: _text,
+                          fontSize: 12.8,
+                          fontWeight: FontWeight.w400,
+                          height: 1.35,
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 18),
 
-                    const Text(
-                      "Requiring Discount",
-                      style: TextStyle(
-                        color: Color(0xFF6E6E6E),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    // const Text(
+                    //   "Requiring Discount",
+                    //   style: TextStyle(
+                    //     color: Color(0xFF6E6E6E),
+                    //     fontSize: 16,
+                    //     fontWeight: FontWeight.w700,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
 
-                    const Text(
-                      "If you add a discount for requiring bookings, you will\nreceive longer lasting bookings.",
-                      style: TextStyle(
-                        color: _text,
-                        fontSize: 12.8,
-                        fontWeight: FontWeight.w400,
-                        height: 1.35,
-                      ),
-                    ),
-
+                    // const Text(
+                    //   "If you add a discount for requiring bookings, you will\nreceive longer lasting bookings.",
+                    //   style: TextStyle(
+                    //     color: _text,
+                    //     fontSize: 12.8,
+                    //     fontWeight: FontWeight.w400,
+                    //     height: 1.35,
+                    //   ),
+                    // ),
                     const SizedBox(height: 14),
 
                     // RADIO 1
-                    _RadioRow(
-                      selected: _discountChoice == 0,
-                      title: "I don’t want to add a special offer",
-                      onTap: () => setState(() => _discountChoice = 0),
-                    ),
-                    const SizedBox(height: 10),
+                    // _RadioRow(
+                    //   selected: _discountChoice == 0,
+                    //   title: "I don’t want to add a special offer",
+                    //   onTap: () => setState(() => _discountChoice = 0),
+                    // ),
+                    // const SizedBox(height: 10),
 
-                    // RADIO 2 + recommended chip
+                    // // RADIO 2 + recommended chip
                     _RadioRow(
                       selected: _discountChoice == 1,
                       title: "I want to offer a discount",
@@ -192,11 +209,13 @@ class _AddHanScreenState extends State<AddHanScreen> {
                     ),
 
                     const SizedBox(height: 6),
-
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFEDEDED),
                           borderRadius: BorderRadius.circular(8),
@@ -214,14 +233,14 @@ class _AddHanScreenState extends State<AddHanScreen> {
 
                     const SizedBox(height: 16),
 
-                    const Text(
-                      "Requiring Price:",
-                      style: TextStyle(
-                        color: _green,
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    // const Text(
+                    //   "Requiring Price:",
+                    //   style: TextStyle(
+                    //     color: _green,
+                    //     fontSize: 13.5,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
                     const SizedBox(height: 6),
 
                     Opacity(
@@ -250,7 +269,9 @@ class _AddHanScreenState extends State<AddHanScreen> {
                   onPressed: _onSave,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _green,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     elevation: 0,
                   ),
                   child: const Text(
@@ -323,7 +344,10 @@ class _OutlinedField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Color(0xFFB0B0B0), fontSize: 13),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
           borderSide: const BorderSide(color: Color(0xFFBDBDBD), width: 1),
@@ -408,16 +432,16 @@ class _RadioCircle extends StatelessWidget {
       ),
       child: selected
           ? Center(
-        child: Container(
-          width: 16,
-          height: 16,
-          decoration: const BoxDecoration(
-            color: _green,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.check, size: 12, color: Colors.white),
-        ),
-      )
+              child: Container(
+                width: 16,
+                height: 16,
+                decoration: const BoxDecoration(
+                  color: _green,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check, size: 12, color: Colors.white),
+              ),
+            )
           : null,
     );
   }

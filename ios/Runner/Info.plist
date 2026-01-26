@@ -41,6 +41,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+		<!-- ✅ Google Maps API Key -->
+	<key>GMSApiKey</key>
+	<string>AIzaSyBuJYjc5adcBQH3D3WaLQaHjuHmF7LG_Nw</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

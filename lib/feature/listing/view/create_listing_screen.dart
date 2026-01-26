@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/feature/listing/view/add_screen.dart';
 
 import '../../../core/constants/assets.dart';
-import 'list_home_category_screen.dart'; // ✅ update path if needed
 
 /// ✅ FULL REPLACEABLE: CreateListingScreen
 /// ✅ Fixes your mismatch:
@@ -34,7 +34,8 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
 
   void _openCategory(String category) {
     // ✅ You can pass category if you want
-    Get.to(() => const ListingHomeCategoryScreen());
+    // Get.to(() => const ListingHomeCategoryScreen());
+    Get.to(() => const AddHanScreen());
   }
 
   @override
@@ -92,7 +93,6 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                 ),
               ),
 
-
               const SizedBox(height: 14),
 
               _SearchField(
@@ -112,9 +112,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
                     child: SizedBox(
                       width: 342,
                       height: 432,
-                      child: _CategoryCluster(
-                        onTap: _openCategory,
-                      ),
+                      child: _CategoryCluster(onTap: _openCategory),
                     ),
                   ),
                 ),
@@ -169,7 +167,6 @@ class _TopProgress extends StatelessWidget {
   }
 }
 
-
 /* ------------------------ Search field ------------------------ */
 
 class _SearchField extends StatelessWidget {
@@ -206,14 +203,23 @@ class _SearchField extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 12,
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CreateListingScreen.border, width: 1),
+            borderSide: const BorderSide(
+              color: CreateListingScreen.border,
+              width: 1,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CreateListingScreen.border, width: 1.2),
+            borderSide: const BorderSide(
+              color: CreateListingScreen.border,
+              width: 1.2,
+            ),
           ),
         ),
       ),
@@ -353,7 +359,12 @@ class _BubbleContent extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(iconPath, width: 34, height: 34, fit: BoxFit.contain),
+                Image.asset(
+                  iconPath,
+                  width: 34,
+                  height: 34,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 6),
                 Text(
                   label,

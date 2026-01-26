@@ -10,7 +10,8 @@ class InformationOfInterestScreen extends StatefulWidget {
       _InformationOfInterestScreenState();
 }
 
-class _InformationOfInterestScreenState extends State<InformationOfInterestScreen> {
+class _InformationOfInterestScreenState
+    extends State<InformationOfInterestScreen> {
   // Screenshot palette
   static const Color _green = Color(0xFF2FA86A);
   static const Color _muted = Color(0xFF8B8B8B);
@@ -47,8 +48,10 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
     "Upholstery cleaning",
     "Sofa cleaning",
   ];
-  late final List<bool> _cleaningSelected =
-  List<bool>.filled(_cleaningTypes.length, false);
+  late final List<bool> _cleaningSelected = List<bool>.filled(
+    _cleaningTypes.length,
+    false,
+  );
 
   final List<String> _tasks = const [
     "Laundry",
@@ -58,8 +61,8 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
   ];
   late final List<bool> _taskSelected = List<bool>.filled(_tasks.length, false);
 
-  bool? _petsYes;        // null / true / false
-  bool? _workProYes;     // null / true / false
+  bool? _petsYes; // null / true / false
+  bool? _workProYes; // null / true / false
 
   final List<String> _employmentStatus = const [
     "I work professionally in cleaning.",
@@ -78,14 +81,12 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
 
   // ---------------------------------------------
 
-
   void _onContinue() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const GalleryScreen()),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +108,11 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _TopProgressBar(value: _progress, track: _track, fill: _green),
+                      _TopProgressBar(
+                        value: _progress,
+                        track: _track,
+                        fill: _green,
+                      ),
                       const SizedBox(height: 12),
 
                       Row(
@@ -117,7 +122,11 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
                             borderRadius: BorderRadius.circular(10),
                             child: const Padding(
                               padding: EdgeInsets.all(6),
-                              child: Icon(Icons.arrow_back, size: 22, color: _green),
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 22,
+                                color: _green,
+                              ),
                             ),
                           ),
                           const Spacer(),
@@ -125,7 +134,10 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
                             onPressed: () => Navigator.pop(context),
                             style: TextButton.styleFrom(
                               foregroundColor: _muted,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
                               textStyle: const TextStyle(
                                 fontSize: 13.5,
                                 fontWeight: FontWeight.w500,
@@ -186,108 +198,105 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
                         );
                       }),
 
-                      const SizedBox(height: 6),
+                      // const SizedBox(height: 6),
 
-                      const Text(
-                        "Indicate the types of cleaning that you can\nperform",
-                        style: TextStyle(
-                          color: _text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          height: 1.25,
-                        ),
-                      ),
+                      // const Text(
+                      //   "Indicate the types of cleaning that you can\nperform",
+                      //   style: TextStyle(
+                      //     color: _text,
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.w600,
+                      //     height: 1.25,
+                      //   ),
+                      // ),
                       const SizedBox(height: 10),
 
                       // Cleaning types checkboxes
-                      ...List.generate(_cleaningTypes.length, (i) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: _CheckRow(
-                            value: _cleaningSelected[i],
-                            title: _cleaningTypes[i],
-                            onTap: () => setState(() => _cleaningSelected[i] = !_cleaningSelected[i]),
-                            fill: _boxFill,
-                            border: _boxBorder,
-                            active: _green,
-                            textColor: _text,
-                          ),
-                        );
-                      }),
+                      // ...List.generate(_cleaningTypes.length, (i) {
+                      //   return Padding(
+                      //     padding: const EdgeInsets.only(bottom: 10),
+                      //     child: _CheckRow(
+                      //       value: _cleaningSelected[i],
+                      //       title: _cleaningTypes[i],
+                      //       onTap: () => setState(() => _cleaningSelected[i] = !_cleaningSelected[i]),
+                      //       fill: _boxFill,
+                      //       border: _boxBorder,
+                      //       active: _green,
+                      //       textColor: _text,
+                      //     ),
+                      //   );
+                      // }),
 
-                      const SizedBox(height: 10),
+                      // const SizedBox(height: 10),
 
-                      const Text(
-                        "Indicate the tasks you can perform during\nthe service",
-                        style: TextStyle(
-                          color: _text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          height: 1.25,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
+                      // const Text(
+                      //   "Indicate the tasks you can perform during\nthe service",
+                      //   style: TextStyle(
+                      //     color: _text,
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.w600,
+                      //     height: 1.25,
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 10),
 
                       // Tasks checkboxes
-                      ...List.generate(_tasks.length, (i) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _CheckRow(
-                            value: _taskSelected[i],
-                            title: _tasks[i],
-                            onTap: () => setState(() => _taskSelected[i] = !_taskSelected[i]),
-                            fill: _boxFill,
-                            border: _boxBorder,
-                            active: _green,
-                            textColor: _text,
-                          ),
-                        );
-                      }),
+                      // ...List.generate(_tasks.length, (i) {
+                      //   return Padding(
+                      //     padding: const EdgeInsets.only(bottom: 12),
+                      //     child: _CheckRow(
+                      //       value: _taskSelected[i],
+                      //       title: _tasks[i],
+                      //       onTap: () => setState(() => _taskSelected[i] = !_taskSelected[i]),
+                      //       fill: _boxFill,
+                      //       border: _boxBorder,
+                      //       active: _green,
+                      //       textColor: _text,
+                      //     ),
+                      //   );
+                      // }),
+                      // const SizedBox(height: 6),
 
-                      const SizedBox(height: 6),
+                      // const Text(
+                      //   "Do you clean houses  where pets live?",
+                      //   style: TextStyle(
+                      //     color: _text,
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.w600,
+                      //     height: 1.25,
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 10),
 
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: _RadioInline(
+                      //         selected: _petsYes == true,
+                      //         label: "Yes",
+                      //         onTap: () => setState(() => _petsYes = true),
+                      //         fill: _radioFill,
+                      //         border: _radioBorder,
+                      //         active: _green,
+                      //         textColor: _text,
+                      //       ),
+                      //     ),
+                      //     Expanded(
+                      //       child: _RadioInline(
+                      //         selected: _petsYes == false,
+                      //         label: "No",
+                      //         onTap: () => setState(() => _petsYes = false),
+                      //         fill: _radioFill,
+                      //         border: _radioBorder,
+                      //         active: _green,
+                      //         textColor: _text,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(height: 14),
                       const Text(
-                        "Do you clean houses  where pets live?",
-                        style: TextStyle(
-                          color: _text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          height: 1.25,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _RadioInline(
-                              selected: _petsYes == true,
-                              label: "Yes",
-                              onTap: () => setState(() => _petsYes = true),
-                              fill: _radioFill,
-                              border: _radioBorder,
-                              active: _green,
-                              textColor: _text,
-                            ),
-                          ),
-                          Expanded(
-                            child: _RadioInline(
-                              selected: _petsYes == false,
-                              label: "No",
-                              onTap: () => setState(() => _petsYes = false),
-                              fill: _radioFill,
-                              border: _radioBorder,
-                              active: _green,
-                              textColor: _text,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 14),
-
-                      const Text(
-                        "Do you currently work professionally in the\ncleaning industry?",
+                        "Do you currently work professionally in the\nservice industry?",
                         style: TextStyle(
                           color: _text,
                           fontSize: 16,
@@ -323,7 +332,6 @@ class _InformationOfInterestScreenState extends State<InformationOfInterestScree
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 14),
 
                       const Text(
@@ -481,7 +489,9 @@ class _RadioRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Row(
-        crossAxisAlignment: dense ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: dense
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
           _RadioCircle(
             selected: selected,
@@ -536,7 +546,12 @@ class _RadioInline extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _RadioCircle(selected: selected, fill: fill, border: border, active: active),
+          _RadioCircle(
+            selected: selected,
+            fill: fill,
+            border: border,
+            active: active,
+          ),
           const SizedBox(width: 8),
           Text(
             label,
@@ -573,23 +588,20 @@ class _RadioCircle extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: fill,
-        border: Border.all(
-          color: selected ? active : border,
-          width: 1.2,
-        ),
+        border: Border.all(color: selected ? active : border, width: 1.2),
       ),
       child: selected
           ? Center(
-        child: Container(
-          width: 14,
-          height: 14,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: active,
-          ),
-          child: const Icon(Icons.check, size: 11, color: Colors.white),
-        ),
-      )
+              child: Container(
+                width: 14,
+                height: 14,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: active,
+                ),
+                child: const Icon(Icons.check, size: 11, color: Colors.white),
+              ),
+            )
           : null,
     );
   }
@@ -677,7 +689,9 @@ class _GreySquareCheck extends StatelessWidget {
           borderRadius: BorderRadius.circular(2),
           border: Border.all(color: border, width: 1.2),
         ),
-        child: value ? Icon(Icons.check_rounded, size: 16, color: active) : null,
+        child: value
+            ? Icon(Icons.check_rounded, size: 16, color: active)
+            : null,
       ),
     );
   }

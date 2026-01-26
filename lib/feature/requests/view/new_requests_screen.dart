@@ -92,15 +92,15 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
   }
 
   void _onLocation(RequestItem item) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Open location: ${item.name}')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Open location: ${item.name}')));
   }
 
   void _onCompleted(RequestItem item) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Completed: ${item.name}')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Completed: ${item.name}')));
   }
 
   @override
@@ -124,7 +124,6 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
                   color: const Color(0xFF3FA96B),
                 ),
               ),
-
             ),
             const SizedBox(height: 14),
 
@@ -157,7 +156,6 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
                 ],
               ),
             ),
-
 
             const SizedBox(height: 8),
 
@@ -358,11 +356,31 @@ class RequestCard extends StatelessWidget {
             const SizedBox(height: 10),
 
             // Info (same order like screenshot)
-            _InfoRow(icon: Icons.calendar_today_outlined, label: 'Date:', value: item.date),
-            _InfoRow(icon: Icons.access_time_rounded, label: 'Time:', value: item.time),
-            _InfoRow(icon: Icons.settings_outlined, label: 'Services:', value: item.service),
-            _InfoRow(icon: Icons.email_outlined, label: 'Email:', value: item.email),
-            _InfoRow(icon: Icons.phone_outlined, label: 'Phone:', value: item.phone),
+            _InfoRow(
+              icon: Icons.calendar_today_outlined,
+              label: 'Date:',
+              value: item.date,
+            ),
+            _InfoRow(
+              icon: Icons.access_time_rounded,
+              label: 'Time:',
+              value: item.time,
+            ),
+            _InfoRow(
+              icon: Icons.settings_outlined,
+              label: 'Services:',
+              value: item.service,
+            ),
+            _InfoRow(
+              icon: Icons.email_outlined,
+              label: 'Email:',
+              value: item.email,
+            ),
+            _InfoRow(
+              icon: Icons.phone_outlined,
+              label: 'Phone:',
+              value: item.phone,
+            ),
             _InfoRow(
               icon: Icons.location_on_outlined,
               label: 'Location:',
@@ -374,32 +392,30 @@ class RequestCard extends StatelessWidget {
 
             // Bottom actions
             if (status == RequestStatus.newRequest)
-              _PrimaryButton(
-                text: 'View Details',
-                onTap: onViewDetails,
+              _PrimaryButton(text: 'View Details', onTap: onViewDetails),
 
-              )
-            else
-              Row(
-                children: [
-                  Expanded(
-                    child: _SolidButton(
-                      text: 'Location',
-                      icon: Icons.near_me_outlined,
-                      color: _C.red,
-                      onTap: onLocation,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _SolidButton(
-                      text: 'Completed',
-                      color: _C.greenSoft,
-                      onTap: onCompleted,
-                    ),
-                  ),
-                ],
-              ),
+            // else
+
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: _SolidButton(
+            //         text: 'Location',
+            //         icon: Icons.near_me_outlined,
+            //         color: _C.red,
+            //         onTap: onLocation,
+            //       ),
+            //     ),
+            //     const SizedBox(width: 12),
+            //     Expanded(
+            //       child: _SolidButton(
+            //         text: 'Completed',
+            //         color: _C.greenSoft,
+            //         onTap: onCompleted,
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -430,7 +446,6 @@ class _PrimaryButton extends StatelessWidget {
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
                 fontSize: 14.5,
-                
               ),
             ),
           ),
@@ -506,7 +521,9 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        crossAxisAlignment: maxLines > 1 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: maxLines > 1
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
           Icon(icon, size: 18, color: _C.icon),
           const SizedBox(width: 10),
@@ -548,7 +565,9 @@ class _Avatar extends StatelessWidget {
     return CircleAvatar(
       radius: 18,
       backgroundColor: const Color(0xFFE6E6E6),
-      backgroundImage: (url == null || url!.isEmpty) ? null : NetworkImage(url!),
+      backgroundImage: (url == null || url!.isEmpty)
+          ? null
+          : NetworkImage(url!),
       child: (url == null || url!.isEmpty)
           ? const Icon(Icons.person, color: Color(0xFF777777), size: 20)
           : null,
@@ -574,11 +593,26 @@ class _BottomNav extends StatelessWidget {
       unselectedItemColor: _C.subtext,
       selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.calendar_month_outlined), label: 'Calendar'),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined), label: 'Requests'),
-        BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Inbox'),
-        BottomNavigationBarItem(icon: Icon(Icons.grid_view_rounded), label: 'Listings'),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month_outlined),
+          label: 'Calendar',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.list_alt_outlined),
+          label: 'Requests',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat_bubble_outline),
+          label: 'Inbox',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.grid_view_rounded),
+          label: 'Listings',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          label: 'Profile',
+        ),
       ],
     );
   }

@@ -214,7 +214,7 @@ class _CalendarEmptyListing extends StatelessWidget {
                         Icons
                             .warning_amber_outlined, // outlined = closer to 2px stroke look
                         size: 21,
-                        color: Color(0xFF000000),
+                        color: Color(0xFFFFC34D),
                       ),
                     ),
 
