@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:paschaloliver/feature/auth/view/reset_password_screen.dart';
+import 'package:paschaloliver/core/constants/api_endpoints.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../../core/network/api_service/api_client.dart';
+import '../services/auth_interface.dart';
+import '../services/auth_interface_impl.dart';
+import 'reset_password_screen.dart';
 
 class HandyOtpScreen extends StatefulWidget {
   const HandyOtpScreen({super.key});
@@ -14,7 +18,6 @@ class HandyOtpScreen extends StatefulWidget {
 
 class _HandyOtpScreenState extends State<HandyOtpScreen> {
   Color get _brandGreen => const Color(0xFF27AE60);
-  Color get _textColor => const Color(0xFF222222);
 
   final List<TextEditingController> _controllers = List.generate(
     4,
@@ -22,29 +25,87 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
   );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
+  bool _isLoading = false;
+
+  late final AuthInterface _auth;
+  late final String _email;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _email = (Get.arguments is String) ? (Get.arguments as String) : "";
+
+    final ApiClient api = Get.isRegistered<ApiClient>()
+        ? Get.find<ApiClient>()
+        : Get.put(ApiClient(ApiEndpoints.baseUrl), permanent: true);
+
+    _auth = Get.isRegistered<AuthInterface>()
+        ? Get.find<AuthInterface>()
+        : Get.put<AuthInterface>(AuthInterfaceImpl(api), permanent: true);
+  }
+
   @override
   void dispose() {
-    for (final c in _controllers) {
-      c.dispose();
-    }
-    for (final f in _focusNodes) {
-      f.dispose();
-    }
+    for (final c in _controllers) c.dispose();
+    for (final f in _focusNodes) f.dispose();
     super.dispose();
   }
 
   void _onOtpChanged(String value, int index) {
     if (value.length == 1 && index < 3) {
-      // move to next box
       _focusNodes[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
-      // backspace → go previous
       _focusNodes[index - 1].requestFocus();
     }
   }
 
-  String get _otp =>
-      _controllers.map((e) => e.text.trim()).join(); // full OTP string
+  String get _otp => _controllers.map((e) => e.text.trim()).join();
+
+  Future<void> _verifyOtp() async {
+    final code = _otp;
+    if (code.length != 4) {
+      Get.snackbar(
+        'Invalid code',
+        'Please enter the 4-digit code.',
+        snackPosition: SnackPosition.TOP,
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await _auth.verifyEmail(email: _email.trim(), otp: code);
+
+      Get.snackbar("Success", "OTP verified", snackPosition: SnackPosition.TOP);
+
+      Get.to(() => const HandyResetPasswordScreen(), arguments: _email.trim());
+    } catch (e) {
+      Get.snackbar(
+        "Failed",
+        e.toString().replaceFirst("Exception: ", ""),
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _resendOtp() async {
+    setState(() => _isLoading = true);
+    try {
+      await _auth.forgotPassword(email: _email.trim());
+      Get.snackbar("Success", "OTP resent", snackPosition: SnackPosition.TOP);
+    } catch (e) {
+      Get.snackbar(
+        "Failed",
+        e.toString().replaceFirst("Exception: ", ""),
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,28 +119,13 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // ---------------- LOGO ----------------
               const SizedBox(height: 8),
               SizedBox(
                 height: 90,
-                child: Image.asset(
-                  Images.appLogo, // 🔁 change path to your logo
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(Images.appLogo, fit: BoxFit.contain),
               ),
               const SizedBox(height: 12),
-              // Text(
-              //   'HandyNaija',
-              //   style: TextStyle(
-              //     fontSize: 28,
-              //     fontWeight: FontWeight.w700,
-              //     color: _brandGreen,
-              //     letterSpacing: 0.3,
-              //   ),
-              // ),
-              // const SizedBox(height: 24),
 
-              // ---------------- TITLE & SUBTITLE ----------------
               SizedBox(
                 width: 343,
                 height: 31,
@@ -89,10 +135,9 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.urbanist(
                       fontSize: 28,
-                      fontWeight: FontWeight.w600, // ✅ SemiBold
-                      height: 1.1, // ✅ 110%
-                      letterSpacing: 0,
-                      color: const Color(0xFF123055), // ✅ #123055
+                      fontWeight: FontWeight.w600,
+                      height: 1.1,
+                      color: const Color(0xFF123055),
                     ),
                   ),
                 ),
@@ -109,8 +154,7 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
                   style: GoogleFonts.urbanist(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    height: 1.1, // 110%
-                    letterSpacing: 0,
+                    height: 1.1,
                     color: const Color(0xFF181919),
                   ),
                 ),
@@ -118,7 +162,6 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
 
               const SizedBox(height: 28),
 
-              // ---------------- OTP BOXES ----------------
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (index) {
@@ -162,40 +205,33 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
                   );
                 }),
               ),
+
               const SizedBox(height: 14),
 
-              // ---------------- RESEND TEXT ----------------
               SizedBox(
                 width: 343,
                 height: 15,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end, // ✅ Right
-                  crossAxisAlignment: CrossAxisAlignment.center, // ✅ Middle
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       "Didn't get the code ? ",
                       style: GoogleFonts.urbanist(
                         fontSize: 14,
-                        fontWeight: FontWeight.w400, // ✅ Regular
-                        height: 1.1, // ✅ 110%
-                        letterSpacing: 0,
-                        color: const Color(0xFF181919), // use your figma color
+                        fontWeight: FontWeight.w400,
+                        height: 1.1,
+                        color: const Color(0xFF181919),
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        // TODO: resend
-                      },
+                      onTap: _isLoading ? null : _resendOtp,
                       child: Text(
                         "Resend it.",
                         style: GoogleFonts.urbanist(
                           fontSize: 14,
-                          fontWeight:
-                              FontWeight.w400, // ✅ Regular (Figma = 14 Regular)
+                          fontWeight: FontWeight.w400,
                           height: 1.1,
-                          letterSpacing: 0,
-                          color: _brandGreen, // or figma color if different
+                          color: _brandGreen,
                         ),
                       ),
                     ),
@@ -205,7 +241,6 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
 
               const SizedBox(height: 24),
 
-              // ---------------- CONTINUE BUTTON ----------------
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -217,33 +252,24 @@ class _HandyOtpScreenState extends State<HandyOtpScreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: () {
-                    final code = _otp; // e.g. "8523"
-
-                    // (optional) basic validation
-                    if (code.length != 4) {
-                      Get.snackbar(
-                        'Invalid code',
-                        'Please enter the 4-digit code.',
-                        snackPosition: SnackPosition.TOP,
-                      );
-                      return;
-                    }
-
-                    // ✅ Navigate to reset password screen with GetX
-                    Get.to(() => const HandyResetPasswordScreen());
-                    // If you want to pass the code:
-                    // Get.to(() => const HandyResetPasswordScreen(), arguments: code);
-                  },
-
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  onPressed: _isLoading ? null : _verifyOtp,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ],

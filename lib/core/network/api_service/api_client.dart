@@ -1,22 +1,23 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:paschaloliver/core/constants/api_endpoints.dart';
+import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import 'api_endpoints.dart';
 import 'token_meneger.dart';
 
 class ApiClient {
   final Dio _dio;
 
   ApiClient(String baseUrl)
-      : _dio = Dio(
-          BaseOptions(
-            baseUrl: baseUrl,
-            connectTimeout: const Duration(seconds: 30),
-            receiveTimeout: const Duration(seconds: 30),
-          ),
-        ) {
+    : _dio = Dio(
+        BaseOptions(
+          baseUrl: baseUrl,
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+        ),
+      ) {
     _dio.interceptors.add(
       PrettyDioLogger(
         requestHeader: true,
@@ -58,7 +59,7 @@ class ApiClient {
           if (token == null) {
             print("Token missing → logout...");
             await TokenManager.clearToken();
-            Get.offAllNamed('/login');
+            Get.offAll(() => HandyEmailLoginScreen());
             return handler.reject(e);
           }
 
@@ -71,7 +72,7 @@ class ApiClient {
             } catch (err) {
               print("⚠ Token refresh failed. Logging out...");
               await TokenManager.clearToken();
-              Get.offAllNamed('/login');
+              Get.offAll(() => HandyEmailLoginScreen());
               return handler.reject(e);
             }
           }
@@ -109,7 +110,7 @@ class ApiClient {
     // 🔥 Dio (NO interceptor)
     final refreshDio = Dio(
       BaseOptions(
-        baseUrl: baseApiUrl,
+        baseUrl: ApiEndpoints.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
       ),
@@ -117,9 +118,7 @@ class ApiClient {
 
     final response = await refreshDio.post(
       "/auth/refresh-token",
-      data: {
-        "refreshToken": refreshToken,
-      },
+      data: {"refreshToken": refreshToken},
     );
 
     final data = response.data["data"];

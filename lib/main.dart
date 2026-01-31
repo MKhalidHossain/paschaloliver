@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/core/constants/app_binding.dart';
 
 import 'package:paschaloliver/feature/splash/splash_view.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -17,13 +17,12 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Paschal Oliver',
+      initialBinding: AppBinding(),
       theme: ThemeData(
         useMaterial3: true,
 
         // ✅ Urbanist everywhere
-        textTheme: GoogleFonts.urbanistTextTheme(
-          ThemeData.light().textTheme,
-        ),
+        textTheme: GoogleFonts.urbanistTextTheme(ThemeData.light().textTheme),
         // optional (helps some widgets that rely on fontFamily)
         fontFamily: GoogleFonts.urbanist().fontFamily,
 

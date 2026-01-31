@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
+import 'package:paschaloliver/core/constants/api_endpoints.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../../core/network/api_service/api_client.dart';
+import '../../../core/network/api_service/api_endpoints.dart';
+import '../services/auth_interface.dart';
+import '../services/auth_interface_impl.dart';
 import 'otp_screen.dart';
+import 'sign_in_view.dart';
 
 class HandyForgotPasswordScreen extends StatefulWidget {
   const HandyForgotPasswordScreen({super.key});
@@ -17,9 +22,65 @@ class HandyForgotPasswordScreen extends StatefulWidget {
 class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
   Color get _brandGreen => const Color(0xFF27AE60);
   Color get _borderColor => const Color(0xFFDDDDDD);
-  Color get _textColor => const Color(0xFF222222);
 
-  bool _emailSelected = true; // only one option for now
+  bool _emailSelected = true;
+  bool _isLoading = false;
+
+  late final AuthInterface _auth;
+  late final String _email;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _email = (Get.arguments is String) ? (Get.arguments as String) : "";
+
+    // If email not provided, go back to login
+    if (_email.trim().isEmpty) {
+      Future.microtask(() => Get.offAll(() => const HandyEmailLoginScreen()));
+      return;
+    }
+
+    final ApiClient api = Get.isRegistered<ApiClient>()
+        ? Get.find<ApiClient>()
+        : Get.put(ApiClient(ApiEndpoints.baseUrl), permanent: true);
+
+    _auth = Get.isRegistered<AuthInterface>()
+        ? Get.find<AuthInterface>()
+        : Get.put<AuthInterface>(AuthInterfaceImpl(api), permanent: true);
+  }
+
+  Future<void> _sendOtp() async {
+    setState(() => _isLoading = true);
+    try {
+      await _auth.forgotPassword(email: _email.trim());
+
+      Get.snackbar(
+        "Success",
+        "OTP sent to your email",
+        snackPosition: SnackPosition.TOP,
+      );
+
+      Get.to(() => const HandyOtpScreen(), arguments: _email.trim());
+    } catch (e) {
+      Get.snackbar(
+        "Failed",
+        e.toString().replaceFirst("Exception: ", ""),
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  String _maskEmail(String email) {
+    final parts = email.split('@');
+    if (parts.length != 2) return email;
+    final name = parts[0];
+    final domain = parts[1];
+    if (name.length <= 3) return "***@$domain";
+    return "${name.substring(0, 3)}***@$domain";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +94,14 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // ---------------- LOGO ----------------
               const SizedBox(height: 8),
               SizedBox(
                 height: 90,
-                child: Image.asset(
-                  Images.appLogo, // TODO: change path
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(Images.appLogo, fit: BoxFit.contain),
               ),
               const SizedBox(height: 8),
-              // Text(
-              //   'HandyNaija',
-              //   style: TextStyle(
-              //     fontSize: 28,
-              //     fontWeight: FontWeight.w700,
-              //     color: _brandGreen,
-              //     letterSpacing: 0.3,
-              //   ),
-              // ),
               const SizedBox(height: 24),
 
-              // ---------------- TITLE & SUBTITLE ----------------
               SizedBox(
                 width: 343,
                 height: 31,
@@ -64,10 +111,9 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.urbanist(
                       fontSize: 28,
-                      fontWeight: FontWeight.w600, // ✅ SemiBold
-                      height: 1.1, // ✅ 110%
-                      letterSpacing: 0,
-                      color: const Color(0xFF123055), // ✅ #123055
+                      fontWeight: FontWeight.w600,
+                      height: 1.1,
+                      color: const Color(0xFF123055),
                     ),
                   ),
                 ),
@@ -84,8 +130,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                   style: GoogleFonts.urbanist(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    height: 1.1, // 110%
-                    letterSpacing: 0,
+                    height: 1.1,
                     color: const Color(0xFF181919),
                   ),
                 ),
@@ -93,11 +138,8 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
 
               const SizedBox(height: 24),
 
-              // ---------------- EMAIL OPTION CARD ----------------
               GestureDetector(
-                onTap: () {
-                  setState(() => _emailSelected = true);
-                },
+                onTap: () => setState(() => _emailSelected = true),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   padding: const EdgeInsets.symmetric(
@@ -141,49 +183,35 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: 239,
-                              height: 15,
-                              child: Text(
-                                'Via Email:',
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400, // ✅ Regular
-                                  height: 1.1, // ✅ 110%
-                                  letterSpacing: 0,
-                                  color: const Color(0xFF727272), // ✅ #727272
-                                ),
+                            Text(
+                              'Via Email:',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                height: 1.1,
+                                color: const Color(0xFF727272),
                               ),
                             ),
-
                             const SizedBox(height: 4),
-                            SizedBox(
-                              width: 239,
-                              height: 22,
-                              child: Text(
-                                'gdg***fsf@azlotv.com',
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500, // ✅ 500 Medium
-                                  height: 1.1, // ✅ 110%
-                                  letterSpacing: 0,
-                                  color: const Color(
-                                    0xFF181919,
-                                  ), // ✅ Black Text
-                                ),
+                            Text(
+                              _maskEmail(_email),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                height: 1.1,
+                                color: const Color(0xFF181919),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
                     ],
                   ),
                 ),
               ),
+
               const SizedBox(height: 24),
 
-              // ---------------- CONTINUE BUTTON ----------------
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -195,31 +223,30 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: () {
-                    Get.to(() => const HandyOtpScreen());
-                  },
-                  child: SizedBox(
-                    width: 63,
-                    height: 18,
-                    child: Center(
-                      child: Text(
-                        'Continue',
-                        style: GoogleFonts.urbanist(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500, // ✅ Medium 500
-                          height: 1.1, // ✅ 110%
-                          letterSpacing: 0,
-                          color: Colors.white,
+                  onPressed: _isLoading ? null : _sendOtp,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Continue',
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              // ---------------- REMEMBER PASSWORD ----------------
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -228,10 +255,8 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                     style: TextStyle(fontSize: 13),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Get.to(() => const HandyEmailLoginScreen());
-                    },
-
+                    onTap: () =>
+                        Get.offAll(() => const HandyEmailLoginScreen()),
                     child: Text(
                       'Sign In',
                       style: TextStyle(

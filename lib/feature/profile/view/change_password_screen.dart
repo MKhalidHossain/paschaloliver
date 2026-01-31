@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
 
 /// ✅ FULL REPLACEABLE: ChangePasswordScreen (matches screenshot)
 class ChangePasswordScreen extends StatefulWidget {
@@ -20,6 +21,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _obscureCurrent = true;
   bool _obscureNew = true;
   bool _obscureConfirm = true;
+  bool _loading = false;
+
+  void _showSnack(String title, String message) {
+    Get.closeAllSnackbars();
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(12),
+    );
+  }
+
+  void _clearFields() {
+    _currentCtrl.clear();
+    _newCtrl.clear();
+    _confirmCtrl.clear();
+  }
 
   // Figma-like colors
   static const Color _text = Color(0xFF181919);
@@ -35,11 +53,59 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
+    final current = _currentCtrl.text.trim();
+    final next = _newCtrl.text.trim();
+    final confirm = _confirmCtrl.text.trim();
+
+    if (current.isEmpty) {
+      _showSnack("Change password failed", "Current password required");
+      return;
+    }
+    if (next.isEmpty) {
+      _showSnack("Change password failed", "New password required");
+      return;
+    }
+    if (next.length < 6) {
+      _showSnack("Change password failed", "Minimum 6 characters");
+      return;
+    }
+    if (confirm.isEmpty) {
+      _showSnack("Change password failed", "Confirm password required");
+      return;
+    }
+    if (confirm != next) {
+      _showSnack("Password mismatch", "Password does not match");
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) return;
 
-    // TODO: API call
-    Get.back();
+    setState(() => _loading = true);
+    try {
+      final authC = Get.find<AuthController>();
+      final msg = await authC.changePassword(
+        currentPassword: current,
+        newPassword: next,
+      );
+
+      if (!mounted) return;
+      _showSnack(
+        "Success",
+        msg.isNotEmpty ? msg : "Password changed successfully",
+      );
+      _clearFields();
+      Get.back();
+    } catch (e) {
+      if (!mounted) return;
+      _showSnack(
+        "Change password failed",
+        e.toString().replaceFirst("Exception: ", ""),
+      );
+      _clearFields();
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
@@ -145,7 +211,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _submit,
+                  onPressed: _loading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2FA86A),
                     elevation: 0,
@@ -153,15 +219,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    "Update",
-                    style: GoogleFonts.urbanist(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      height: 1.1,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _loading
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : Text(
+                          "Update",
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 18),

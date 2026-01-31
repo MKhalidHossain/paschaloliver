@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/assets.dart';
-import '../conteroller/role_controller.dart';
+import '../controller/role_controller.dart';
 
 import 'sign_up_view.dart';
 
-
-enum AccountType { user, serviceProvider }
+enum AccountType { client, professional }
 
 class ChooseAccountTypeView extends StatefulWidget {
   const ChooseAccountTypeView({super.key});
@@ -50,25 +49,25 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
             _accountOption(
               title: 'Book a Service',
               subtitle: '(I\'m client)',
-              value: AccountType.user,
-              imagePath: Images.clientIcon,   //
+              value: AccountType.client,
+              imagePath: Images.clientIcon, //
             ),
 
             _accountOption(
               title: 'Offer Services',
               subtitle: '(I\'m a professional)',
-              value: AccountType.serviceProvider,
-              imagePath: Images.offerIcon,    //
+              value: AccountType.professional,
+              imagePath: Images.offerIcon, //
             ),
-
 
             const Spacer(),
 
             ElevatedButton(
               onPressed: selectedType == null ? null : _continue,
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                selectedType == null ? Colors.white : AppColors.appColor,
+                backgroundColor: selectedType == null
+                    ? Colors.white
+                    : AppColors.appColor,
                 minimumSize: const Size(double.infinity, 56),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -91,9 +90,9 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
   }
 
   void _continue() {
-    final role = selectedType == AccountType.user ? 'customer' : 'provider';
+    final role = selectedType == AccountType.client ? 'client' : 'professional';
     roleController.setRole(role);
-    Get.to(() => SignUpScreen());
+    Get.to(() => const SignUpScreen());
   }
 
   Widget _accountOption({
@@ -165,6 +164,3 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
     );
   }
 }
-
-
-

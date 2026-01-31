@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/core/constants/api_endpoints.dart';
+
+import 'package:paschaloliver/core/network/api_service/api_client.dart';
+import 'package:paschaloliver/core/network/api_service/api_endpoints.dart';
+import 'package:paschaloliver/feature/auth/services/auth_interface.dart';
+import 'package:paschaloliver/feature/auth/services/auth_interface_impl.dart';
 
 import '../../../app_ground.dart';
 import '../../../core/constants/assets.dart';
 import '../../user/app_ground_user.dart';
+import '../controller/login_controller.dart';
 import 'forget_password.dart';
 
 class HandyEmailLoginScreen extends StatefulWidget {
@@ -15,56 +22,47 @@ class HandyEmailLoginScreen extends StatefulWidget {
 }
 
 class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailCtrl = TextEditingController();
-  final _passwordCtrl = TextEditingController();
+  static const Color _green = Color(0xFF19A94A);
 
-  bool _obscurePassword = true;
-  bool _rememberMe = false;
+  static const OutlineInputBorder _baseBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(8)),
+    borderSide: BorderSide(color: Color(0xFFDDDDDD), width: 1),
+  );
 
-  Color get _green => const Color(0xFF19A94A);
+  OutlineInputBorder _outlineBorder({Color? color}) {
+    if (color == null) return _baseBorder;
+    return _baseBorder.copyWith(borderSide: BorderSide(color: color, width: 1));
+  }
+
+  late final LoginController c;
+  late final String _tag; // ✅ unique tag so controller is unique per screen
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ✅ 1) ApiClient (singleton is OK)
+    final ApiClient api = Get.isRegistered<ApiClient>()
+        ? Get.find<ApiClient>()
+        : Get.put(ApiClient(ApiEndpoints.baseUrl), permanent: true);
+
+    // ✅ 2) AuthInterface (singleton is OK)
+    final AuthInterface auth = Get.isRegistered<AuthInterface>()
+        ? Get.find<AuthInterface>()
+        : Get.put<AuthInterface>(AuthInterfaceImpl(api), permanent: true);
+
+    // ✅ 3) LoginController MUST be unique per screen instance
+    _tag = DateTime.now().microsecondsSinceEpoch.toString();
+    c = Get.put(LoginController(auth), tag: _tag);
+  }
 
   @override
   void dispose() {
-    _emailCtrl.dispose();
-    _passwordCtrl.dispose();
-    super.dispose();
-  }
-
-  // void _submit() {
-  //   if (!_formKey.currentState!.validate()) return;
-  //
-  //   final email = _emailCtrl.text.trim();
-  //   final password = _passwordCtrl.text.trim();
-  //   final remember = _rememberMe;
-  //
-  //   debugPrint('Login -> email: $email | remember: $remember');
-  //
-  //   Get.offAll(() => const AppGround()); // removes login screen from stack
-  // }
-
-  void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-
-    final email = _emailCtrl.text.trim().toLowerCase();
-    final password = _passwordCtrl.text.trim();
-    final remember = _rememberMe;
-
-    debugPrint('Login -> email: $email | remember: $remember');
-
-    // ✅ route by email
-    if (email == "professional@gmail.com") {
-      Get.offAll(() => const AppGround());
-    } else if (email == "user@gmail.com") {
-      Get.offAll(() => const UserAppGround());
-    } else {
-      // ✅ fallback (choose what you want)
-      Get.snackbar(
-        "Login",
-        "Unknown user type for: $email",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    // ✅ delete controller so its GlobalKey is not reused anywhere
+    if (Get.isRegistered<LoginController>(tag: _tag)) {
+      Get.delete<LoginController>(tag: _tag);
     }
+    super.dispose();
   }
 
   @override
@@ -72,12 +70,9 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // background illustration
           Positioned.fill(
             child: Image.asset(Images.welcome, fit: BoxFit.cover),
           ),
-
-          // gradient overlay for readability
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -92,8 +87,6 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
               ),
             ),
           ),
-
-          // ✅ SafeArea: remove bottom padding so sheet can go to the very bottom
           SafeArea(
             top: true,
             bottom: false,
@@ -107,7 +100,6 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
   }
 
   Widget _buildBottomSheet(BuildContext context) {
-    // ✅ system bottom inset (home indicator area)
     final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return Container(
@@ -126,14 +118,12 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
           ),
         ],
       ),
-      // ✅ extend background under the home indicator, keep content above it
       padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + bottomInset),
       child: Form(
-        key: _formKey,
+        key: c.formKey, // ✅ safe now (unique controller)
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // drag handle
             Container(
               width: 50,
               height: 4,
@@ -144,27 +134,25 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
             ),
             const SizedBox(height: 18),
 
-            // header row
             Row(
               children: [
                 SizedBox(
                   width: 57,
                   height: 26,
                   child: Align(
-                    alignment: Alignment.centerRight, // ✅ Figma: Right
+                    alignment: Alignment.centerRight,
                     child: Text(
                       'Login',
                       style: GoogleFonts.urbanist(
                         fontSize: 24,
-                        fontWeight: FontWeight.w500, // ✅ Medium (500)
-                        height: 1.1, // ✅ 110%
+                        fontWeight: FontWeight.w500,
+                        height: 1.1,
                         letterSpacing: 0,
-                        color: const Color(0xFF181919), // ✅ #181919
+                        color: const Color(0xFF181919),
                       ),
                     ),
                   ),
                 ),
-
                 const Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
@@ -178,7 +166,6 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Email
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -191,8 +178,9 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
               ),
             ),
             const SizedBox(height: 6),
+
             TextFormField(
-              controller: _emailCtrl,
+              controller: c.emailCtrl,
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
               decoration: InputDecoration(
@@ -208,16 +196,15 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                 ),
               ),
               validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter your email';
-                }
-                if (!value.contains('@')) return 'Enter a valid email';
+                final v = value?.trim() ?? "";
+                if (v.isEmpty) return 'Please enter your email';
+                if (!v.contains('@')) return 'Enter a valid email';
                 return null;
               },
             ),
+
             const SizedBox(height: 16),
 
-            // Password
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -230,59 +217,59 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
               ),
             ),
             const SizedBox(height: 6),
-            TextFormField(
-              controller: _passwordCtrl,
-              obscureText: _obscurePassword,
-              decoration: InputDecoration(
-                hintText: '****************',
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 12,
-                ),
-                border: _outlineBorder(),
-                enabledBorder: _outlineBorder(),
-                focusedBorder: _outlineBorder(
-                  color: Colors.black.withOpacity(0.8),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                    size: 20,
-                    color: Colors.grey.shade600,
+
+            Obx(() {
+              return TextFormField(
+                controller: c.passwordCtrl,
+                obscureText: c.obscurePassword.value,
+                decoration: InputDecoration(
+                  hintText: '****************',
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
                   ),
-                  onPressed: () {
-                    setState(() => _obscurePassword = !_obscurePassword);
-                  },
+                  border: _outlineBorder(),
+                  enabledBorder: _outlineBorder(),
+                  focusedBorder: _outlineBorder(
+                    color: Colors.black.withOpacity(0.8),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      c.obscurePassword.value
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      size: 20,
+                      color: Colors.grey.shade600,
+                    ),
+                    onPressed: c.togglePasswordVisibility,
+                  ),
                 ),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-            ),
+                validator: (value) {
+                  final v = value ?? "";
+                  if (v.isEmpty) return 'Please enter your password';
+                  if (v.length < 6)
+                    return 'Password must be at least 6 characters';
+                  return null;
+                },
+              );
+            }),
+
             const SizedBox(height: 12),
 
-            // Remember / Forgot
             Row(
               children: [
-                Checkbox(
-                  value: _rememberMe,
-                  visualDensity: VisualDensity.compact,
-                  activeColor: const Color(0xFF3FA96B), // ✅ green when checked
-                  checkColor: Colors.white, // ✅ tick color
-                  onChanged: (v) {
-                    if (v == null) return;
-                    setState(() => _rememberMe = v);
-                  },
-                ),
-
+                Obx(() {
+                  return Checkbox(
+                    value: c.rememberMe.value,
+                    visualDensity: VisualDensity.compact,
+                    activeColor: const Color(0xFF3FA96B),
+                    checkColor: Colors.white,
+                    onChanged: (v) {
+                      if (v == null) return;
+                      c.toggleRemember(v);
+                    },
+                  );
+                }),
                 const SizedBox(width: 2),
                 const Text(
                   'Remember me',
@@ -295,11 +282,10 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                     minimumSize: const Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  onPressed: () {
-                    // 👈 change here
-                    Get.to(() => const HandyForgotPasswordScreen());
-                  },
-
+                  onPressed: () => Get.to(
+                    () => const HandyForgotPasswordScreen(),
+                    arguments: c.emailCtrl.text.trim(), // ✅ pass email
+                  ),
                   child: const Text(
                     'Forgot your password?',
                     style: TextStyle(
@@ -313,41 +299,50 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
             ),
             const SizedBox(height: 8),
 
-            // Log in button
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _green,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            Obx(() {
+              return SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: c.isLoading.value
+                      ? null
+                      : () => c.submit(
+                          goProfessional: () =>
+                              Get.offAll(() => const AppGround()),
+                          goUser: () => Get.offAll(() => const UserAppGround()),
+                        ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _green,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+                  child: c.isLoading.value
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Log in',
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            letterSpacing: 0,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
-                child: Text(
-                  'Log in',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500, // ✅ Figma 500
-                    height: 1.1, // ✅ 110%
-                    letterSpacing: 0, // ✅ 0%
-                    color: Colors.white, // ✅ #FFFFFF
-                  ),
-                ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
-    );
-  }
-
-  OutlineInputBorder _outlineBorder({Color? color}) {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: color ?? const Color(0xFFDDDDDD), width: 1),
     );
   }
 }

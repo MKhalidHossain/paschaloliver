@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
+import 'package:paschaloliver/core/constants/api_endpoints.dart';
+
 import '../../../core/constants/assets.dart';
+import '../../../core/network/api_service/api_client.dart';
+import '../services/auth_interface.dart';
+import '../services/auth_interface_impl.dart';
+import 'sign_in_view.dart';
 
 class HandyResetPasswordScreen extends StatefulWidget {
   const HandyResetPasswordScreen({super.key});
@@ -21,10 +26,29 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
   String? _newError;
   String? _confirmError;
 
+  bool _isLoading = false;
+  late final AuthInterface _auth;
+  late final String _email;
+
   Color get _brandGreen => const Color(0xFF27AE60);
   Color get _fieldBorder => const Color(0xFFDDDDDD);
-  Color get _textColor => const Color(0xFF222222);
   Color get _hintColor => const Color(0xFFB9B9B9);
+  Color get _textColor => const Color(0xFF222222);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _email = (Get.arguments is String) ? (Get.arguments as String) : "";
+
+    final ApiClient api = Get.isRegistered<ApiClient>()
+        ? Get.find<ApiClient>()
+        : Get.put(ApiClient(ApiEndpoints.baseUrl), permanent: true);
+
+    _auth = Get.isRegistered<AuthInterface>()
+        ? Get.find<AuthInterface>()
+        : Get.put<AuthInterface>(AuthInterfaceImpl(api), permanent: true);
+  }
 
   @override
   void dispose() {
@@ -33,17 +57,9 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
     super.dispose();
   }
 
-  // ✅ YOUR SNACKBAR STYLE (TOP)
-  void _showSnack({
-    required String title,
-    required String message,
-  }) {
+  void _showSnack({required String title, required String message}) {
     Get.closeCurrentSnackbar();
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
-    );
+    Get.snackbar(title, message, snackPosition: SnackPosition.TOP);
   }
 
   bool _validate() {
@@ -73,23 +89,32 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
     return newErr == null && confirmErr == null;
   }
 
-  void _onContinue() {
+  Future<void> _onContinue() async {
     if (!_validate()) {
-      // ✅ shows TOP snackbar
       _showSnack(
         title: "Invalid input",
         message: "Please fix the highlighted fields and try again.",
       );
-      return; // ✅ NO navigation
+      return;
     }
 
-    _showSnack(
-      title: "Success",
-      message: "Password updated successfully.",
-    );
+    setState(() => _isLoading = true);
+    try {
+      await _auth.resetPassword(
+        email: _email.trim(),
+        newPassword: _newPassCtrl.text.trim(),
+      );
 
-    // ✅ navigate to sign in only if valid
-    Get.offAll(() => const HandyEmailLoginScreen());
+      _showSnack(title: "Success", message: "Password updated successfully.");
+      Get.offAll(() => const HandyEmailLoginScreen());
+    } catch (e) {
+      _showSnack(
+        title: "Failed",
+        message: e.toString().replaceFirst("Exception: ", ""),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -107,22 +132,9 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
               const SizedBox(height: 8),
               SizedBox(
                 height: 90,
-                child: Image.asset(
-                  Images.appLogo,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(Images.appLogo, fit: BoxFit.contain),
               ),
               const SizedBox(height: 8),
-              // Text(
-              //   'HandyNaija',
-              //   style: TextStyle(
-              //     fontSize: 28,
-              //     fontWeight: FontWeight.w700,
-              //     color: _brandGreen,
-              //     letterSpacing: 0.3,
-              //   ),
-              // ),
-              // const SizedBox(height: 28),
 
               Text(
                 'Reset Password',
@@ -154,9 +166,11 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
                 obscure: _obscureConfirm,
                 errorText: _confirmError,
                 onChanged: (_) {
-                  if (_confirmError != null) setState(() => _confirmError = null);
+                  if (_confirmError != null)
+                    setState(() => _confirmError = null);
                 },
-                onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                onToggle: () =>
+                    setState(() => _obscureConfirm = !_obscureConfirm),
               ),
               const SizedBox(height: 28),
 
@@ -171,15 +185,24 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: _onContinue,
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  onPressed: _isLoading ? null : _onContinue,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -194,10 +217,7 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-        ),
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -218,12 +238,11 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
           onChanged: onChanged,
           decoration: InputDecoration(
             hintText: '***************',
-            hintStyle: TextStyle(
-              fontSize: 13,
-              color: _hintColor,
+            hintStyle: TextStyle(fontSize: 13, color: _hintColor),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 14,
             ),
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             suffixIcon: IconButton(
               icon: Icon(
                 obscure
@@ -241,14 +260,6 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: _brandGreen, width: 1.4),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: const BorderSide(color: Colors.red, width: 1.2),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: const BorderSide(color: Colors.red, width: 1.2),
             ),
           ),
         ),

@@ -103,7 +103,17 @@ class PerDetailsScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
           children: [
-            _TopBar(title: "Personal Details", onBack: () => Get.back()),
+            _TopBar(
+              title: "Personal Details",
+              onBack: () => Get.back(),
+              onEdit: () {
+                Get.snackbar(
+                  "Edit",
+                  "Edit profile",
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              },
+            ),
             const SizedBox(height: 22),
 
             // Avatar + camera button (UI SAME, only logic changed)
@@ -368,9 +378,10 @@ class _SheetItem extends StatelessWidget {
 /// ---------------- UI WIDGETS ----------------
 
 class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title, required this.onBack});
+  const _TopBar({required this.title, required this.onBack, this.onEdit});
   final String title;
   final VoidCallback onBack;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -401,6 +412,20 @@ class _TopBar extends StatelessWidget {
               color: const Color(0xFF000000),
             ),
           ),
+          const Spacer(),
+          if (onEdit != null)
+            InkWell(
+              onTap: onEdit,
+              borderRadius: BorderRadius.circular(8),
+              child: const Padding(
+                padding: EdgeInsets.all(6),
+                child: Icon(
+                  Icons.edit_rounded,
+                  size: 18,
+                  color: _C.green,
+                ),
+              ),
+            ),
         ],
       ),
     );

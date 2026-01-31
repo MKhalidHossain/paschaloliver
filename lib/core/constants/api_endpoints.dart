@@ -1,9 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 base class ApiEndpoints {
-  static const String socketUrl = _LocalHostWifi.socketUrl;
+  // static const String socketUrl = _LocalHostWifi.socketUrl;
 
-  static const String baseUrl = _LocalHostWifi.baseUrl;
+  // static const String baseUrl = _LocalHostWifi.baseUrl;
+
+  static const String socketUrl = _RemoteServer.socketUrl;
+
+  static const String baseUrl = _RemoteServer.baseUrl;
 
   // ---------------------- AUTH -----------------------------
   static const String login = _Auth.login;
@@ -17,15 +21,21 @@ base class ApiEndpoints {
   static const String refreshToken = _Auth.refreshToken;
 
   // ---------------------- USER -----------------------------
-  static const String user = '${baseUrl}/user';
+  static const String user = '$baseUrl/user';
 
-  // ---------------------- Message -----------------------------
+  // ---------------------- category -----------------------------
+  static const String categories = '$baseUrl/categories';
+
+  //---------------------subcategory-------------------------
+  // ✅ subcategory by categoryId
+  static String subcategoriesByCategoryId(String categoryId) =>
+      '$baseUrl/subcategories/category/$categoryId';
 }
 
 class _RemoteServer {
-  static const String socketUrl = '';
+  static const String socketUrl = 'https://api.handynaijaapp.com';
 
-  static const String baseUrl = '';
+  static const String baseUrl = 'https://api.handynaijaapp.com/api/v1';
 }
 
 class _LocalHostWifi {
@@ -40,26 +50,11 @@ class _Auth {
   // example
   static const String login = '$_authRoute/login';
   static const String register = '$_authRoute/register';
-  static const String forgetPassword = '$_authRoute/forget-password';
+  static const String forgetPassword = '$_authRoute/forgot-password';
   static const String verifyEmail = '$_authRoute/verify-email';
   static const String resetPassword = '$_authRoute/reset-password';
   static const String logout = '$_authRoute/logout';
   static const String changePassword = '$_authRoute/change-password';
   static const String switchRole = '$_authRoute/switch-role';
   static const String refreshToken = '$_authRoute/refresh-token';
-}
-
-// ---------------------- Notification -----------------------------
-class _Notification {
-  static const String _notificationRoute =
-      '${ApiEndpoints.baseUrl}/notification';
-}
-
-class _User {
-  static const String _userRoute = '${ApiEndpoints.baseUrl}/user';
-}
-
-// ---------------------- MESSAGE -----------------------------
-class _Message {
-  static const String _messageRoute = '${ApiEndpoints.baseUrl}/message';
 }

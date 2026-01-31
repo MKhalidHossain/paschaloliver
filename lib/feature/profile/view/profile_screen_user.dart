@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/app_ground.dart';
+import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
 import 'package:paschaloliver/feature/profile/view/payment_and_refund_screen.dart';
 import 'package:paschaloliver/feature/profile/view/per_details_screen.dart';
 import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart';
-import 'package:paschaloliver/feature/profile/view/privacy_policy_screen.dart';
-import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.dart';
+import 'package:paschaloliver/feature/user/app_ground_user.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
@@ -246,8 +246,24 @@ class ProfileScreenUser extends StatelessWidget {
                   ),
                 ),
                 title: "Switch to Professional version",
-                onTap: () {
-                  Get.to(() => const AppGround());
+
+                // onTap: () {
+                //   Get.to(() => const AppGround());
+                // },
+                onTap: () async {
+                  final authC = Get.find<AuthController>();
+
+                  final newRole = await authC.switchRole(
+                    role: "professional", // only if backend needs it
+                  );
+
+                  if (newRole == "professional") {
+                    Get.offAll(() => const AppGround());
+                  } else {
+                    Get.offAll(
+                      () => const UserAppGround(),
+                    ); // your client main screen
+                  }
                 },
               ),
             ),
@@ -884,7 +900,7 @@ class _LogoutConfirmDialog extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: () async {
                           Get.back();
-                          Get.offAll(() => const HandyEmailLoginScreen());
+                          Get.offAll(() => HandyEmailLoginScreen());
                         },
                         icon: Image.asset(
                           Images.logout2Icon,

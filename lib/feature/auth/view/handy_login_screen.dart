@@ -198,9 +198,7 @@ class _BottomSheet extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const HandyEmailLoginScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => HandyEmailLoginScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(

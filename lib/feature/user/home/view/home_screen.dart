@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:paschaloliver/feature/user/home/controllers/category_controller.dart';
 import 'package:paschaloliver/feature/user/home/view/search/search_screen.dart';
+import 'package:paschaloliver/feature/user/home/view/subcategory_screen.dart';
 
 import '../../../../core/constants/assets.dart';
 import 'address/address_flow_screens.dart';
-import 'subcategory_screen.dart'; // ✅ update path if needed
 
 /// ✅ FULL REPLACEABLE HOME SCREEN (MATCHES YOUR SCREENSHOT)
 class UserHomeScreen extends StatefulWidget {
@@ -17,8 +18,6 @@ class UserHomeScreen extends StatefulWidget {
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
   static const Color _green = Color(0xFF3AAE6E);
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     _WhiteCircleIcon(
                       icon: Icons.search,
                       onTap: () async {
-                        final result = await Get.to<String>(() => const HandySearchPage());
+                        final result = await Get.to<String>(
+                          () => const HandySearchPage(),
+                        );
                         if (result != null) {
                           // use your selected value here
                           debugPrint("Selected: $result");
@@ -78,11 +79,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               const SizedBox(height: 10),
 
               // ✅ Cluster centered
-              const Expanded(
-                child: Center(
-                  child: UserHomeCluster(),
-                ),
-              ),
+              const Expanded(child: Center(child: UserHomeCluster())),
 
               // ✅ Add address button
               Padding(
@@ -104,8 +101,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.white.withOpacity(.85), width: 1.2),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      side: BorderSide(
+                        color: Colors.white.withOpacity(.85),
+                        width: 1.2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       backgroundColor: Colors.transparent,
                     ),
                   ),
@@ -121,16 +123,13 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 }
 
-/// ✅ The N cluster widget (with GetX navigation)
 class UserHomeCluster extends StatelessWidget {
   const UserHomeCluster({super.key});
 
   static const Color _green = Color(0xFF3AAE6E);
-
   static const double _w = 342;
   static const double _h = 432;
 
-  // circle size from your PNG
   static const double _d = 100;
   static const double _r = _d / 2;
 
@@ -146,115 +145,76 @@ class UserHomeCluster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.contain,
-      child: SizedBox(
-        width: _w,
-        height: _h,
-        child: Stack(
-          children: [
-            // ✅ ensure green behind image
-            const Positioned.fill(child: ColoredBox(color: _green)),
+    final controller = Get.find<CategoryController>();
 
-            // ✅ your N PNG (should be transparent around it)
-            Positioned.fill(
-              child: Image.asset(
-                Images.homeNBg,
-                fit: BoxFit.fill,
-              ),
-            ),
+    final positions = <Offset>[
+      const Offset(59.4, 59.4),
+      const Offset(282.3, 59.4),
+      const Offset(59.4, 216.6),
+      const Offset(170.9, 216.6),
+      const Offset(282.3, 216.6),
+      const Offset(59.4, 373.8),
+      const Offset(282.3, 373.8),
+    ];
 
-            // Home
-            _pos(
-              59.4,
-              59.4,
-              _CircleContent(
-                icon: Images.homeIcon,
-                label: "Home",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.home)),
-              ),
-            ),
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        );
+      }
 
-            // Tech & IT Support
-            _pos(
-              282.3,
-              59.4,
-              _CircleContent(
-                icon: Images.techItIcon,
-                label: "Tech & IT\nSupport",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.techIt)),
-              ),
-            ),
+      if (controller.error.isNotEmpty) {
+        return Center(
+          child: Text(
+            controller.error.value,
+            style: const TextStyle(color: Colors.white),
+          ),
+        );
+      }
 
-            // Beauty
-            _pos(
-              59.4,
-              216.6,
-              _CircleContent(
-                icon: Images.beautyIcon,
-                label: "Beauty",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.beauty)),
-              ),
-            ),
+      final items = controller.categories.take(positions.length).toList();
 
-            // Repair & Maintenance
-            _pos(
-              170.9,
-              216.6,
-              _CircleContent(
-                icon: Images.maintanceIcon,
-                label: "Repair &\nMaintenance",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.repairMaintenance)),
+      return FittedBox(
+        fit: BoxFit.contain,
+        child: SizedBox(
+          width: _w,
+          height: _h,
+          child: Stack(
+            children: [
+              const Positioned.fill(child: ColoredBox(color: _green)),
+              Positioned.fill(
+                child: Image.asset(Images.homeNBg, fit: BoxFit.fill),
               ),
-            ),
 
-            // Automobile
-            _pos(
-              282.3,
-              216.6,
-              _CircleContent(
-                icon: Images.automactionIcon,
-                label: "Automobile",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.automobile)),
-              ),
-            ),
-
-            // Media & Events
-            _pos(
-              59.4,
-              373.8,
-              _CircleContent(
-                icon: Images.mediaIcon,
-                label: "Media &\nEvents",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.mediaEvents)),
-              ),
-            ),
-
-            // Others
-            _pos(
-              282.3,
-              373.8,
-              _CircleContent(
-                icon: Images.othersIcon,
-                label: "Others",
-                onTap: () => Get.to(() => const SubCategoryScreen(category: HomeCategory.others)),
-              ),
-            ),
-          ],
+              for (int i = 0; i < items.length; i++)
+                _pos(
+                  positions[i].dx,
+                  positions[i].dy,
+                  _CircleNetworkContent(
+                    imageUrl: items[i].image,
+                    label: items[i].title,
+                    onTap: () {
+                      Get.to(() => SubCategoryScreen(categoryId: items[i].id));
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
-class _CircleContent extends StatelessWidget {
-  const _CircleContent({
-    required this.icon,
+class _CircleNetworkContent extends StatelessWidget {
+  const _CircleNetworkContent({
+    required this.imageUrl,
     required this.label,
     required this.onTap,
   });
 
-  final String icon;
+  final String imageUrl;
   final String label;
   final VoidCallback onTap;
 
@@ -271,7 +231,14 @@ class _CircleContent extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(icon, width: 34, height: 34, fit: BoxFit.contain),
+                Image.network(
+                  imageUrl,
+                  width: 34,
+                  height: 34,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.image_not_supported, size: 28),
+                ),
                 const SizedBox(height: 6),
                 Text(
                   label,
@@ -347,4 +314,15 @@ class _WhiteCircleIcon extends StatelessWidget {
   }
 }
 
+// class SubCategoryScreen extends StatelessWidget {
+//   final String categoryId;
+//   const SubCategoryScreen({super.key, required this.categoryId});
 
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text("Subcategories")),
+//       body: Center(child: Text("Category ID: $categoryId")),
+//     );
+//   }
+// }

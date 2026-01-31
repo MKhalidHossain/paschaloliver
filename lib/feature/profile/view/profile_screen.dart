@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/core/network/api_service/token_meneger.dart';
 import 'package:paschaloliver/feature/profile/view/my_balance_screen.dart';
 import 'package:paschaloliver/feature/profile/view/payment_and_refund_screen.dart';
 import 'package:paschaloliver/feature/profile/view/per_details_screen.dart';
@@ -8,6 +9,8 @@ import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart'
 import 'package:paschaloliver/feature/profile/view/privacy_policy_screen.dart';
 import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.dart';
 import 'package:paschaloliver/feature/user/app_ground_user.dart';
+import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
+import 'package:paschaloliver/app_ground.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
@@ -246,8 +249,18 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 title: "Switch to Client version",
-                onTap: () {
-                  Get.to(() => const UserAppGround());
+                onTap: () async {
+                  final authC = Get.find<AuthController>();
+
+                  final newRole = await authC.switchRole(
+                    role: "client", // only if backend needs it
+                  );
+
+                  if (newRole == "client" || newRole == "user") {
+                    Get.offAll(() => const UserAppGround());
+                  } else {
+                    Get.offAll(() => const AppGround());
+                  }
                 },
               ),
             ),
@@ -778,10 +791,198 @@ class _GreenBtn extends StatelessWidget {
   }
 }
 
-class _LogoutConfirmDialog extends StatelessWidget {
+// class _LogoutConfirmDialog extends StatelessWidget {
+//   const _LogoutConfirmDialog();
+
+//   static const Color _red = Color(0xFFFF2D2D);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Material(
+//         color: Colors.transparent,
+//         child: Container(
+//           width: 340,
+//           margin: const EdgeInsets.symmetric(horizontal: 18),
+//           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+//           decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(14),
+//           ),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Container(
+//                 width: 48,
+//                 height: 48,
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xFF3FA96B).withOpacity(.12),
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//                 child: Padding(
+//                   padding: const EdgeInsets.symmetric(
+//                     horizontal: 2.55,
+//                   ), // ✅ left & right
+//                   child: SizedBox(
+//                     width: 42.9, // ✅ 48 - (2.55*2)
+//                     height: 48,
+//                     child: Image.asset(
+//                       Images.logoutIcon, // PNG
+//                       fit: BoxFit.contain,
+//                       // ✅ tint (only if your PNG is single-color)
+//                       color: const Color(0xFF3FA96B),
+//                       colorBlendMode: BlendMode.srcIn,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+
+//               const SizedBox(height: 10),
+//               Text(
+//                 "Are you sure want to Log out",
+//                 textAlign: TextAlign.center,
+//                 style: GoogleFonts.urbanist(
+//                   fontSize: 16, // ✅ 16px
+//                   fontWeight: FontWeight.w700, // ✅ Bold
+//                   height: 1.1, // ✅ 110%
+//                   letterSpacing: 0, // ✅ 0%
+//                   color: const Color(0xFF000000), // ✅ #000000
+//                 ),
+//               ),
+
+//               const SizedBox(height: 6),
+//               Text(
+//                 "Tap log out to Log out from this app.",
+//                 textAlign: TextAlign.center,
+//                 style: GoogleFonts.urbanist(
+//                   fontSize: 12, // ✅ 12px
+//                   fontWeight: FontWeight.w400, // ✅ Regular
+//                   height: 1.2, // ✅ 120%
+//                   letterSpacing: 0, // ✅ 0%
+//                   color: const Color(0xFF000000), // ✅ #000000
+//                 ),
+//               ),
+
+//               const SizedBox(height: 14),
+//               Row(
+//                 children: [
+//                   Expanded(
+//                     child: SizedBox(
+//                       height: 42,
+//                       child: OutlinedButton(
+//                         onPressed: () => Get.back(),
+//                         style: OutlinedButton.styleFrom(
+//                           side: const BorderSide(color: _red, width: 1.2),
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(10),
+//                           ),
+//                           backgroundColor: Colors.white,
+//                           elevation: 0,
+//                         ),
+//                         child: Text(
+//                           "Cancel",
+//                           style: GoogleFonts.urbanist(
+//                             fontSize: 16, // ✅ 16px
+//                             fontWeight: FontWeight.w500, // ✅ Medium (500)
+//                             height: 1.1, // ✅ 110%
+//                             letterSpacing: 0, // ✅ 0%
+//                             color: const Color.fromARGB(
+//                               255,
+//                               16,
+//                               17,
+//                               16,
+//                             ), // ✅ #3FA96B
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   const SizedBox(width: 12),
+//                   Expanded(
+//                     child: SizedBox(
+//                       height: 42,
+//                       child: ElevatedButton.icon(
+//                         onPressed: () async {
+//                           Get.back();
+//                           Get.offAll(() => HandyEmailLoginScreen());
+//                         },
+//                         icon: Image.asset(
+//                           Images.logout2Icon,
+//                           width: 18,
+//                           height: 18,
+//                           // ✅ tint to white (works best if icon is single-color)
+//                           color: Colors.white,
+//                           colorBlendMode: BlendMode.srcIn,
+//                         ),
+
+//                         label: Text(
+//                           "Log out",
+//                           style: GoogleFonts.urbanist(
+//                             fontSize: 16, // ✅ 16px
+//                             fontWeight: FontWeight.w500, // ✅ Medium (500)
+//                             height: 1.1, // ✅ 110%
+//                             letterSpacing: 0, // ✅ 0%
+//                             color: Colors.white, // ✅ #FFFFFF
+//                           ),
+//                         ),
+
+//                         style: ElevatedButton.styleFrom(
+//                           backgroundColor: _red,
+//                           elevation: 0,
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(10),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class _LogoutConfirmDialog extends StatefulWidget {
   const _LogoutConfirmDialog();
 
+  @override
+  State<_LogoutConfirmDialog> createState() => _LogoutConfirmDialogState();
+}
+
+class _LogoutConfirmDialogState extends State<_LogoutConfirmDialog> {
   static const Color _red = Color(0xFFFF2D2D);
+  bool _loading = false;
+
+  Future<void> _doLogout() async {
+    if (_loading) return;
+    setState(() => _loading = true);
+
+    try {
+      // ✅ Clear secure storage (tokens, role, email, serviceType, everything)
+      await TokenManager.clearAll();
+
+      // ✅ (Optional) clear GetX instances to avoid “old state”
+      // Remove these lines if you don’t want to delete dependencies.
+      Get.delete(force: true); // deletes all registered controllers/services
+
+      // ✅ Go to Sign In screen and remove all previous pages
+      Get.offAll(() => const HandyEmailLoginScreen());
+      // If you want to go to HandyEmailLoginScreen instead:
+      // Get.offAll(() => const HandyEmailLoginScreen());
+    } catch (e) {
+      setState(() => _loading = false);
+      Get.snackbar(
+        "Logout failed",
+        e.toString(),
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -807,33 +1008,30 @@ class _LogoutConfirmDialog extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 2.55,
-                  ), // ✅ left & right
+                  padding: const EdgeInsets.symmetric(horizontal: 2.55),
                   child: SizedBox(
-                    width: 42.9, // ✅ 48 - (2.55*2)
+                    width: 42.9,
                     height: 48,
                     child: Image.asset(
-                      Images.logoutIcon, // PNG
+                      Images.logoutIcon,
                       fit: BoxFit.contain,
-                      // ✅ tint (only if your PNG is single-color)
                       color: const Color(0xFF3FA96B),
                       colorBlendMode: BlendMode.srcIn,
                     ),
                   ),
                 ),
               ),
-
               const SizedBox(height: 10),
+
               Text(
                 "Are you sure want to Log out",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.urbanist(
-                  fontSize: 16, // ✅ 16px
-                  fontWeight: FontWeight.w700, // ✅ Bold
-                  height: 1.1, // ✅ 110%
-                  letterSpacing: 0, // ✅ 0%
-                  color: const Color(0xFF000000), // ✅ #000000
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  height: 1.1,
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
 
@@ -842,22 +1040,23 @@ class _LogoutConfirmDialog extends StatelessWidget {
                 "Tap log out to Log out from this app.",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.urbanist(
-                  fontSize: 12, // ✅ 12px
-                  fontWeight: FontWeight.w400, // ✅ Regular
-                  height: 1.2, // ✅ 120%
-                  letterSpacing: 0, // ✅ 0%
-                  color: const Color(0xFF000000), // ✅ #000000
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  height: 1.2,
+                  letterSpacing: 0,
+                  color: const Color(0xFF000000),
                 ),
               ),
 
               const SizedBox(height: 14),
+
               Row(
                 children: [
                   Expanded(
                     child: SizedBox(
                       height: 42,
                       child: OutlinedButton(
-                        onPressed: () => Get.back(),
+                        onPressed: _loading ? null : () => Get.back(),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: _red, width: 1.2),
                           shape: RoundedRectangleBorder(
@@ -869,50 +1068,50 @@ class _LogoutConfirmDialog extends StatelessWidget {
                         child: Text(
                           "Cancel",
                           style: GoogleFonts.urbanist(
-                            fontSize: 16, // ✅ 16px
-                            fontWeight: FontWeight.w500, // ✅ Medium (500)
-                            height: 1.1, // ✅ 110%
-                            letterSpacing: 0, // ✅ 0%
-                            color: const Color.fromARGB(
-                              255,
-                              16,
-                              17,
-                              16,
-                            ), // ✅ #3FA96B
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            letterSpacing: 0,
+                            color: const Color(0xFF101110),
                           ),
                         ),
                       ),
                     ),
                   ),
+
                   const SizedBox(width: 12),
+
                   Expanded(
                     child: SizedBox(
                       height: 42,
                       child: ElevatedButton.icon(
-                        onPressed: () async {
-                          Get.back();
-                          Get.offAll(() => const HandyEmailLoginScreen());
-                        },
-                        icon: Image.asset(
-                          Images.logout2Icon,
-                          width: 18,
-                          height: 18,
-                          // ✅ tint to white (works best if icon is single-color)
-                          color: Colors.white,
-                          colorBlendMode: BlendMode.srcIn,
-                        ),
-
+                        onPressed: _loading ? null : _doLogout,
+                        icon: _loading
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Image.asset(
+                                Images.logout2Icon,
+                                width: 18,
+                                height: 18,
+                                color: Colors.white,
+                                colorBlendMode: BlendMode.srcIn,
+                              ),
                         label: Text(
-                          "Log out",
+                          _loading ? "Logging out..." : "Log out",
                           style: GoogleFonts.urbanist(
-                            fontSize: 16, // ✅ 16px
-                            fontWeight: FontWeight.w500, // ✅ Medium (500)
-                            height: 1.1, // ✅ 110%
-                            letterSpacing: 0, // ✅ 0%
-                            color: Colors.white, // ✅ #FFFFFF
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            height: 1.1,
+                            letterSpacing: 0,
+                            color: Colors.white,
                           ),
                         ),
-
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _red,
                           elevation: 0,
