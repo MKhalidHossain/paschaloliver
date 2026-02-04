@@ -10,18 +10,10 @@ class UserBottomNav extends StatelessWidget {
   static const _green = Color(0xFF2FA86A);
   static const _grey = Color(0xFF1F1F1F);
   static const _line = Color(0xFFEDEDED);
-  static const _red = Color(0xFFE53935);
-
   Color _labelColor(bool selected) => selected ? _green : _grey;
 
   Color _iconColorForTab(int tab, bool selected) {
     if (!selected) return Colors.black;
-
-    // Favorites + Services are red in your design
-    if (tab == 1) return _red;
-    // if (tab == 2) return _red;
-
-    // Search + Inbox + Profile are green
     return _green;
   }
 

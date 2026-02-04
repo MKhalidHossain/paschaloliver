@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/app_ground.dart';
 import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
+import 'package:paschaloliver/feature/auth/view/handy_login_screen.dart';
 import 'package:paschaloliver/feature/profile/view/payment_and_refund_screen.dart';
 import 'package:paschaloliver/feature/profile/view/per_details_screen.dart';
 import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart';
 import 'package:paschaloliver/feature/user/app_ground_user.dart';
 
+import '../../../core/network/api_service/token_meneger.dart';
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
 import 'about_screen.dart';
@@ -390,7 +392,36 @@ class ProfileScreenUser extends StatelessWidget {
                     onTap: () => Get.to(() => const AboutHandyNaijaScreen()),
                   ),
 
-                  const _ThinDivider(),
+                  FutureBuilder<bool>(
+                    future: TokenManager.isLoggedIn(),
+                    builder: (context, snapshot) {
+                      final loggedIn = snapshot.data == true;
+                      if (loggedIn) {
+                        return const _ThinDivider();
+                      }
+
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const _ThinDivider(),
+                          _TileRow(
+                            leading: const _LeadingIcon(
+                              child: Icon(
+                                Icons.switch_account_rounded,
+                                size: 18,
+                                color: _C.green,
+                              ),
+                            ),
+                            title: "Switch account",
+                            onTap: () {
+                              Get.to(() => const HandyLoginScreen());
+                            },
+                          ),
+                          const _ThinDivider(),
+                        ],
+                      );
+                    },
+                  ),
                   _TileRow(
                     leading: const _LeadingIcon(
                       child: Icon(

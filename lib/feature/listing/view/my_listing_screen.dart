@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'create_listing_screen.dart';
+import 'point_tiers_screen.dart';
 
 class MyListingScreen extends StatefulWidget {
   const MyListingScreen({super.key});
@@ -106,7 +107,21 @@ class _MyListingScreenState extends State<MyListingScreen> {
                     : _ListingState(
                         items: listings,
                         onAddNewListing: _onCreateListing,
-                        onOpenPublished: (it) {},
+                        onOpenPublished: (it) {
+                          final tier = _parseTier(it.tier);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PointTiersScreen(
+                                serviceTitle: it.title,
+                                currentTier: tier,
+                                completedServices: 140,
+                                currentRating: 4.6,
+                                hasViolations: false,
+                              ),
+                            ),
+                          );
+                        },
                         onOpenIncomplete: (it) {},
                       ),
               ),
@@ -132,6 +147,18 @@ class _MyListingScreenState extends State<MyListingScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text("Create listing tapped")));
+  }
+
+  TierLevel _parseTier(String? tier) {
+    switch ((tier ?? "").toLowerCase()) {
+      case "silver":
+        return TierLevel.silver;
+      case "gold":
+        return TierLevel.gold;
+      case "bronze":
+      default:
+        return TierLevel.bronze;
+    }
   }
 }
 
@@ -320,7 +347,10 @@ class _ListingState extends StatelessWidget {
           ...published.map(
             (it) => Padding(
               padding: const EdgeInsets.only(bottom: 14),
-              child: _PublishedCard(item: it, onTap: () => onOpenPublished(it)),
+              child: _PublishedCard(
+                item: it,
+                onBronzeTap: () => onOpenPublished(it),
+              ),
             ),
           ),
         ],
@@ -360,74 +390,73 @@ class _ListingState extends StatelessWidget {
 /* ---------------- Published Card ---------------- */
 
 class _PublishedCard extends StatelessWidget {
-  const _PublishedCard({required this.item, required this.onTap});
+  const _PublishedCard({required this.item, required this.onBronzeTap});
   final ListingItem item;
-  final VoidCallback onTap;
+  final VoidCallback onBronzeTap;
 
   static const Color _cardBorder = Color(0xFFE9E9E9);
   static const Color _text = Color(0xFF1F1F1F);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _cardBorder, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.04),
-              blurRadius: 10,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
-              child: Row(
-                children: [
-                  _ServiceIcon(kind: item.title),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.title,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 18, // ✅ 18px
-                            fontWeight: FontWeight.w500, // ✅ Medium (500)
-                            height: 1.2, // ✅ 120%
-                            letterSpacing: 0, // ✅ 0%
-                            color: const Color(0xFF181919), // ✅ #181919
-                          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _cardBorder, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.04),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+            child: Row(
+              children: [
+                _ServiceIcon(kind: item.title),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 18, // ✅ 18px
+                          fontWeight: FontWeight.w500, // ✅ Medium (500)
+                          height: 1.2, // ✅ 120%
+                          letterSpacing: 0, // ✅ 0%
+                          color: const Color(0xFF181919), // ✅ #181919
                         ),
+                      ),
 
-                        const SizedBox(height: 2),
-                        Text(
-                          item.subtitle,
-                          style: GoogleFonts.urbanist(
-                            fontSize: 14, // ✅ 14px
-                            fontWeight: FontWeight.w400, // ✅ Regular
-                            height: 1.2, // ✅ 120%
-                            letterSpacing: 0, // ✅ 0%
-                            color: const Color(0xFF181919), // ✅ #181919
-                          ),
+                      const SizedBox(height: 2),
+                      Text(
+                        item.subtitle,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14, // ✅ 14px
+                          fontWeight: FontWeight.w400, // ✅ Regular
+                          height: 1.2, // ✅ 120%
+                          letterSpacing: 0, // ✅ 0%
+                          color: const Color(0xFF181919), // ✅ #181919
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
 
-            // green bar "Bronze" with chevron (like screenshot)
-            Container(
+          // green bar "Bronze" with chevron (like screenshot)
+          InkWell(
+            onTap: onBronzeTap,
+            child: Container(
               height: 44,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.vertical(
@@ -464,8 +493,8 @@ class _PublishedCard extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

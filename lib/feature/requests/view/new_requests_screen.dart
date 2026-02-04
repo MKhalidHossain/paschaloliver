@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/requests/view/request_details_screen.dart';
+import 'package:paschaloliver/feature/requests/controller/request_history_controller.dart';
+import 'package:paschaloliver/feature/requests/services/request_history_interface.dart';
 import '../models/requests_model.dart';
 
 /// ✅ Status for card UI
@@ -17,64 +20,20 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   int _bottomIndex = 1; // Requests selected
-
-  final _newRequests = <RequestItem>[
-    RequestItem(
-      name: 'Mr. Hamid',
-      price: 20,
-      date: '12 July 2025',
-      time: '10:00 AM - 11 AM',
-      service: 'Cleaner',
-      email: 'example@gmail.com',
-      phone: '012562589663',
-      location: '13th Street 47 W 13th St, New York, NY 10011',
-      avatarUrl: null,
-    ),
-    RequestItem(
-      name: 'Willems',
-      price: 20,
-      date: '12 July 2025',
-      time: '10:00 AM - 11 AM',
-      service: 'Cleaner',
-      email: 'example@gmail.com',
-      phone: '012562589663',
-      location: '13th Street 47 W 13th St, New York, NY 10011',
-      avatarUrl: null,
-    ),
-  ];
-
-  final _completed = <RequestItem>[
-    RequestItem(
-      name: 'Mr. Hamid',
-      price: 20,
-      date: '12 July 2025',
-      time: '10:00 AM - 11 AM',
-      service: 'Cleaner',
-      email: 'example@gmail.com',
-      phone: '012562589663',
-      location: '13th Street 47 W 13th St, New York, NY 10011',
-      avatarUrl: null,
-    ),
-  ];
-
-  final _canceled = <RequestItem>[
-    RequestItem(
-      name: 'Mr. Hamid',
-      price: 20,
-      date: '12 July 2025',
-      time: '10:00 AM - 11 AM',
-      service: 'Cleaner',
-      email: 'example@gmail.com',
-      phone: '012562589663',
-      location: '13th Street 47 W 13th St, New York, NY 10011',
-      avatarUrl: null,
-    ),
-  ];
+  late final RequestHistoryController _historyC;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _historyC = Get.isRegistered<RequestHistoryController>()
+        ? Get.find<RequestHistoryController>()
+        : Get.put(
+            RequestHistoryController(
+              service: Get.find<RequestHistoryInterface>(),
+            ),
+          );
+    _historyC.fetchHistory();
   }
 
   @override
@@ -163,29 +122,80 @@ class _RequestsHistoryScreenState extends State<RequestsHistoryScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  _RequestsList(
-                    items: _newRequests,
-                    status: RequestStatus.newRequest,
-                    onViewDetails: _onViewDetails,
-                    onLocation: _onLocation,
-                    onCompleted: _onCompleted,
-                  ),
-                  _RequestsList(
-                    items: _completed,
-                    status: RequestStatus.completed,
-                    emptyText: 'No completed requests yet.',
-                    onViewDetails: _onViewDetails,
-                    onLocation: _onLocation,
-                    onCompleted: _onCompleted,
-                  ),
-                  _RequestsList(
-                    items: _canceled,
-                    status: RequestStatus.canceled,
-                    emptyText: 'No canceled requests yet.',
-                    onViewDetails: _onViewDetails,
-                    onLocation: _onLocation,
-                    onCompleted: _onCompleted,
-                  ),
+                  Obx(() {
+                    if (_historyC.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: _C.green),
+                      );
+                    }
+                    if (_historyC.error.value.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          _historyC.error.value,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: _C.subtext),
+                        ),
+                      );
+                    }
+                    final items = _historyC.filterByStatus("new");
+                    return _RequestsList(
+                      items: items,
+                      status: RequestStatus.newRequest,
+                      onViewDetails: _onViewDetails,
+                      onLocation: _onLocation,
+                      onCompleted: _onCompleted,
+                    );
+                  }),
+                  Obx(() {
+                    if (_historyC.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: _C.green),
+                      );
+                    }
+                    if (_historyC.error.value.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          _historyC.error.value,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: _C.subtext),
+                        ),
+                      );
+                    }
+                    final items = _historyC.filterByStatus("completed");
+                    return _RequestsList(
+                      items: items,
+                      status: RequestStatus.completed,
+                      emptyText: 'No completed requests yet.',
+                      onViewDetails: _onViewDetails,
+                      onLocation: _onLocation,
+                      onCompleted: _onCompleted,
+                    );
+                  }),
+                  Obx(() {
+                    if (_historyC.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: _C.green),
+                      );
+                    }
+                    if (_historyC.error.value.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          _historyC.error.value,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: _C.subtext),
+                        ),
+                      );
+                    }
+                    final items = _historyC.filterByStatus("canceled");
+                    return _RequestsList(
+                      items: items,
+                      status: RequestStatus.canceled,
+                      emptyText: 'No canceled requests yet.',
+                      onViewDetails: _onViewDetails,
+                      onLocation: _onLocation,
+                      onCompleted: _onCompleted,
+                    );
+                  }),
                 ],
               ),
             ),

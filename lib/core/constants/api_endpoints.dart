@@ -19,6 +19,7 @@ base class ApiEndpoints {
   static const String changePassword = _Auth.changePassword;
   static const String switchRole = _Auth.switchRole;
   static const String refreshToken = _Auth.refreshToken;
+  static const String requestHistory = _Requests.requestHistory;
 
   // ---------------------- USER -----------------------------
   static const String user = '$baseUrl/user';
@@ -57,4 +58,10 @@ class _Auth {
   static const String changePassword = '$_authRoute/change-password';
   static const String switchRole = '$_authRoute/switch-role';
   static const String refreshToken = '$_authRoute/refresh-token';
+}
+
+class _Requests {
+  @protected
+  static const String _requestRoute = ApiEndpoints.baseUrl;
+  static const String requestHistory = '$_requestRoute/request-history';
 }

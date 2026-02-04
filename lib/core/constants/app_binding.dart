@@ -4,6 +4,9 @@ import 'package:paschaloliver/core/network/api_service/api_client.dart';
 import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
 import 'package:paschaloliver/feature/auth/services/auth_interface.dart';
 import 'package:paschaloliver/feature/auth/services/auth_interface_impl.dart';
+import 'package:paschaloliver/feature/requests/controller/request_history_controller.dart';
+import 'package:paschaloliver/feature/requests/services/request_history_interface.dart';
+import 'package:paschaloliver/feature/requests/services/request_history_interface_impl.dart';
 import 'package:paschaloliver/feature/user/home/controllers/category_controller.dart';
 import 'package:paschaloliver/feature/user/home/controllers/subcategory_controller.dart';
 import 'package:paschaloliver/feature/user/home/services/category_interface.dart';
@@ -46,6 +49,16 @@ class AppBinding extends Bindings {
     Get.lazyPut<AuthInterface>(() => AuthInterfaceImpl(apiClient), fenix: true);
     Get.lazyPut<AuthController>(
       () => AuthController(Get.find<AuthInterface>()),
+      fenix: true,
+    );
+
+    // ✅ Requests history (professional)
+    Get.lazyPut<RequestHistoryInterface>(
+      () => RequestHistoryInterfaceImpl(apiClient: Get.find<ApiClient>()),
+      fenix: true,
+    );
+    Get.lazyPut<RequestHistoryController>(
+      () => RequestHistoryController(service: Get.find<RequestHistoryInterface>()),
       fenix: true,
     );
   }
