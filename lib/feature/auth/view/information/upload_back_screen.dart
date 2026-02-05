@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../professional/controller/professional_registration_controller.dart';
-import '../../../professional/services/professional_interface.dart';
+import 'information_screen.dart';
 
 /// ---------------------------------------------------------------------------
 /// Shared styles
@@ -839,21 +839,7 @@ class ReviewDocumentScreen extends StatelessWidget {
                         minimumSize: const Size(0, 48),
                       ),
                       onPressed: () async {
-                        final regC =
-                            Get.find<ProfessionalRegistrationController>();
-                        final api = Get.find<ProfessionalInterface>();
-                        try {
-                          final data = await regC.toFormData();
-                          await api.createProfessionalProfile(formData: data);
-                          Get.to(() => const VerificationUnderReviewScreen());
-                        } catch (e) {
-                          Get.snackbar(
-                            'Professional Profile',
-                            e.toString().replaceFirst('Exception: ', ''),
-                            snackPosition: SnackPosition.BOTTOM,
-                            margin: const EdgeInsets.all(12),
-                          );
-                        }
+                        Get.to(() => const VerificationUnderReviewScreen());
                       },
                       child: const Text(
                         'Continue',
@@ -1061,11 +1047,14 @@ class VerificationUnderReviewScreen extends StatelessWidget {
                 24,
                 16 + MediaQuery.of(context).padding.bottom,
               ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: null,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                  onPressed: () => Get.to(
+                    () => const InformationScreen(),
+                    arguments: {'fromWaiting': true},
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE0E0E0),
                     disabledBackgroundColor: const Color(0xFFE0E0E0),

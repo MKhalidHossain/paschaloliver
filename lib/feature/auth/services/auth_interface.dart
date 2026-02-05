@@ -5,7 +5,7 @@ import 'package:paschaloliver/feature/auth/models/switch_role_response_model.dar
 abstract class AuthInterface {
   Future<LoginApiResponse> login(LoginRequestModel params);
 
-  Future<void> registerUser({
+  Future<String?> registerUser({
     required String name,
     required String email,
     required String password,

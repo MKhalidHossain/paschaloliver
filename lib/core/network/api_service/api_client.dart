@@ -47,9 +47,11 @@ class ApiClient {
         onError: (DioException e, handler) async {
           Get.closeAllSnackbars();
 
-          // Skip logout for login/signup endpoints
+          // Skip logout for auth/register + professional create endpoints
           if (e.requestOptions.path.contains("/auth/login") ||
-              e.requestOptions.path.contains("/auth/signup")) {
+              e.requestOptions.path.contains("/auth/signup") ||
+              e.requestOptions.path.contains("/auth/register") ||
+              e.requestOptions.path.contains("/professional")) {
             return handler.next(e); // just pass error
           }
 
@@ -134,8 +136,12 @@ class ApiClient {
     return await _dio.get(path, queryParameters: query);
   }
 
-  Future<Response> post(String path, {dynamic data}) async {
-    return await _dio.post(path, data: data);
+  Future<Response> post(
+    String path, {
+    dynamic data,
+    Options? options,
+  }) async {
+    return await _dio.post(path, data: data, options: options);
   }
 
   Future<Response> put(String path, {dynamic data}) async {

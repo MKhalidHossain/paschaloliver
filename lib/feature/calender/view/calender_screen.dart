@@ -25,11 +25,7 @@ class CalendarHomeShell extends StatefulWidget {
 class _CalendarHomeShellState extends State<CalendarHomeShell> {
   // Palette (match screenshots)
   static const Color _green = Color(0xFF3FA96B);
-  static const Color _text = Color(0xFF1F1F1F);
-  static const Color _muted = Color(0xFF6B6B6B);
-  static const Color _navGrey = Color(0xFF9B9B9B);
   static const Color _line = Color(0xFFEDEDED);
-  static const Color _cardBg = Color(0xFFE4E4E4);
 
   int _index = 0;
 
@@ -131,7 +127,7 @@ class _CalendarHomeShellState extends State<CalendarHomeShell> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      barrierColor: Colors.black.withOpacity(.35),
+      barrierColor: Colors.black.withAlpha(89),
       builder: (_) {
         return _UpdateScheduleSheet(
           onClose: () => Get.back(),
@@ -155,7 +151,6 @@ class _CalendarEmptyListing extends StatelessWidget {
   final VoidCallback onCompleteListing;
 
   static const Color _green = Color(0xFF3FA96B);
-  static const Color _muted = Color(0xFF6B6B6B);
   static const Color _cardBg = Color(0xFFE4E4E4);
 
   @override
@@ -736,7 +731,7 @@ class _UpdateScheduleSheet extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: _green.withOpacity(.12),
+                color: _green.withAlpha(31),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: const Icon(

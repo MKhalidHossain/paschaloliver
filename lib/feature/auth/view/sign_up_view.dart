@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/core/constants/api_endpoints.dart';
+import 'package:paschaloliver/feature/auth/models/login_request_model.dart';
+import 'package:paschaloliver/core/network/api_service/token_meneger.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/network/api_service/api_client.dart';
 import '../controller/role_controller.dart';
@@ -86,12 +88,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ? 'client'
           : roleRaw; // client | professional
 
-      await _auth.registerUser(
+      final userId = await _auth.registerUser(
         name: name,
         email: email,
         password: password,
         role: role,
       );
+
+      if (userId != null && userId.isNotEmpty) {
+        await TokenManager.saveUid(userId);
+      }
+
+      if (role == 'professional') {
+        await _auth.login(
+          LoginRequestModel(
+            email: email,
+            password: password,
+          ),
+        );
+      }
 
       // ✅ FIX: role-based navigation ONLY
       if (role == 'client') {

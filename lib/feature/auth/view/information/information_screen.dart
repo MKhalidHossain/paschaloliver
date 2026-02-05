@@ -5,8 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../professional/controller/professional_registration_controller.dart';
+import '../../../professional/services/professional_interface.dart';
 import '../work/work_schedule_screen.dart';
 import 'kyc_back_flow.dart';
+import 'upload_back_screen.dart';
 
 class InformationScreen extends StatefulWidget {
   const InformationScreen({super.key});
@@ -953,7 +955,7 @@ class _InformationScreenState extends State<InformationScreen> {
     );
   }
 
-  void _onSavePressed() {
+  Future<void> _onSavePressed() async {
     setState(() => _submitted = true);
 
     final allValid = _validateForm();
@@ -981,6 +983,26 @@ class _InformationScreenState extends State<InformationScreen> {
       addressCountry: _countryAddress ?? '',
       region: _streetRegionCtrl.text.trim(),
     );
+
+    final args = Get.arguments;
+    final fromWaiting = args is Map && args['fromWaiting'] == true;
+
+    if (fromWaiting) {
+      final api = Get.find<ProfessionalInterface>();
+      try {
+        final data = await regC.toFormData();
+        await api.createProfessionalProfile(formData: data);
+        Get.off(() => const VerificationUnderReviewScreen());
+      } catch (e) {
+        Get.snackbar(
+          'Professional Profile',
+          e.toString().replaceFirst('Exception: ', ''),
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
+      }
+      return;
+    }
 
     Get.to(() => const WorkScheduleScreen());
   }

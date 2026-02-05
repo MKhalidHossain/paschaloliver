@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:paschaloliver/core/constants/api_endpoints.dart';
 import 'package:paschaloliver/core/network/api_service/api_client.dart';
+import 'package:paschaloliver/core/network/api_service/token_meneger.dart';
 
 import 'professional_interface.dart';
 
@@ -12,9 +13,13 @@ class ProfessionalInterfaceImpl implements ProfessionalInterface {
   @override
   Future<void> createProfessionalProfile({required FormData formData}) async {
     try {
+      final uid = await TokenManager.getUid();
       final Response res = await apiClient.post(
         ApiEndpoints.professional,
         data: formData,
+        options: uid == null || uid.isEmpty
+            ? null
+            : Options(headers: {"x-user-id": uid}),
       );
 
       final responseData = res.data;

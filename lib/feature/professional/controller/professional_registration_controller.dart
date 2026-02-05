@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
+import 'package:paschaloliver/core/network/api_service/token_meneger.dart';
 
 class ProfessionalRegistrationController extends GetxController {
   // Location / working areas
@@ -94,53 +94,120 @@ class ProfessionalRegistrationController extends GetxController {
   }
 
   Future<FormData> toFormData() async {
-    final map = <String, dynamic>{
-      'personalDetails[name]': name,
-      'personalDetails[surname]': surname,
-      'personalDetails[gender]': gender,
-      'personalDetails[dateOfBirth]':
-          dateOfBirth == null ? null : dateOfBirth!.toIso8601String().split('T').first,
-      'personalDetails[countryOfBirth]': countryOfBirth,
-      'personalDetails[cityOfBirth]': cityOfBirth,
-      'identity[documentType]': _documentTypeLabel(),
-      'identity[documentNumber]': documentNumber,
-      'identity[documentCountry]': documentCountry,
-      'address[street]': street,
-      'address[streetNumber]': streetNumber,
-      'address[zipCode]': zipCode,
-      'address[city]': addressCity,
-      'address[country]': addressCountry,
-      'address[region]': region,
-      'country': country,
-      'city': city,
-      'workingAreas': workingAreas,
-      'workSchedule': jsonEncode(workSchedule),
-      'profileDetails': jsonEncode({
-        'cleaningTypes': <String>[],
-        'additionalTasks': <String>[],
-      }),
-    };
+    final form = FormData();
 
-    map.removeWhere((_, v) {
-      if (v == null) return true;
-      if (v is String && v.trim().isEmpty) return true;
-      if (v is List && v.isEmpty) return true;
-      return false;
-    });
+    void addField(String key, dynamic value) {
+      if (value == null) return;
+      if (value is String && value.trim().isEmpty) return;
+      form.fields.add(MapEntry(key, value.toString()));
+    }
+
+    final uid = await TokenManager.getUid();
+    final uidFromToken = uid ?? await TokenManager.getUidFromToken();
+    addField('user', uidFromToken);
+    // Extra fallbacks for backend parsers that expect different keys.
+    addField('userId', uidFromToken);
+    addField('user_id', uidFromToken);
+
+    addField('personalDetails[name]', name);
+    addField('personalDetails[surname]', surname);
+    addField('personalDetails[gender]', gender);
+    addField(
+      'personalDetails[dateOfBirth]',
+      dateOfBirth == null
+          ? null
+          : dateOfBirth!.toIso8601String().split('T').first,
+    );
+    addField('personalDetails[countryOfBirth]', countryOfBirth);
+    addField('personalDetails[cityOfBirth]', cityOfBirth);
+
+    addField('identity[documentType]', _documentTypeLabel());
+    addField('identity[documentNumber]', documentNumber);
+    addField('identity[documentCountry]', documentCountry);
+
+    addField('address[street]', street);
+    addField('address[streetNumber]', streetNumber);
+    addField('address[zipCode]', zipCode);
+    addField('address[city]', addressCity);
+    addField('address[country]', addressCountry);
+    addField('address[region]', region);
+
+    addField('country', country);
+    addField('city', city);
+
+    if (workingAreas.isNotEmpty) {
+      for (var i = 0; i < workingAreas.length; i++) {
+        addField('workingAreas[$i]', workingAreas[i]);
+      }
+    }
+
+    if (workSchedule.isNotEmpty) {
+      for (var i = 0; i < workSchedule.length; i++) {
+        final item = workSchedule[i];
+        final day = item['day'];
+        final isAvailable = item['isAvailable'];
+        addField('workSchedule[$i][day]', day);
+        if (isAvailable != null) {
+          addField('workSchedule[$i][isAvailable]', isAvailable.toString());
+        }
+
+        final slots = item['slots'];
+        if (slots is List) {
+          for (var j = 0; j < slots.length; j++) {
+            final slot = slots[j];
+            if (slot is Map) {
+              addField(
+                'workSchedule[$i][slots][$j][startTime]',
+                slot['startTime'],
+              );
+              addField(
+                'workSchedule[$i][slots][$j][endTime]',
+                slot['endTime'],
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // Only send profileDetails if user actually selected anything.
+    // This avoids backend "expected object, received string" errors.
+    final cleaningTypes = <String>[];
+    final additionalTasks = <String>[];
+    if (cleaningTypes.isNotEmpty) {
+      for (var i = 0; i < cleaningTypes.length; i++) {
+        addField('profileDetails[cleaningTypes][$i]', cleaningTypes[i]);
+      }
+    }
+    if (additionalTasks.isNotEmpty) {
+      for (var i = 0; i < additionalTasks.length; i++) {
+        addField('profileDetails[additionalTasks][$i]', additionalTasks[i]);
+      }
+    }
 
     if (documentFrontImage != null) {
-      map['documentFrontImage'] = await MultipartFile.fromFile(
-        documentFrontImage!.path,
-        filename: documentFrontImage!.path.split('/').last,
+      form.files.add(
+        MapEntry(
+          'documentFrontImage',
+          await MultipartFile.fromFile(
+            documentFrontImage!.path,
+            filename: documentFrontImage!.path.split('/').last,
+          ),
+        ),
       );
     }
     if (documentBackImage != null) {
-      map['documentBackImage'] = await MultipartFile.fromFile(
-        documentBackImage!.path,
-        filename: documentBackImage!.path.split('/').last,
+      form.files.add(
+        MapEntry(
+          'documentBackImage',
+          await MultipartFile.fromFile(
+            documentBackImage!.path,
+            filename: documentBackImage!.path.split('/').last,
+          ),
+        ),
       );
     }
 
-    return FormData.fromMap(map);
+    return form;
   }
 }

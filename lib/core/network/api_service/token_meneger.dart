@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -111,6 +113,26 @@ class TokenManager {
 
   static Future<String?> getUid() async {
     return await _storage.read(key: _uidKey);
+  }
+
+  static Future<String?> getUidFromToken() async {
+    final token = await getToken();
+    if (token == null || token.trim().isEmpty) return null;
+    final parts = token.split('.');
+    if (parts.length < 2) return null;
+    try {
+      final normalized = base64Url.normalize(parts[1]);
+      final payload =
+          jsonDecode(utf8.decode(base64Url.decode(normalized))) as Map;
+      final uid = payload['_id'] ??
+          payload['id'] ??
+          payload['userId'] ??
+          payload['sub'];
+      if (uid == null) return null;
+      return uid.toString();
+    } catch (_) {
+      return null;
+    }
   }
 
   static Future<void> clearUid() async {

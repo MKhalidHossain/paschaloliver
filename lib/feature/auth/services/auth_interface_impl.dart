@@ -56,7 +56,7 @@ class AuthInterfaceImpl implements AuthInterface {
   }
 
   @override
-  Future<void> registerUser({
+  Future<String?> registerUser({
     required String name,
     required String email,
     required String password,
@@ -77,6 +77,16 @@ class AuthInterfaceImpl implements AuthInterface {
       if (data == null || data["success"] != true) {
         throw Exception(data?["message"] ?? "Registration failed");
       }
+
+      // Save user id for professional profile creation (no token yet)
+      final userId = data is Map<String, dynamic>
+          ? (data["data"]?["_id"]?.toString() ??
+              data["data"]?["id"]?.toString())
+          : null;
+      if (userId != null && userId.isNotEmpty) {
+        await TokenManager.saveUid(userId);
+      }
+      return userId;
     } on DioException catch (e) {
       final msg = e.response?.data is Map<String, dynamic>
           ? (e.response!.data["message"]?.toString() ?? "Registration failed")
