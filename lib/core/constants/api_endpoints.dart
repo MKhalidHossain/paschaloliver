@@ -40,9 +40,12 @@ class _RemoteServer {
   static const String baseUrl = 'https://api.handynaijaapp.com/api/v1';
 }
 
+// ignore: unused_element
 class _LocalHostWifi {
+  // ignore: unused_field
   static const String socketUrl = 'http://10.10.5.98:5000';
 
+  // ignore: unused_field
   static const String baseUrl = 'http://10.10.5.98:5000/api/v1';
 }
 

@@ -9,7 +9,6 @@ class BecomeProfessionalScreen extends StatelessWidget {
   const BecomeProfessionalScreen({super.key});
 
   Color get _brandGreen => const Color(0xFF27AE60);
-  Color get _textColor => const Color(0xFF222222);
   Color get _bg => Colors.white;
 
   @override

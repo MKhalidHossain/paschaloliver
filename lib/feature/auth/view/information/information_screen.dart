@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../professional/controller/professional_registration_controller.dart';
@@ -27,8 +24,6 @@ class _InformationScreenState extends State<InformationScreen> {
   Color get _textDark => const Color(0xFF333333);
   Color get _hintText => const Color(0xFF777777);
 
-  final _picker = ImagePicker();
-
   // Personal details
   final _nameCtrl = TextEditingController();
   final _surnameCtrl = TextEditingController();
@@ -46,7 +41,6 @@ class _InformationScreenState extends State<InformationScreen> {
   String _docType = 'government_id'; // 'government_id' / 'passport'
   String? _countryOfDocument;
   final _documentNumberCtrl = TextEditingController();
-  File? _documentFile;
 
   // Address
   final _streetCtrl = TextEditingController();
@@ -412,7 +406,8 @@ class _InformationScreenState extends State<InformationScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: DropdownButtonFormField<T>(
-        value: value,
+        key: ValueKey(value),
+        initialValue: value,
         isExpanded: true,
         icon: const Icon(
           Icons.keyboard_arrow_down_rounded,
@@ -738,7 +733,7 @@ class _InformationScreenState extends State<InformationScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15), // ✅ 15%
+              color: Colors.black.withAlpha(38), // ✅ 15%
               blurRadius: 8, // ✅ blur 8
               offset: const Offset(0, 2), // ✅ y 2
               spreadRadius: 0,
@@ -847,8 +842,7 @@ class _InformationScreenState extends State<InformationScreen> {
                   // Keep your flow screen
                   Get.to(() => UploadFrontIdScreen());
 
-                  // OR if you want quick pick here:
-                  // await _pickDoc(ImageSource.gallery);
+                  // Upload flow continues in UploadFrontIdScreen
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _brandGreen,
@@ -893,20 +887,6 @@ class _InformationScreenState extends State<InformationScreen> {
           ),
       ],
     );
-  }
-
-  // Optional: camera/gallery doc pick (if you use it)
-  Future<void> _pickDoc(ImageSource source) async {
-    try {
-      final XFile? file = await _picker.pickImage(source: source);
-      if (file == null) return;
-      final img = File(file.path);
-      setState(() => _documentFile = img);
-      final regC = Get.find<ProfessionalRegistrationController>();
-      regC.documentFrontImage = img;
-    } catch (e) {
-      debugPrint('Document pick error: $e');
-    }
   }
 
   Widget _dontHaveDocText() {

@@ -51,9 +51,9 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
   Future<void> _pickFromCamera() async {
     final file = await _picker.pickImage(
       source: ImageSource.camera,
-      maxWidth: 1600,
-      maxHeight: 1600,
-      imageQuality: 90,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 70,
     );
     if (file == null) return;
 
@@ -72,9 +72,9 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
   Future<void> _pickFromGallery() async {
     final file = await _picker.pickImage(
       source: ImageSource.gallery,
-      maxWidth: 1600,
-      maxHeight: 1600,
-      imageQuality: 90,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 70,
     );
     if (file == null) return;
 
@@ -499,7 +499,7 @@ class _TakeBackPhotoScreenState extends State<TakeBackPhotoScreen> {
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withAlpha(230),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),
@@ -887,7 +887,7 @@ class ReviewDocumentScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withAlpha(10),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -1184,7 +1184,7 @@ class VerificationSuccessScreen extends StatelessWidget {
             height: 180,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _brandGreen.withOpacity(0.12),
+              color: _brandGreen.withAlpha(31),
             ),
             child: Center(
               child: Container(

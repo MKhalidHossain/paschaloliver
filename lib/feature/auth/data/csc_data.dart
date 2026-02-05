@@ -1,6 +1,4 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:dio/dio.dart';
 
 class CSCity {
   final String id;
@@ -47,12 +45,21 @@ class CSCountry {
         .map((e) => CSState.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
-}
 
-/// Parses in isolate (fast + smooth UI)
-List<CSCountry> _parseCountries(String raw) {
-  final list = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
-  return list.map(CSCountry.fromJson).toList();
+  factory CSCountry.fromApi(Map<String, dynamic> j) => CSCountry(
+    id: "${j['iso2'] ?? j['iso3'] ?? j['country'] ?? ''}",
+    name: "${j['country'] ?? ''}",
+    emoji: "",
+    states: (j['cities'] as List? ?? [])
+        .map(
+          (c) => CSState(
+            id: c.toString(),
+            name: c.toString(),
+            cities: const [],
+          ),
+        )
+        .toList(),
+  );
 }
 
 class CSCData {
@@ -60,10 +67,21 @@ class CSCData {
 
   static Future<List<CSCountry>> loadCountries() async {
     if (_cache != null) return _cache!;
-    final raw = await rootBundle.loadString(
-      'packages/country_state_city_picker/lib/assets/country.json',
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+      ),
     );
-    _cache = await compute(_parseCountries, raw);
+    final res = await dio.get('https://api.evpitch.com/api/v1/countries');
+    final body = res.data;
+    final List list = body is Map
+        ? (body['data'] as List?) ?? []
+        : (body as List?) ?? [];
+    _cache = list
+        .whereType<Map>()
+        .map((e) => CSCountry.fromApi(Map<String, dynamic>.from(e)))
+        .toList();
     return _cache!;
   }
 }

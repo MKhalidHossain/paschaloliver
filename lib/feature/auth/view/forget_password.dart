@@ -5,7 +5,6 @@ import 'package:paschaloliver/core/constants/api_endpoints.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/network/api_service/api_client.dart';
-import '../../../core/network/api_service/api_endpoints.dart';
 import '../services/auth_interface.dart';
 import '../services/auth_interface_impl.dart';
 import 'otp_screen.dart';
@@ -157,7 +156,7 @@ class _HandyForgotPasswordScreenState extends State<HandyForgotPasswordScreen> {
                       BoxShadow(
                         blurRadius: 8,
                         offset: const Offset(0, 3),
-                        color: Colors.black.withOpacity(0.03),
+                        color: Colors.black.withAlpha(8),
                       ),
                     ],
                   ),

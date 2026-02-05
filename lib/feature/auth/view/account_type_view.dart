@@ -124,7 +124,7 @@ class _ChooseAccountTypeViewState extends State<ChooseAccountTypeView> {
                   color: const Color(0xFFFAFAFA),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withAlpha(26),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),

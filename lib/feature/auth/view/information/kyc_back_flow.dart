@@ -17,15 +17,6 @@ const _brandGreen = Color(0xFF27AE60);
 const _textDark = Color(0xFF333333);
 const _hintText = Color(0xFF777777);
 
-TextStyle get _titleStyle => const TextStyle(
-  fontSize: 22,
-  fontWeight: FontWeight.w700,
-  color: _textDark,
-);
-
-TextStyle get _subtitleStyle =>
-    const TextStyle(fontSize: 14, height: 1.4, color: _hintText);
-
 /// ---------------------------------------------------------------------------
 /// 1) UPLOAD FRONT ID SCREEN
 /// ---------------------------------------------------------------------------
@@ -43,9 +34,9 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
   Future<void> _pickFromCamera() async {
     final file = await _picker.pickImage(
       source: ImageSource.camera,
-      maxWidth: 1600,
-      maxHeight: 1600,
-      imageQuality: 90,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 70,
     );
     if (file == null) return;
 
@@ -59,9 +50,9 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
   Future<void> _pickFromGallery() async {
     final file = await _picker.pickImage(
       source: ImageSource.gallery,
-      maxWidth: 1600,
-      maxHeight: 1600,
-      imageQuality: 90,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 70,
     );
     if (file == null) return;
 
@@ -550,7 +541,7 @@ class _TakeFrontPhotoScreenState extends State<TakeFrontPhotoScreen> {
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18),
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withAlpha(230),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),

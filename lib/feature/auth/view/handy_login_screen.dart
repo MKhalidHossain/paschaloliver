@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/feature/auth/view/sign_in_view.dart';
 import '../../../core/constants/assets.dart'; // Images.welcome, Images.google
@@ -33,8 +31,8 @@ class HandyLoginScreen extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.10),
-                    Colors.black.withOpacity(0.55),
+                    Colors.black.withAlpha(26),
+                    Colors.black.withAlpha(140),
                   ],
                 ),
               ),
@@ -301,7 +299,7 @@ class _DividerLine extends StatelessWidget {
 }
 
 class _TermsAndPrivacyText extends StatefulWidget {
-  const _TermsAndPrivacyText({super.key});
+  const _TermsAndPrivacyText();
 
   @override
   State<_TermsAndPrivacyText> createState() => _TermsAndPrivacyTextState();

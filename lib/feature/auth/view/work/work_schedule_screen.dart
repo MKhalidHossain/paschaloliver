@@ -44,8 +44,15 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && mounted) {
+          Navigator.of(context).pop();
+        }
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -114,37 +121,6 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  // ---------------- TOP BAR ----------------
-
-  Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                onPressed: _handleBackPressed,
-              ),
-              const Spacer(),
-            ],
-          ),
-          const SizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: 0.7,
-              minHeight: 10,
-              backgroundColor: Colors.grey.shade300,
-              valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -544,11 +520,6 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
   }
 
   // ---------------- LEAVE WITHOUT SAVING ----------------
-
-  void _handleBackPressed() async {
-    if (!await _onWillPop()) return;
-    Get.back();
-  }
 
   Future<bool> _onWillPop() async {
     if (!_hasChanges) return true;
@@ -1056,7 +1027,7 @@ class AppToggle extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(.15),
+                    color: Colors.black.withAlpha(38),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),

@@ -202,7 +202,7 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
       border: _outlineBorder(),
       enabledBorder: _outlineBorder(),
       focusedBorder: _outlineBorder(
-        color: Colors.black.withOpacity(0.8),
+        color: Colors.black.withAlpha(204),
       ),
       suffixIcon: suffixIcon,
     );

@@ -20,8 +20,6 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
   Color get _brandGreen => const Color(0xFF3FA96B);
 
   Color get _bg => Colors.white;
-  Color get _textDark => const Color(0xFF333333);
-  Color get _hintText => const Color(0xFF777777);
   Color get _borderGrey => const Color(0xFFE0E0E0);
 
   final ImagePicker _picker = ImagePicker();
@@ -31,8 +29,15 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && mounted) {
+          Navigator.of(context).pop();
+        }
+      },
       child: Scaffold(
         backgroundColor: _bg,
         body: SafeArea(
@@ -172,7 +177,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withAlpha(10),
                         blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
@@ -334,7 +339,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.12),
+                      color: Colors.black.withAlpha(31),
                       blurRadius: 18,
                       offset: const Offset(0, -4),
                     ),

@@ -20,6 +20,8 @@ enum _WorkAreaViewMode { map, list }
 class _WorkAreaScreenState extends State<WorkAreaScreen> {
   Color get _brandGreen => const Color(0xFF27AE60);
 
+  // Google Maps enabled (API keys configured)
+  final bool _isMapEnabled = true;
   _WorkAreaViewMode _viewMode = _WorkAreaViewMode.map;
 
   // sample work areas
@@ -120,8 +122,15 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop();
+        if (shouldPop && mounted) {
+          Navigator.of(context).pop();
+        }
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -188,37 +197,6 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  // ---------------- TOP BAR + PROGRESS ----------------
-
-  Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                onPressed: _handleBackPressed,
-              ),
-              const Spacer(),
-            ],
-          ),
-          const SizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: 0.6,
-              minHeight: 10,
-              backgroundColor: Colors.grey.shade300,
-              valueColor: AlwaysStoppedAnimation<Color>(_brandGreen),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -294,7 +272,7 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
               border: Border.all(color: Colors.grey.shade200),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(.06),
+                  color: Colors.black.withAlpha(15),
                   blurRadius: 14,
                   offset: const Offset(0, 8),
                 ),
@@ -464,7 +442,18 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
               child: _buildToggleButton(
                 label: 'Map',
                 isActive: _viewMode == _WorkAreaViewMode.map,
-                onTap: () => setState(() => _viewMode = _WorkAreaViewMode.map),
+                onTap: () {
+                  if (!_isMapEnabled) {
+                    Get.snackbar(
+                      'Map disabled',
+                      'Google Maps API key is not configured.',
+                      snackPosition: SnackPosition.BOTTOM,
+                      margin: const EdgeInsets.all(12),
+                    );
+                    return;
+                  }
+                  setState(() => _viewMode = _WorkAreaViewMode.map);
+                },
               ),
             ),
             Expanded(
@@ -661,11 +650,6 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
   }
 
   // ---------------- LEAVE WITHOUT SAVING ----------------
-
-  void _handleBackPressed() async {
-    if (!await _onWillPop()) return;
-    Get.back();
-  }
 
   Future<bool> _onWillPop() async {
     if (!_hasChanges) return true;

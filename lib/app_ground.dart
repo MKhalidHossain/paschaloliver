@@ -157,7 +157,6 @@ class _BottomBar extends StatelessWidget {
 
 class _NavItem extends StatelessWidget {
   const _NavItem({
-    super.key,
     required this.label,
     required this.icon,
     this.activeIcon,
@@ -254,8 +253,6 @@ class _SmartIcon extends StatelessWidget {
 
     // 3) String asset path (png/jpg/svg)
     if (value is String) {
-      final path = value.toLowerCase();
-
       // PNG/JPG -> colorize using ColorFiltered
       return SizedBox(
         width: size,
@@ -269,23 +266,5 @@ class _SmartIcon extends StatelessWidget {
 
     // fallback
     return Icon(Icons.help_outline, size: size, color: color);
-  }
-}
-
-/// ------------------------
-/// Placeholder pages
-/// ------------------------
-class _StubPage extends StatelessWidget {
-  final String title;
-  const _StubPage({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-      ),
-    );
   }
 }

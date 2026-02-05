@@ -10,7 +10,6 @@ class HandyOnboardingPerformServicesScreen extends StatelessWidget {
   const HandyOnboardingPerformServicesScreen({super.key});
 
   Color get _brandGreen => const Color(0xFF27AE60);
-  Color get _textColor => const Color(0xFF222222);
 
   @override
   Widget build(BuildContext context) {

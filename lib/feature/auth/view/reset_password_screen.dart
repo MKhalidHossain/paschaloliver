@@ -166,8 +166,9 @@ class _HandyResetPasswordScreenState extends State<HandyResetPasswordScreen> {
                 obscure: _obscureConfirm,
                 errorText: _confirmError,
                 onChanged: (_) {
-                  if (_confirmError != null)
+                  if (_confirmError != null) {
                     setState(() => _confirmError = null);
+                  }
                 },
                 onToggle: () =>
                     setState(() => _obscureConfirm = !_obscureConfirm),

@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/core/constants/api_endpoints.dart';
 
 import 'package:paschaloliver/core/network/api_service/api_client.dart';
-import 'package:paschaloliver/core/network/api_service/api_endpoints.dart';
 import 'package:paschaloliver/feature/auth/services/auth_interface.dart';
 import 'package:paschaloliver/feature/auth/services/auth_interface_impl.dart';
 
@@ -80,8 +79,8 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.12),
-                    Colors.black.withOpacity(0.4),
+                    Colors.black.withAlpha(31),
+                    Colors.black.withAlpha(102),
                   ],
                 ),
               ),
@@ -192,7 +191,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                 border: _outlineBorder(),
                 enabledBorder: _outlineBorder(),
                 focusedBorder: _outlineBorder(
-                  color: Colors.black.withOpacity(0.8),
+                  color: Colors.black.withAlpha(204),
                 ),
               ),
               validator: (value) {
@@ -231,7 +230,7 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                   border: _outlineBorder(),
                   enabledBorder: _outlineBorder(),
                   focusedBorder: _outlineBorder(
-                    color: Colors.black.withOpacity(0.8),
+                    color: Colors.black.withAlpha(204),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -247,8 +246,9 @@ class _HandyEmailLoginScreenState extends State<HandyEmailLoginScreen> {
                 validator: (value) {
                   final v = value ?? "";
                   if (v.isEmpty) return 'Please enter your password';
-                  if (v.length < 6)
+                  if (v.length < 6) {
                     return 'Password must be at least 6 characters';
+                  }
                   return null;
                 },
               );
