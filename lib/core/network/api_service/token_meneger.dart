@@ -11,6 +11,7 @@ class TokenManager {
   static const _emailKey = "email";
   static const _uidKey = "uid";
   static const _userNameKey = "userName";
+  static const _tierCongratsPrefix = "tier_congrats_";
 
   // NEW
   static const _serviceTypeKey = "service_type";
@@ -152,6 +153,16 @@ class TokenManager {
   // ---------------- CLEAR ALL ----------------
   static Future<void> clearAll() async {
     await _storage.deleteAll();
+  }
+
+  // ---------------- TIER CONGRATS (one-time) ----------------
+  static Future<void> setTierCongratsShown(String tierLabel) async {
+    await _storage.write(key: "$_tierCongratsPrefix$tierLabel", value: "1");
+  }
+
+  static Future<bool> isTierCongratsShown(String tierLabel) async {
+    final v = await _storage.read(key: "$_tierCongratsPrefix$tierLabel");
+    return v == "1";
   }
 }
 
