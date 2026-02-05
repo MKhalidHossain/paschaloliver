@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
+import '../../../professional/services/professional_interface.dart';
 
 /// ---------------------------------------------------------------------------
 /// Shared styles
@@ -55,6 +57,9 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
     );
     if (file == null) return;
 
+    final regC = Get.find<ProfessionalRegistrationController>();
+    regC.documentBackImage = File(file.path);
+
     final backImage = FileImage(File(file.path));
     Get.to(
       () => UploadedBackIdScreen(
@@ -72,6 +77,9 @@ class _UploadBackIdScreenState extends State<UploadBackIdScreen> {
       imageQuality: 90,
     );
     if (file == null) return;
+
+    final regC = Get.find<ProfessionalRegistrationController>();
+    regC.documentBackImage = File(file.path);
 
     final backImage = FileImage(File(file.path));
     Get.to(
@@ -830,8 +838,22 @@ class ReviewDocumentScreen extends StatelessWidget {
                         ),
                         minimumSize: const Size(0, 48),
                       ),
-                      onPressed: () {
-                        Get.to(() => const VerificationUnderReviewScreen());
+                      onPressed: () async {
+                        final regC =
+                            Get.find<ProfessionalRegistrationController>();
+                        final api = Get.find<ProfessionalInterface>();
+                        try {
+                          final data = await regC.toFormData();
+                          await api.createProfessionalProfile(formData: data);
+                          Get.to(() => const VerificationUnderReviewScreen());
+                        } catch (e) {
+                          Get.snackbar(
+                            'Professional Profile',
+                            e.toString().replaceFirst('Exception: ', ''),
+                            snackPosition: SnackPosition.BOTTOM,
+                            margin: const EdgeInsets.all(12),
+                          );
+                        }
                       },
                       child: const Text(
                         'Continue',

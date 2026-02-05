@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../profile/profile_screen.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
 
 class WorkScheduleScreen extends StatefulWidget {
   const WorkScheduleScreen({super.key});
@@ -399,7 +400,29 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     }
 
     _hasChanges = false;
+    _persistSchedule();
     Get.back(result: _days);
+  }
+
+  void _persistSchedule() {
+    final regC = Get.find<ProfessionalRegistrationController>();
+    final payload = _days
+        .map(
+          (d) => {
+            'day': d.label,
+            'isAvailable': d.isActive,
+            'slots': d.ranges
+                .map(
+                  (r) => {
+                    'startTime': r.formatStart(),
+                    'endTime': r.formatEnd(),
+                  },
+                )
+                .toList(),
+          },
+        )
+        .toList();
+    regC.setWorkSchedule(payload);
   }
 
   Future<void> _showScheduleCheckSheet() async {
@@ -497,6 +520,7 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                         _hasChanges = false;
+                        _persistSchedule();
                         Get.to(() => const ProfilePictureScreen());
                       },
                       child: const Text(

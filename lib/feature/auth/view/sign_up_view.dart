@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:paschaloliver/core/constants/api_endpoints.dart';
-
 import '../../../core/constants/assets.dart';
 import '../../../core/network/api_service/api_client.dart';
 import '../controller/role_controller.dart';

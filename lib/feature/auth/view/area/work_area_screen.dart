@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 
 import '../work/work_schedule_screen.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
 
 class WorkAreaScreen extends StatefulWidget {
   const WorkAreaScreen({super.key});
@@ -63,7 +64,23 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
   @override
   void initState() {
     super.initState();
+    _hydrateLocationFromArgs();
     _tryCenterFromPreviousCity();
+  }
+
+  void _hydrateLocationFromArgs() {
+    final args = Get.arguments;
+    if (args is Map) {
+      final regC = Get.find<ProfessionalRegistrationController>();
+      final country = args['country'];
+      final state = args['state'];
+      if (country != null) {
+        regC.setCountry(country.name ?? country.toString());
+      }
+      if (state != null) {
+        regC.setCity(state.name ?? state.toString());
+      }
+    }
   }
 
   /// Optional: if you pass {country,state,city} from previous screen, it will auto-center map
@@ -537,6 +554,12 @@ class _WorkAreaScreenState extends State<WorkAreaScreen> {
 
   void _goToSchedule() {
     _hasChanges = false;
+    final regC = Get.find<ProfessionalRegistrationController>();
+    final selectedNames = _areas
+        .where((a) => _selectedIds.contains(a.id))
+        .map((a) => a.name)
+        .toList();
+    regC.setWorkingAreas(selectedNames);
     Get.to(() => const WorkScheduleScreen(), arguments: _selectedIds.toList());
   }
 

@@ -9,7 +9,9 @@ class TranslationService {
 
   Future<String> translateText(String text, String targetLang) async {
     final apiKey = dotenv.env['GOOGLE_API_KEY'];
-    if (apiKey == null) throw Exception("API key not found");
+    if (apiKey == null || apiKey.trim().isEmpty) {
+      return text;
+    }
 
     const endpoint = 'https://translation.googleapis.com/language/translate/v2';
 

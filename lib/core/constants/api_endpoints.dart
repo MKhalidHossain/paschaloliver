@@ -23,6 +23,7 @@ base class ApiEndpoints {
 
   // ---------------------- USER -----------------------------
   static const String user = '$baseUrl/user';
+  static const String professional = '$baseUrl/professional';
 
   // ---------------------- category -----------------------------
   static const String categories = '$baseUrl/categories';

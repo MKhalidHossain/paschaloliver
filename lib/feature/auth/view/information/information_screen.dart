@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
 import '../work/work_schedule_screen.dart';
 import 'kyc_back_flow.dart';
 
@@ -828,7 +829,9 @@ class _InformationScreenState extends State<InformationScreen> {
   }
 
   Widget _uploadPillButton() {
-    final hasError = _submitted && _documentFile == null;
+    final regC = Get.find<ProfessionalRegistrationController>();
+    final hasError = _submitted &&
+        (regC.documentFrontImage == null || regC.documentBackImage == null);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -897,7 +900,10 @@ class _InformationScreenState extends State<InformationScreen> {
     try {
       final XFile? file = await _picker.pickImage(source: source);
       if (file == null) return;
-      setState(() => _documentFile = File(file.path));
+      final img = File(file.path);
+      setState(() => _documentFile = img);
+      final regC = Get.find<ProfessionalRegistrationController>();
+      regC.documentFrontImage = img;
     } catch (e) {
       debugPrint('Document pick error: $e');
     }
@@ -973,6 +979,29 @@ class _InformationScreenState extends State<InformationScreen> {
     final allValid = _validateForm();
     if (!allValid) return;
 
+    final regC = Get.find<ProfessionalRegistrationController>();
+    regC.setPersonalDetails(
+      name: _nameCtrl.text.trim(),
+      surname: _surnameCtrl.text.trim(),
+      gender: _gender ?? '',
+      dateOfBirth: _dobDate!,
+      countryOfBirth: _countryOfBirth ?? '',
+      cityOfBirth: _cityOfBirthCtrl.text.trim(),
+    );
+    regC.setIdentity(
+      documentType: _docType,
+      documentNumber: _documentNumberCtrl.text.trim(),
+      documentCountry: _countryOfDocument ?? '',
+    );
+    regC.setAddress(
+      street: _streetCtrl.text.trim(),
+      streetNumber: _streetNumberCtrl.text.trim(),
+      zipCode: _zipCtrl.text.trim(),
+      addressCity: _cityCtrl.text.trim(),
+      addressCountry: _countryAddress ?? '',
+      region: _streetRegionCtrl.text.trim(),
+    );
+
     Get.to(() => const WorkScheduleScreen());
   }
 
@@ -998,7 +1027,9 @@ class _InformationScreenState extends State<InformationScreen> {
         _countryOfDocument == null ||
         _countryAddress == null;
 
-    final missingDoc = _documentFile == null; // if you require upload
+    final regC = Get.find<ProfessionalRegistrationController>();
+    final missingDoc =
+        regC.documentFrontImage == null || regC.documentBackImage == null;
 
     return !(anyEmptyText || missingDropdown || missingDoc);
   }

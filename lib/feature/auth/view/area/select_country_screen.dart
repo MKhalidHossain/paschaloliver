@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../data/csc_data.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
 import 'choose_city_screen.dart';
 
 class SelectCountryScreen extends StatefulWidget {
@@ -53,6 +54,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final regC = Get.find<ProfessionalRegistrationController>();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -178,6 +180,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                         return InkWell(
                           onTap: () {
                             setState(() => _selected = country);
+                            regC.setCountry(country.name);
 
                             // Go to state screen
                             Get.to(

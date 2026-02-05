@@ -49,7 +49,10 @@ class TranslatedText extends StatelessWidget {
     super.key,
   });
 
-  final LanguageController languageController = Get.put(LanguageController());
+  final LanguageController languageController =
+      Get.isRegistered<LanguageController>()
+          ? Get.find<LanguageController>()
+          : Get.put(LanguageController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {

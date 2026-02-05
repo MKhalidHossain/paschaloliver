@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/assets.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
 import 'upload_back_screen.dart'; // 👈 back flow
 
 /// ---------------------------------------------------------------------------
@@ -48,6 +49,9 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
     );
     if (file == null) return;
 
+    final regC = Get.find<ProfessionalRegistrationController>();
+    regC.documentFrontImage = File(file.path);
+
     final frontImage = FileImage(File(file.path));
     Get.to(() => UploadedFrontIdScreen(frontImage: frontImage));
   }
@@ -60,6 +64,9 @@ class _UploadFrontIdScreenState extends State<UploadFrontIdScreen> {
       imageQuality: 90,
     );
     if (file == null) return;
+
+    final regC = Get.find<ProfessionalRegistrationController>();
+    regC.documentFrontImage = File(file.path);
 
     final frontImage = FileImage(File(file.path));
     Get.to(() => UploadedFrontIdScreen(frontImage: frontImage));

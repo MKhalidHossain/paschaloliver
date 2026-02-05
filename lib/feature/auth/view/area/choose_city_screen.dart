@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:paschaloliver/feature/auth/view/area/work_area_screen.dart';
 
 import '../../data/csc_data.dart';
+import '../../../professional/controller/professional_registration_controller.dart';
 
 class SelectStateScreen extends StatefulWidget {
   const SelectStateScreen({super.key});
@@ -28,6 +29,9 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
     _country = Get.arguments as CSCountry;
     _all = _country.states;
     _filtered = _all;
+
+    final regC = Get.find<ProfessionalRegistrationController>();
+    regC.setCountry(_country.name);
   }
 
   @override
@@ -169,6 +173,8 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
                   return InkWell(
                     onTap: () {
                       setState(() => _selected = state);
+                      final regC = Get.find<ProfessionalRegistrationController>();
+                      regC.setCity(state.name);
 
                       // Optional next step: go to city list (same style)
                       Get.to(
