@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:paschaloliver/core/constants/assets.dart';
 
 /// ------------------------------------------------------------
 /// Personal Details (UI SAME) + ✅ Working Camera/Gallery
@@ -137,8 +138,8 @@ class PerDetailsScreen extends StatelessWidget {
                           return Image.file(File(path), fit: BoxFit.cover);
                         }
 
-                        return Image.network(
-                          "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=300&q=60",
+                        return Image.asset(
+                          Images.userPlaceholder,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => const Icon(
                             Icons.person,
@@ -179,15 +180,15 @@ class PerDetailsScreen extends StatelessWidget {
             const SizedBox(height: 18),
 
             // Name with counter (0/50)
- Obx(() {
-  return _Field(
-    controller: c.nameCtrl,
-    hint: "Name",
-    maxLength: 50,
-    suffixText: "${c.nameLen.value}/50",
-    keyboardType: TextInputType.name,
-  );
-}),
+            Obx(() {
+              return _Field(
+                controller: c.nameCtrl,
+                hint: "Name",
+                maxLength: 50,
+                suffixText: "${c.nameLen.value}/50",
+                keyboardType: TextInputType.name,
+              );
+            }),
 
             const SizedBox(height: 12),
 
@@ -419,11 +420,7 @@ class _TopBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: const Padding(
                 padding: EdgeInsets.all(6),
-                child: Icon(
-                  Icons.edit_rounded,
-                  size: 18,
-                  color: _C.green,
-                ),
+                child: Icon(Icons.edit_rounded, size: 18, color: _C.green),
               ),
             ),
         ],

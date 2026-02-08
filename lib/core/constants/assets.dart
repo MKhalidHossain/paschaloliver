@@ -141,4 +141,11 @@ class Images {
   static const obg3 = "assets/images/onbg3.png";
 
   // static const String pt4 = 'assets/images/pt4.png';
+
+  //profile
+  static const String userPlaceholder =
+      'assets/profile/Portrait_Placeholder.png';
+
+  static const String balancIcon = 'assets/profile/questionIcon.png';
+  static const String balanceEmptyIcon = 'assets/profile/balace_icon_Frame.png';
 }

@@ -615,15 +615,18 @@ class NicolasProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Until we are certain that the service has gone as\nexpected, we will not release the payment to the\nprofessional.\n\n"
-                    "In case of a no-show, we will refund the full amount of\nthe service.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 11.2,
-                      fontWeight: FontWeight.w700,
-                      color: _C.muted,
-                      height: 1.35,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Until we are certain that the service has gone as expected, we will not release the payment to the professional."
+                      "\n\nIn case of a no-show, we will refund the full amount of the service.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 11.2,
+                        fontWeight: FontWeight.w700,
+                        color: _C.muted,
+                        height: 1.35,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -835,7 +838,7 @@ class NicolasProfileScreen extends StatelessWidget {
           child: Row(
             children: [
               const Text(
-                "₦1350/h",
+                "\$ 1350/h",
                 style: TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w900,

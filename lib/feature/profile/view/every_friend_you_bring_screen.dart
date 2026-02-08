@@ -126,7 +126,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                   const SizedBox(height: 30),
 
                   const Text(
-                    "Receive ₦10 and give\nothers ₦10",
+                    "Receive \$10 and give\nothers \$10",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w900,
@@ -140,13 +140,13 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                   const _BulletRow(
                     emoji: "😁",
                     text:
-                        "Earn ₦10 discount for each friend\nyou bring to Handynaija",
+                        "Earn \$10 discount for each friend\nyou bring to Handynaija",
                   ),
                   const SizedBox(height: 10),
                   const _BulletRow(
                     emoji: "🎁",
                     text:
-                        "By registering with your code, your\nfriends will receive an additional ₦10\nas a gift",
+                        "By registering with your code, your\nfriends will receive an additional \$10\nas a gift",
                   ),
 
                   const SizedBox(height: 18),

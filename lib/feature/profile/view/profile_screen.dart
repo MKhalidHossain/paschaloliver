@@ -117,7 +117,7 @@ class ProfileScreen extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                title: "# 10 for every friend you bring",
+                title: "\$ 10 for every friend you bring",
                 onTap: () {
                   Get.to(() => const ShareAndEarnMoneyScreen());
                 },

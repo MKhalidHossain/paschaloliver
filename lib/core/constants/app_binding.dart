@@ -77,7 +77,9 @@ class AppBinding extends Bindings {
       fenix: true,
     );
     Get.lazyPut<RequestHistoryController>(
-      () => RequestHistoryController(service: Get.find<RequestHistoryInterface>()),
+      () => RequestHistoryController(
+        service: Get.find<RequestHistoryInterface>(),
+      ),
       fenix: true,
     );
   }

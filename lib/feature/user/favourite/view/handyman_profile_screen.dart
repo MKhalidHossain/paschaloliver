@@ -194,7 +194,7 @@ class _ProfileCard extends StatelessWidget {
                               Row(
                                 children: const [
                                   Text(
-                                    "₦20.50",
+                                    "\$20.50",
                                     style: TextStyle(
                                       fontFamily: "Urbanist",
                                       fontSize: 12.5,
@@ -319,7 +319,7 @@ class _ProfileCard extends StatelessWidget {
                     Expanded(
                       child: _InfoChip(
                         icon: Icons.attach_money_rounded,
-                        text: "Minimum charge ₦30",
+                        text: "Minimum charge \$30",
                       ),
                     ),
                   ],

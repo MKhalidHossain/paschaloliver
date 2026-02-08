@@ -71,7 +71,7 @@ class MyBalanceScreen extends StatelessWidget {
                       alignment: Alignment.center,
                       children: [
                         Text(
-                          "₦${balance.toStringAsFixed(2)}",
+                          "\$${balance.toStringAsFixed(2)}",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
                             fontSize: 24,
@@ -152,7 +152,7 @@ class MyBalanceScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      "Minimum withdrawal amount ₦${minWithdrawal.toStringAsFixed(2)}",
+                      "Minimum withdrawal amount \$${minWithdrawal.toStringAsFixed(2)}",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.urbanist(
                         fontSize: 16,
@@ -180,7 +180,7 @@ class MyBalanceScreen extends StatelessWidget {
                       ),
                       const Spacer(),
                       Text(
-                        "₦${pendingPayments.toStringAsFixed(2)}",
+                        "\$${pendingPayments.toStringAsFixed(2)}",
                         style: GoogleFonts.urbanist(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
@@ -190,7 +190,7 @@ class MyBalanceScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Image.asset(
-                        Images.balanceIcon,
+                        Images.balancIcon,
                         width: 14,
                         height: 14,
                         fit: BoxFit.contain,
@@ -237,16 +237,25 @@ class _EmptyState extends StatelessWidget {
             Container(
               width: 90,
               height: 90,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF2F2F2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(
-                Icons.receipt_long_outlined,
-                size: 40,
-                color: _C.green,
+              // decoration: BoxDecoration(
+              //   color: const Color(0xFFF2F2F2),
+              //   borderRadius: BorderRadius.circular(20),
+              // ),
+              child: Center(
+                child: Image.asset(
+                  Images.balanceEmptyIcon, // <-- your asset path
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const Icon(
+                    Icons.receipt_long_outlined,
+                    size: 40,
+                    color: _C.green,
+                  ),
+                ),
               ),
             ),
+
             const SizedBox(height: 20),
             Text(
               "You haven’t received any payment yet. When you complete a service, the received money will appear here.",

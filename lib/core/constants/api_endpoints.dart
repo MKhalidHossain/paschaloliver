@@ -49,7 +49,7 @@ class _LocalHostWifi {
   static const String baseUrl = 'http://10.10.5.98:5000/api/v1';
 }
 
-class _Auth {
+abstract class _Auth {
   @protected
   static const String _authRoute = '${ApiEndpoints.baseUrl}/auth';
   // example

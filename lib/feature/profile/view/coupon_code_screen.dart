@@ -208,7 +208,7 @@ class MyCodesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Do you want a ₦10 discount?",
+                          "Do you want a \$10 discount?",
                           style: GoogleFonts.urbanist(
                             fontSize: 18,
                             fontWeight: FontWeight.w500, // Medium
@@ -219,7 +219,7 @@ class MyCodesScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "Share the app with your friends and earn ₦10 when\nthey make their first booking!",
+                          "Share the app with your friends and earn \$10 when\nthey make their first booking!",
                           style: GoogleFonts.urbanist(
                             fontSize: 12,
                             fontWeight: FontWeight.w400, // Regular

@@ -646,7 +646,7 @@ class _ProCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "₦${model.pricePerHour.toStringAsFixed(2)}",
+                            "\$ ${model.pricePerHour.toStringAsFixed(2)}",
                             style: const TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w900,
@@ -742,7 +742,7 @@ class _ProCard extends StatelessWidget {
                 Expanded(
                   child: _MiniPill(
                     icon: Icons.attach_money_rounded,
-                    label: "Minimum charge ₦30",
+                    label: "Minimum charge \$ 30",
                   ),
                 ),
               ],

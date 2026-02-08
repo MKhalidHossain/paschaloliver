@@ -469,7 +469,7 @@ class _UpcomingServiceCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          "₦${(item.pricePerHour ?? 20.50).toStringAsFixed(2)}",
+                          "\$${(item.pricePerHour ?? 20.50).toStringAsFixed(2)}",
                           style: const TextStyle(
                             fontFamily: "Urbanist",
                             fontSize: 14,
@@ -607,7 +607,7 @@ class _UpcomingServiceCard extends StatelessWidget {
                   Expanded(
                     child: _InfoChip(
                       icon: Icons.attach_money_rounded,
-                      text: "Minimum charge ₦30",
+                      text: "Minimum charge \$30",
                       bg: _chipBg,
                     ),
                   ),
