@@ -31,8 +31,12 @@ class TokenManager {
     debugPrint("✅ Saving access token: $access");
     debugPrint("✅ Saving refresh token: $refresh");
 
-    await _storage.write(key: _accessTokenKey, value: access);
-    await _storage.write(key: _refreshKey, value: refresh);
+    if (access.trim().isNotEmpty) {
+      await _storage.write(key: _accessTokenKey, value: access);
+    }
+    if (refresh.trim().isNotEmpty) {
+      await _storage.write(key: _refreshKey, value: refresh);
+    }
 
     if (uid != null) {
       await _storage.write(key: _uidKey, value: uid);
@@ -56,17 +60,25 @@ class TokenManager {
     required String accessToken,
     required String refreshToken,
   }) async {
-    await _storage.write(key: _accessTokenKey, value: accessToken);
-    await _storage.write(key: _refreshKey, value: refreshToken);
+    if (accessToken.trim().isNotEmpty) {
+      await _storage.write(key: _accessTokenKey, value: accessToken);
+    }
+    if (refreshToken.trim().isNotEmpty) {
+      await _storage.write(key: _refreshKey, value: refreshToken);
+    }
   }
 
   static Future<void> accessToken(String token) async {
     debugPrint("Saving token is $token");
-    await _storage.write(key: _accessTokenKey, value: token);
+    if (token.trim().isNotEmpty) {
+      await _storage.write(key: _accessTokenKey, value: token);
+    }
   }
 
   static Future<void> refreshToken(String token) async {
-    await _storage.write(key: _refreshKey, value: token);
+    if (token.trim().isNotEmpty) {
+      await _storage.write(key: _refreshKey, value: token);
+    }
   }
 
   static Future<String?> getToken() async {

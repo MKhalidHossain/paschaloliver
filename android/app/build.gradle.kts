@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.paschaloliver"
+    namespace = "com.paschaloliver.pattern"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

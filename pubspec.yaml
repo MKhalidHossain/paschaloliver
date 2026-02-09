@@ -21,6 +21,7 @@ dependencies:
   dio: ^5.9.0
   dartz: ^0.10.1
   image_picker: ^1.2.1
+  flutter_image_compress: ^2.3.0
   flutter_secure_storage: ^9.2.4
   flutter_dotenv: ^6.0.0
   pretty_dio_logger: ^1.4.0
@@ -69,4 +70,3 @@ flutter:
   #         weight: 500
   #       - asset: assets/fonts/sfpro/SF-Pro-Display-Semibold.otf
   #         weight: 600
-

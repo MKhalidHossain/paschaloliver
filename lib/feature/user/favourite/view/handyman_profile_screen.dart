@@ -3,11 +3,20 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
+import '../models/favorite_api_models.dart';
+import 'professional_detail_screen.dart';
 
 /// ✅ Handyman Profile Card Screen
 /// ✅ NEW: Tap the RED PORTION (left info area) => FavoritesEmptyScreen
 class HandymanProfileScreen extends StatelessWidget {
-  const HandymanProfileScreen({super.key});
+  const HandymanProfileScreen({
+    super.key,
+    required this.title,
+    required this.professionals,
+  });
+
+  final String title;
+  final List<FavoriteProfessional> professionals;
 
   static const _line = Color(0xFFEDEDED);
 
@@ -18,13 +27,21 @@ class HandymanProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _TopBar(title: "Handyman", onBack: () => Get.back()),
+            _TopBar(title: title, onBack: () => Get.back()),
             const Divider(height: 1, thickness: 1, color: _line),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-                children: const [_ProfileCard()],
-              ),
+              child: professionals.isEmpty
+                  ? const FavoritesEmptyScreen()
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+                      itemCount: professionals.length,
+                      itemBuilder: (context, i) {
+                        return _ProfileCard(
+                          professional: professionals[i],
+                          serviceTitle: title,
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -102,21 +119,22 @@ class _TopBar extends StatelessWidget {
 /* ----------------------------- CARD ----------------------------- */
 
 class _ProfileCard extends StatelessWidget {
-  const _ProfileCard();
+  const _ProfileCard({
+    required this.professional,
+    required this.serviceTitle,
+  });
 
   static const _green = Color(0xFF2FA86A);
   static const _text = Color(0xFF1F1F1F);
   static const _muted = Color(0xFF8B8B8B);
 
+  final FavoriteProfessional professional;
+  final String serviceTitle;
+
   @override
   Widget build(BuildContext context) {
-    final photos = <String>[
-      Images.men,
-      Images.men,
-      Images.men,
-      Images.men,
-      Images.men,
-    ];
+    final photos = professional.gallery;
+    final imageUrl = photos.isNotEmpty ? photos.first : "";
 
     return Container(
       decoration: BoxDecoration(
@@ -143,19 +161,36 @@ class _ProfileCard extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      Get.to(() => const FavoritesEmptyScreen());
+                      Get.to(
+                        () => ProfessionalDetailScreen(
+                          professionalId: professional.id,
+                        ),
+                      );
                     },
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            Images.men,
-                            width: 52,
-                            height: 52,
-                            fit: BoxFit.cover,
-                          ),
+                          child: imageUrl.isNotEmpty
+                              ? Image.network(
+                                  imageUrl,
+                                  width: 52,
+                                  height: 52,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Image.asset(
+                                    Images.men,
+                                    width: 52,
+                                    height: 52,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Image.asset(
+                                  Images.men,
+                                  width: 52,
+                                  height: 52,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -166,7 +201,7 @@ class _ProfileCard extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      "Nicolas bond",
+                                      professional.name,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.urbanist(
                                         fontSize: 12,
@@ -182,7 +217,7 @@ class _ProfileCard extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                "Handyman",
+                                serviceTitle,
                                 style: GoogleFonts.urbanist(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500, // Medium
@@ -192,10 +227,10 @@ class _ProfileCard extends StatelessWidget {
                               ),
                               const SizedBox(height: 6),
                               Row(
-                                children: const [
+                                children: [
                                   Text(
-                                    "\$20.50",
-                                    style: TextStyle(
+                                    "₦${professional.price.toStringAsFixed(0)}",
+                                    style: const TextStyle(
                                       fontFamily: "Urbanist",
                                       fontSize: 12.5,
                                       fontWeight: FontWeight.w800,
@@ -203,8 +238,8 @@ class _ProfileCard extends StatelessWidget {
                                       height: 1.1,
                                     ),
                                   ),
-                                  SizedBox(width: 6),
-                                  Text(
+                                  const SizedBox(width: 6),
+                                  const Text(
                                     "Per hour",
                                     style: TextStyle(
                                       fontFamily: "Urbanist",
@@ -219,10 +254,10 @@ class _ProfileCard extends StatelessWidget {
                               const SizedBox(height: 6),
                               Row(
                                 children: [
-                                  const _Stars(rating: 4.8),
+                                  _Stars(rating: professional.rating),
                                   const SizedBox(width: 6),
                                   Text(
-                                    "4.8",
+                                    professional.rating.toStringAsFixed(1),
                                     style: GoogleFonts.urbanist(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400, // Regular
@@ -241,8 +276,8 @@ class _ProfileCard extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  const Text(
-                                    "4,323 Reviews",
+                                  Text(
+                                    "${professional.reviewCount} Reviews",
                                     style: TextStyle(
                                       fontFamily: "Urbanist",
                                       fontSize: 11.2,
@@ -270,7 +305,7 @@ class _ProfileCard extends StatelessWidget {
                     const Icon(Icons.favorite_rounded, color: _green, size: 18),
                     const SizedBox(height: 18),
                     Text(
-                      "656 Services", // or your dynamic value
+                      "${professional.gallery.length} Photos",
                       style: GoogleFonts.urbanist(
                         fontSize: 12,
                         fontWeight: FontWeight.w500, // Medium
@@ -350,11 +385,17 @@ class _ProfileCard extends StatelessWidget {
               itemBuilder: (context, i) {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
+                  child: Image.network(
                     photos[i],
                     width: 66,
                     height: 54,
                     fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Image.asset(
+                      Images.men,
+                      width: 66,
+                      height: 54,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 );
               },

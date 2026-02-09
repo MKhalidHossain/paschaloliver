@@ -2,7 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:paschaloliver/feature/listing/controller/listing_create_controller.dart';
+import 'package:paschaloliver/feature/listing/view/my_listing_screen.dart';
 
 class AboutMeScreen extends StatefulWidget {
   const AboutMeScreen({super.key});
@@ -22,10 +25,12 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
   static const Color _danger = Color(0xFFE53935);
 
   static const int _requiredLen = 50; // must be at least 50
-  static const int _maxLen = 50; // screenshot shows 0/50
+  static const int _maxLen = 500; // allow more than 50
 
   final _ctrl = TextEditingController();
   final _focus = FocusNode();
+  late final ListingCreateController _listingController;
+  bool _submitting = false;
 
   bool _showEmptyError = false;
   bool _saved = false;
@@ -36,6 +41,7 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
   @override
   void initState() {
     super.initState();
+    _listingController = Get.find<ListingCreateController>();
     _initialText = _ctrl.text;
     _ctrl.addListener(() {
       // keep UI updated for counter + error clearing
@@ -89,15 +95,31 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
       return;
     }
 
-    // ✅ success (saved)
     setState(() {
       _saved = true;
       _initialText = _ctrl.text;
     });
 
-    // TODO: navigate next screen OR pop result
-    // Navigator.push(context, MaterialPageRoute(builder: (_) => const NextScreen()));
-    Navigator.pop(context, _ctrl.text.trim());
+    _listingController.setAbout(_ctrl.text.trim());
+
+    setState(() => _submitting = true);
+    final ok = await _listingController.submit();
+    if (mounted) setState(() => _submitting = false);
+
+    if (!ok) {
+      final msg = _listingController.error.value.isEmpty
+          ? 'Failed to submit listing'
+          : _listingController.error.value;
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
+      }
+      return;
+    }
+
+    if (mounted) {
+      Get.offAll(() => const MyListingScreen());
+    }
   }
 
   @override
@@ -358,7 +380,7 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                       height: 52,
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _onSave,
+                        onPressed: _submitting ? null : _onSave,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _green,
                           foregroundColor: Colors.white,
@@ -371,7 +393,16 @@ class _AboutMeScreenState extends State<AboutMeScreen> {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        child: const Text("Save"),
+                        child: _submitting
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text("Save"),
                       ),
                     ),
                   ),

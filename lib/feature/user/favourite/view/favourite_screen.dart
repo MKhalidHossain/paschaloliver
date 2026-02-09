@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/assets.dart';
-import '../models/favourite_model.dart';
+import '../../app_ground_user.dart';
+import '../controller/favorite_controller.dart';
+import '../models/favorite_api_models.dart';
 import 'handyman_profile_screen.dart';
 
 /// ✅ Favorites screen (matches your screenshot)
@@ -26,28 +28,7 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = <FavoriteCategory>[
-      FavoriteCategory(
-        title: "Handyman",
-        professionalsText: "1 professionals",
-        avatarCount: 1,
-        extraCount: 0,
-        onTap: () {
-          // TODO: open Handyman favorites list
-          Get.to(() => const HandymanProfileScreen());
-        },
-      ),
-      FavoriteCategory(
-        title: "Cleaning",
-        professionalsText: "4 professionals",
-        avatarCount: 3,
-        extraCount: 1, // shows +1 bubble
-        onTap: () {
-          // TODO: open Cleaning favorites list
-          Get.to(() => const HandymanProfileScreen());
-        },
-      ),
-    ];
+    final controller = Get.find<FavoriteController>();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,21 +54,134 @@ class FavoritesScreen extends StatelessWidget {
 
             // List
             Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                itemCount: items.length,
-                separatorBuilder: (_, __) => const Divider(height: 1, thickness: 1, color: _line),
-                itemBuilder: (context, i) {
-                  final it = items[i];
-                  return _FavoriteRow(
-                    title: it.title,
-                    subtitle: it.professionalsText,
-                    avatarCount: it.avatarCount,
-                    extraCount: it.extraCount,
-                    onTap: it.onTap,
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (controller.error.isNotEmpty) {
+                  return Center(
+                    child: Text(
+                      controller.error.value,
+                      style: const TextStyle(color: _muted),
+                    ),
                   );
-                },
-              ),
+                }
+
+                if (controller.items.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 30, 24, 24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 260),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  Images.noFavIcon,
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(height: 14),
+                                const Text(
+                                  "No favorites",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: _text,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                RichText(
+                                  textAlign: TextAlign.center,
+                                  text: const TextSpan(
+                                    style: TextStyle(
+                                      color: _muted,
+                                      fontSize: 12.5,
+                                      height: 1.35,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "To save a professional, tap the heart icon",
+                                      ),
+                                      TextSpan(
+                                        text: "♥",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 14),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 42,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Get.offAll(() => const UserAppGround());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: _green,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      "Find professional",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  padding: EdgeInsets.zero,
+                  itemCount: controller.items.length,
+                  separatorBuilder: (_, __) =>
+                      const Divider(height: 1, thickness: 1, color: _line),
+                  itemBuilder: (context, i) {
+                    final it = controller.items[i];
+                    final visibleCount =
+                        it.professionals.length > 3 ? 3 : it.professionals.length;
+                    final extraCount =
+                        it.professionals.length > 3 ? it.professionals.length - 3 : 0;
+                    return _FavoriteRow(
+                      title: it.subcategory,
+                      subtitle:
+                          "${it.count} ${it.count == 1 ? 'professional' : 'professionals'}",
+                      imageUrl: it.image,
+                      professionals: it.professionals,
+                      avatarCount: visibleCount,
+                      extraCount: extraCount,
+                      onTap: () {
+                        Get.to(
+                          () => HandymanProfileScreen(
+                            title: it.subcategory,
+                            professionals: it.professionals,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),
@@ -106,6 +200,8 @@ class _FavoriteRow extends StatelessWidget {
   const _FavoriteRow({
     required this.title,
     required this.subtitle,
+    required this.imageUrl,
+    required this.professionals,
     required this.avatarCount,
     required this.extraCount,
     required this.onTap,
@@ -116,6 +212,8 @@ class _FavoriteRow extends StatelessWidget {
 
   final String title;
   final String subtitle;
+  final String imageUrl;
+  final List<FavoriteProfessional> professionals;
   final int avatarCount; // number of visible avatars
   final int extraCount; // +N bubble (0 => hidden)
   final VoidCallback onTap;
@@ -145,11 +243,23 @@ class _FavoriteRow extends StatelessWidget {
                 ],
               ),
               child: Center(
-                child: Image.asset(
-                  Images.cleaningAndhandymanIcon,   // String path
-                  width: 32,
-                  height: 32,
-                ),
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        width: 32,
+                        height: 32,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          Images.cleaningAndhandymanIcon,
+                          width: 32,
+                          height: 32,
+                        ),
+                      )
+                    : Image.asset(
+                        Images.cleaningAndhandymanIcon,
+                        width: 32,
+                        height: 32,
+                      ),
               ),
 
             ),
@@ -187,6 +297,7 @@ class _FavoriteRow extends StatelessWidget {
                   _AvatarStack(
                     visibleCount: avatarCount,
                     extraCount: extraCount,
+                    professionals: professionals,
                   ),
                 ],
               ),
@@ -207,10 +318,12 @@ class _AvatarStack extends StatelessWidget {
   const _AvatarStack({
     required this.visibleCount,
     required this.extraCount,
+    required this.professionals,
   });
 
   final int visibleCount;
   final int extraCount;
+  final List<FavoriteProfessional> professionals;
 
   @override
   Widget build(BuildContext context) {
@@ -232,8 +345,10 @@ class _AvatarStack extends StatelessWidget {
               left: i * overlap,
               child: _AvatarCircle(
                 size: size,
-                // Demo avatar colors. Replace with NetworkImage/AssetImage if you want.
-                color: _demoAvatarColor(i),
+                imageUrl: professionals[i].gallery.isNotEmpty
+                    ? professionals[i].gallery.first
+                    : '',
+                fallbackColor: _demoAvatarColor(i),
               ),
             ),
 
@@ -259,10 +374,15 @@ class _AvatarStack extends StatelessWidget {
 }
 
 class _AvatarCircle extends StatelessWidget {
-  const _AvatarCircle({required this.size, required this.color});
+  const _AvatarCircle({
+    required this.size,
+    required this.imageUrl,
+    required this.fallbackColor,
+  });
 
   final double size;
-  final Color color;
+  final String imageUrl;
+  final Color fallbackColor;
 
   @override
   Widget build(BuildContext context) {
@@ -271,10 +391,17 @@ class _AvatarCircle extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color,
+        color: fallbackColor,
         border: Border.all(color: Colors.white, width: 2),
       ),
-      child: const SizedBox.shrink(),
+      clipBehavior: Clip.antiAlias,
+      child: imageUrl.isNotEmpty
+          ? Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+            )
+          : const SizedBox.shrink(),
     );
   }
 }

@@ -162,57 +162,65 @@ class _SelectStateScreenState extends State<SelectStateScreen> {
 
             // STATE LIST
             Expanded(
-              child: ListView.separated(
-                itemCount: _filtered.length,
-                separatorBuilder: (_, __) =>
-                    Divider(height: 1, color: Colors.grey.shade200),
-                itemBuilder: (context, index) {
-                  final state = _filtered[index];
-                  final isSelected = _selected?.id == state.id;
-
-                  return InkWell(
-                    onTap: () {
-                      setState(() => _selected = state);
-                      final regC = Get.find<ProfessionalRegistrationController>();
-                      regC.setCity(state.name);
-
-                      // Optional next step: go to city list (same style)
-                      Get.to(
-                        () => const WorkAreaScreen(),
-                        arguments: {'country': _country, 'state': state},
-                      );
-                    },
-                    child: Container(
-                      color: isSelected
-                          ? const Color(0xFFF2FFF7)
-                          : Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
+              child: _filtered.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No request exists',
+                        style: TextStyle(color: Colors.black54),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              state.name,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    )
+                  : ListView.separated(
+                      itemCount: _filtered.length,
+                      separatorBuilder: (_, __) =>
+                          Divider(height: 1, color: Colors.grey.shade200),
+                      itemBuilder: (context, index) {
+                        final state = _filtered[index];
+                        final isSelected = _selected?.id == state.id;
+
+                        return InkWell(
+                          onTap: () {
+                            setState(() => _selected = state);
+                            final regC =
+                                Get.find<ProfessionalRegistrationController>();
+                            regC.setCity(state.name);
+
+                            // Optional next step: go to city list (same style)
+                            Get.to(
+                              () => const WorkAreaScreen(),
+                              arguments: {'country': _country, 'state': state},
+                            );
+                          },
+                          child: Container(
+                            color: isSelected
+                                ? const Color(0xFFF2FFF7)
+                                : Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 14,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    state.name,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_circle,
+                                    size: 18,
+                                    color: _brandGreen,
+                                  ),
+                              ],
                             ),
                           ),
-                          if (isSelected)
-                            Icon(
-                              Icons.check_circle,
-                              size: 18,
-                              color: _brandGreen,
-                            ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
 
             const Divider(height: 1),

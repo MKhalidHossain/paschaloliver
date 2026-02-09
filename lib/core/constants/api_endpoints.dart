@@ -20,6 +20,7 @@ base class ApiEndpoints {
   static const String switchRole = _Auth.switchRole;
   static const String refreshToken = _Auth.refreshToken;
   static const String requestHistory = _Requests.requestHistory;
+  static const String applyCoupon = _Coupons.applyCoupon;
 
   // ---------------------- USER -----------------------------
   static const String user = '$baseUrl/user';
@@ -68,4 +69,10 @@ class _Requests {
   @protected
   static const String _requestRoute = ApiEndpoints.baseUrl;
   static const String requestHistory = '$_requestRoute/request-history';
+}
+
+class _Coupons {
+  @protected
+  static const String _couponRoute = '${ApiEndpoints.baseUrl}/coupon';
+  static const String applyCoupon = '$_couponRoute/apply-coupon';
 }

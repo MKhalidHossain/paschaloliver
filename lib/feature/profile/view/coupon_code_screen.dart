@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../../core/constants/api_endpoints.dart';
+import '../../../core/network/api_service/api_client.dart';
 
 /// ---------------------------------------------------------------------------
 /// ✅ MY CODES (PROMO CODE) – like your screenshot (GetX)
@@ -19,12 +22,15 @@ import '../../../core/constants/assets.dart';
 class MyCodesController extends GetxController {
   final promoCtrl = TextEditingController();
   final promo = "".obs;
+  final isApplying = false.obs;
+  late final ApiClient _api;
 
   bool get canAdd => promo.value.trim().isNotEmpty;
 
   @override
   void onInit() {
     super.onInit();
+    _api = Get.find<ApiClient>();
     promoCtrl.addListener(() => promo.value = promoCtrl.text);
   }
 
@@ -34,19 +40,92 @@ class MyCodesController extends GetxController {
     super.onClose();
   }
 
-  void addCode() {
-    final code = promo.value.trim();
-    if (code.isEmpty) return;
+  Future<void> addCode() async {
+    final raw = promo.value.trim();
+    if (raw.isEmpty) {
+      Get.snackbar(
+        "Promo code",
+        "Please enter a promo code.",
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+      );
+      return;
+    }
+    if (raw.length < 4) {
+      Get.snackbar(
+        "Promo code",
+        "Promo code is too short.",
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+      );
+      return;
+    }
+    final code = raw.toUpperCase();
+    final valid = RegExp(r"^[A-Z0-9_-]+$").hasMatch(code);
+    if (!valid) {
+      Get.snackbar(
+        "Promo code",
+        "Use only letters, numbers, - or _.",
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+      );
+      return;
+    }
 
-    // TODO: call API / save locally
-    Get.snackbar(
-      "Promo code",
-      "Added: $code",
-      snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(12),
-      backgroundColor: Colors.black.withOpacity(.75),
-      colorText: Colors.white,
-    );
+    try {
+      isApplying.value = true;
+      final res = await _api.post(
+        ApiEndpoints.applyCoupon,
+        data: {"code": code},
+      );
+      final body = res.data as Map<String, dynamic>? ?? {};
+      final success = body["success"] == true;
+      final message = (body["message"] ?? body["data"]?["message"] ?? "")
+          .toString();
+      if (!success) {
+        throw Exception(message.isEmpty ? "Apply coupon failed" : message);
+      }
+
+      promoCtrl.clear();
+      Get.snackbar(
+        "Promo code",
+        message.isEmpty ? "Coupon added successfully" : message,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+      );
+    } catch (e) {
+      String msg = e.toString().replaceFirst("Exception: ", "");
+      if (e is DioException) {
+        final data = e.response?.data;
+        if (data is Map<String, dynamic>) {
+          msg =
+              (data["message"] ?? data["error"] ?? msg)
+                  .toString()
+                  .trim()
+                  .isEmpty
+              ? msg
+              : (data["message"] ?? data["error"]).toString();
+        }
+      }
+      Get.snackbar(
+        "Promo code",
+        msg,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+      );
+    } finally {
+      isApplying.value = false;
+    }
   }
 }
 
@@ -140,11 +219,12 @@ class MyCodesScreen extends StatelessWidget {
             // Add button (disabled / enabled)
             Obx(() {
               final enabled = c.canAdd;
+              final loading = c.isApplying.value;
               return SizedBox(
                 height: 46,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: enabled ? c.addCode : null,
+                  onPressed: enabled && !loading ? c.addCode : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: enabled ? _green : _field,
                     disabledBackgroundColor: _field,
@@ -154,7 +234,7 @@ class MyCodesScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    "Add",
+                    loading ? "Adding..." : "Add",
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

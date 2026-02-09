@@ -33,6 +33,7 @@ class _C {
 /// ------------------------------ MODELS ------------------------------
 
 class ProModel {
+  final String? professionalId;
   final String name;
   final String role;
   final double rating;
@@ -42,6 +43,7 @@ class ProModel {
   final bool verified;
 
   const ProModel({
+    this.professionalId,
     required this.name,
     required this.role,
     required this.rating,
@@ -81,6 +83,7 @@ class HandyServicesController extends GetxController {
   // list
   final pros = <ProModel>[
     const ProModel(
+      professionalId: "698466fc25898f4b503aa647",
       name: "Nicolas bond",
       role: "Handyman",
       rating: 4.8,
@@ -90,6 +93,7 @@ class HandyServicesController extends GetxController {
       verified: true,
     ),
     const ProModel(
+      professionalId: "698466fc25898f4b503aa647",
       name: "Nicolas bond",
       role: "Handyman",
       rating: 4.8,
@@ -99,6 +103,7 @@ class HandyServicesController extends GetxController {
       verified: true,
     ),
     const ProModel(
+      professionalId: "698466fc25898f4b503aa647",
       name: "Nicolas bond",
       role: "Handyman",
       rating: 4.8,
@@ -576,7 +581,11 @@ class _ProCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(() => const NicolasProfileScreen());
+        Get.to(
+          () => NicolasProfileScreen(
+            professionalId: model.professionalId,
+          ),
+        );
         // or if you want to pass data later:
         // Get.to(() => NicolasProfileScreen(model: model));
       },

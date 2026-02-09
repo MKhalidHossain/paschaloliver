@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../listing/view/create_listing_screen.dart';
+import '../../listing/view/my_listing_screen.dart';
+import '../../listing/controller/listing_create_controller.dart';
 
 /// ---------------------------------------------------------------------------
 /// CalendarHomeShell
@@ -35,29 +37,7 @@ class _CalendarHomeShellState extends State<CalendarHomeShell> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = <Widget>[
-      widget.isListingEmpty
-          ? _CalendarEmptyListing(onCompleteListing: _onCompleteListing)
-          : _CalendarMonthView(
-              month: _month,
-              selectedDay: _selectedDay,
-              onPrevMonth: () => setState(() {
-                _month = DateTime(_month.year, _month.month - 1, 1);
-                _selectedDay = 13;
-              }),
-              onNextMonth: () => setState(() {
-                _month = DateTime(_month.year, _month.month + 1, 1);
-                _selectedDay = 13;
-              }),
-              onSelectDay: (d) => setState(() => _selectedDay = d),
-              onUpdateCalendar: _openUpdateScheduleSheet,
-              onSync: () {},
-            ),
-      const _PlaceholderTab(title: "Requests"),
-      const _PlaceholderTab(title: "Inbox"),
-      const _PlaceholderTab(title: "Listings"),
-      const _PlaceholderTab(title: "Profile"),
-    ];
+    final listingController = Get.find<ListingCreateController>();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -67,7 +47,40 @@ class _CalendarHomeShellState extends State<CalendarHomeShell> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(child: pages[_index]),
+        body: SafeArea(
+          child: Obx(() {
+            final showEmpty = !listingController.hasListing.value;
+            final pages = <Widget>[
+              listingController.isChecking.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : showEmpty
+                      ? _CalendarEmptyListing(
+                          onCompleteListing: _onCompleteListing,
+                        )
+                      : _CalendarMonthView(
+                          month: _month,
+                          selectedDay: _selectedDay,
+                          onPrevMonth: () => setState(() {
+                            _month = DateTime(_month.year, _month.month - 1, 1);
+                            _selectedDay = 13;
+                          }),
+                          onNextMonth: () => setState(() {
+                            _month = DateTime(_month.year, _month.month + 1, 1);
+                            _selectedDay = 13;
+                          }),
+                          onSelectDay: (d) => setState(() => _selectedDay = d),
+                          onUpdateCalendar: _openUpdateScheduleSheet,
+                          onSync: () {},
+                        ),
+              const _PlaceholderTab(title: "Requests"),
+              const _PlaceholderTab(title: "Inbox"),
+              const MyListingScreen(),
+              const _PlaceholderTab(title: "Profile"),
+            ];
+
+            return pages[_index];
+          }),
+        ),
         bottomNavigationBar: Container(
           height: 72,
           decoration: const BoxDecoration(

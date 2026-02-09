@@ -9,6 +9,12 @@ class CSCity {
       CSCity(id: "${j['id']}", name: "${j['name']}");
 }
 
+List _safeList(dynamic value) {
+  if (value is List) return value;
+  if (value is Map) return value.values.toList();
+  return const [];
+}
+
 class CSState {
   final String id;
   final String name;
@@ -18,7 +24,7 @@ class CSState {
   factory CSState.fromJson(Map<String, dynamic> j) => CSState(
     id: "${j['id']}",
     name: "${j['name']}",
-    cities: (j['city'] as List? ?? [])
+    cities: _safeList(j['city'])
         .map((e) => CSCity.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
@@ -41,7 +47,7 @@ class CSCountry {
     id: "${j['id']}",
     name: "${j['name']}",
     emoji: "${j['emoji'] ?? ''}",
-    states: (j['state'] as List? ?? [])
+    states: _safeList(j['state'])
         .map((e) => CSState.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
@@ -50,7 +56,7 @@ class CSCountry {
     id: "${j['iso2'] ?? j['iso3'] ?? j['country'] ?? ''}",
     name: "${j['country'] ?? ''}",
     emoji: "",
-    states: (j['cities'] as List? ?? [])
+    states: _safeList(j['cities'])
         .map(
           (c) => CSState(
             id: c.toString(),
@@ -75,9 +81,8 @@ class CSCData {
     );
     final res = await dio.get('https://api.evpitch.com/api/v1/countries');
     final body = res.data;
-    final List list = body is Map
-        ? (body['data'] as List?) ?? []
-        : (body as List?) ?? [];
+    final dynamic data = body is Map ? body['data'] : body;
+    final List list = _safeList(data);
     _cache = list
         .whereType<Map>()
         .map((e) => CSCountry.fromApi(Map<String, dynamic>.from(e)))

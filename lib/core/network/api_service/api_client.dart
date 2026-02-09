@@ -33,7 +33,7 @@ class ApiClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await TokenManager.getToken();
-          if (token != null) {
+          if (token != null && token.trim().isNotEmpty) {
             options.headers['Authorization'] = "Bearer $token";
           }
 
@@ -47,18 +47,25 @@ class ApiClient {
         onError: (DioException e, handler) async {
           Get.closeAllSnackbars();
 
+          bool _bypassAuthHandling(String path) {
+            return path.contains("/auth/login") ||
+                path.contains("/auth/signup") ||
+                path.contains("/auth/register") ||
+                path.contains("/auth/switch-role") ||
+                path.contains("/professional") ||
+                path.contains("/request-history") ||
+                path.contains("/users/me");
+          }
+
           // Skip logout for auth/register + professional create endpoints
-          if (e.requestOptions.path.contains("/auth/login") ||
-              e.requestOptions.path.contains("/auth/signup") ||
-              e.requestOptions.path.contains("/auth/register") ||
-              e.requestOptions.path.contains("/professional")) {
+          if (_bypassAuthHandling(e.requestOptions.path)) {
             return handler.next(e); // just pass error
           }
 
           final token = await TokenManager.getToken();
 
           // Token missing → force logout
-          if (token == null) {
+          if (token == null || token.trim().isEmpty) {
             print("Token missing → logout...");
             await TokenManager.clearToken();
             Get.offAll(() => HandyEmailLoginScreen());
@@ -69,6 +76,11 @@ class ApiClient {
           if (e.response?.statusCode == 401) {
             try {
               await _refreshToken();
+              final newToken = await TokenManager.getToken();
+              if (newToken != null && newToken.trim().isNotEmpty) {
+                e.requestOptions.headers['Authorization'] =
+                    "Bearer $newToken";
+              }
               final retryResponse = await _dio.fetch(e.requestOptions);
               return handler.resolve(retryResponse);
             } catch (err) {
@@ -105,7 +117,7 @@ class ApiClient {
   Future<void> _refreshToken() async {
     final refreshToken = await TokenManager.getRefreshToken();
 
-    if (refreshToken == null) {
+    if (refreshToken == null || refreshToken.trim().isEmpty) {
       throw Exception("No refresh token");
     }
 

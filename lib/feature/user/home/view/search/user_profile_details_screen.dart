@@ -3,6 +3,11 @@ import 'package:get/get.dart';
 import 'package:paschaloliver/feature/user/home/view/search/payment_screen.dart';
 import 'package:paschaloliver/feature/user/home/view/search/rating_screen.dart';
 import 'package:paschaloliver/feature/user/home/view/search/view_availability_screen.dart';
+import 'package:paschaloliver/core/constants/api_endpoints.dart';
+import 'package:paschaloliver/core/network/api_service/api_client.dart';
+import 'package:paschaloliver/feature/user/favourite/controller/professional_detail_controller.dart';
+import 'package:paschaloliver/feature/user/favourite/services/professional_detail_interface.dart';
+import 'package:paschaloliver/feature/user/favourite/services/professional_detail_interface_impl.dart';
 
 import '../../../../../core/constants/assets.dart';
 import '../../../../inbox/view/inbox_screen.dart';
@@ -41,8 +46,114 @@ class NicolasProfileController extends GetxController {
   final selectedTopCategory = "Hanging".obs;
 }
 
-class NicolasProfileScreen extends StatelessWidget {
-  const NicolasProfileScreen({super.key});
+class NicolasProfileScreen extends StatefulWidget {
+  const NicolasProfileScreen({super.key, this.professionalId});
+
+  final String? professionalId;
+
+  @override
+  State<NicolasProfileScreen> createState() => _NicolasProfileScreenState();
+}
+
+class _NicolasProfileScreenState extends State<NicolasProfileScreen> {
+  late final ProfessionalDetailController _controller;
+  String? _id;
+  bool _didPopOnError = false;
+
+  String _timeAgo(dynamic value) {
+    if (value == null) return "Just now";
+    DateTime? dt;
+    if (value is DateTime) {
+      dt = value;
+    } else if (value is String) {
+      dt = DateTime.tryParse(value);
+    }
+    if (dt == null) return value.toString();
+
+    final diff = DateTime.now().difference(dt);
+    if (diff.inDays >= 1) {
+      final d = diff.inDays;
+      return "$d day${d == 1 ? '' : 's'} ago";
+    }
+    if (diff.inHours >= 1) {
+      final h = diff.inHours;
+      return "$h hour${h == 1 ? '' : 's'} ago";
+    }
+    if (diff.inMinutes >= 1) {
+      final m = diff.inMinutes;
+      return "$m min ago";
+    }
+    return "Just now";
+  }
+
+  List<_CommentData> _mapComments(List<dynamic> raw) {
+    final List<_CommentData> out = [];
+    for (final item in raw) {
+      if (item is! Map) continue;
+      final user = item['user'];
+      String name = "Unknown";
+      if (user is Map && user['name'] != null) {
+        name = user['name'].toString();
+      }
+      final rawRating = item['rating'] ?? item['stars'] ?? item['score'];
+      int rating = 0;
+      if (rawRating is num) {
+        rating = rawRating.round();
+      } else if (rawRating != null) {
+        rating = int.tryParse(rawRating.toString()) ?? 0;
+      }
+      if (rating < 0) rating = 0;
+      if (rating > 5) rating = 5;
+
+      final comment = (item['comment'] ??
+              item['message'] ??
+              item['review'] ??
+              '')
+          .toString();
+      final verified =
+          item['isVerified'] == true || item['verified'] == true;
+      final timeAgo = _timeAgo(
+        item['createdAt'] ?? item['date'] ?? item['time'],
+      );
+
+      out.add(
+        _CommentData(
+          name: name,
+          timeAgo: timeAgo,
+          rating: rating,
+          comment: comment,
+          isVerified: verified,
+        ),
+      );
+    }
+    return out;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (!Get.isRegistered<ApiClient>()) {
+      Get.put<ApiClient>(ApiClient(ApiEndpoints.baseUrl), permanent: true);
+    }
+    if (!Get.isRegistered<ProfessionalDetailInterface>()) {
+      Get.put<ProfessionalDetailInterface>(
+        ProfessionalDetailInterfaceImpl(apiClient: Get.find<ApiClient>()),
+      );
+    }
+    if (!Get.isRegistered<ProfessionalDetailController>()) {
+      Get.put<ProfessionalDetailController>(
+        ProfessionalDetailController(
+          service: Get.find<ProfessionalDetailInterface>(),
+        ),
+      );
+    }
+    _controller = Get.find<ProfessionalDetailController>();
+    _id = widget.professionalId ??
+        (Get.arguments is String ? Get.arguments as String : null);
+    if (_id != null && _id!.isNotEmpty) {
+      _controller.fetch(_id!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +162,42 @@ class NicolasProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
+        child: Obx(() {
+          if (_id == null || _id!.isEmpty) {
+            return const Center(child: Text("Professional id missing"));
+          }
+          if (_controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (_controller.error.isNotEmpty) {
+            if (!_didPopOnError) {
+              _didPopOnError = true;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                final msg = _controller.error.value;
+                if (Get.isSnackbarOpen) {
+                  Get.closeAllSnackbars();
+                }
+                Get.snackbar("Error", msg.isEmpty ? "Failed to load profile" : msg);
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+              });
+            }
+            return const Center(child: Text("Failed to load profile"));
+          }
+
+          final detail = _controller.detail.value;
+          final name = detail?.user.name ?? "Unknown";
+          final about = detail?.user.about ?? "";
+          final gallery = detail?.gallery ?? const <String>[];
+          final comments = detail?.comments ?? const [];
+          final mappedComments = _mapComments(comments);
+          final reviewsCount = mappedComments.length;
+          final titleText = "$name's profile";
+
+          return ListView(
+            padding: EdgeInsets.zero,
+            children: [
             const SizedBox(height: 4),
 
             // Top bar
@@ -74,12 +218,12 @@ class NicolasProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      "Nicolas bond's profile",
+                      titleText,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w900,
                         color: _C.text,
@@ -99,7 +243,17 @@ class NicolasProfileScreen extends StatelessWidget {
                   aspectRatio: 16 / 10,
                   child: Container(
                     color: _C.soft,
-                    child: const Icon(Icons.person, size: 64, color: _C.muted),
+                    child: (gallery.isNotEmpty)
+                        ? Image.network(
+                            gallery.first,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const Icon(
+                              Icons.person,
+                              size: 64,
+                              color: _C.muted,
+                            ),
+                          )
+                        : const Icon(Icons.person, size: 64, color: _C.muted),
                   ),
                 ),
               ),
@@ -113,13 +267,13 @@ class NicolasProfileScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Nicolas bond on HandyNaija",
-                          style: TextStyle(
+                          name,
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
                             color: _C.green,
@@ -128,7 +282,7 @@ class NicolasProfileScreen extends StatelessWidget {
                         SizedBox(height: 6),
                         _StarsRow(
                           score: 4.8,
-                          countText: "4.8  |  4,323 Reviews",
+                          countText: "4.8  |  $reviewsCount Reviews",
                         ),
                         SizedBox(height: 8),
                         _InfoLine(
@@ -212,13 +366,11 @@ class NicolasProfileScreen extends StatelessWidget {
             // About me
             const _SectionTitle(title: "About me"),
             const SizedBox(height: 8),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\n"
-                "Duis aute irure dolor in reprehenderit in voluptate velit esse… ",
-                style: TextStyle(
+                about.isEmpty ? "No bio provided" : about,
+                style: const TextStyle(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                   color: _C.muted,
@@ -282,17 +434,32 @@ class NicolasProfileScreen extends StatelessWidget {
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 scrollDirection: Axis.horizontal,
-                itemCount: 4,
+                itemCount: gallery.isEmpty ? 4 : gallery.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemBuilder: (_, __) => ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    width: 98,
-                    height: 74,
-                    color: _C.soft,
-                    child: const Icon(Icons.image_outlined, color: _C.muted),
-                  ),
-                ),
+                itemBuilder: (_, i) {
+                  final url = gallery.isEmpty ? null : gallery[i];
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      width: 98,
+                      height: 74,
+                      color: _C.soft,
+                      child: (url != null)
+                          ? Image.network(
+                              url,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.image_outlined,
+                                color: _C.muted,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.image_outlined,
+                              color: _C.muted,
+                            ),
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -541,20 +708,24 @@ class NicolasProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            const _CommentCard(
-              name: "Esther",
-              daysAgo: "3 day ago",
-              text: "Service is very good",
-            ),
-            const _CommentCard(
-              name: "Esther",
-              daysAgo: "3 day ago",
-              text: "Service is very good",
-            ),
-            const _CommentCard(
-              name: "Esther",
-              daysAgo: "3 day ago",
-              text: "Service is very good",
+            if (mappedComments.isEmpty)
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 10),
+                child: Text(
+                  "No comments yet",
+                  style: TextStyle(
+                    fontSize: 11.2,
+                    fontWeight: FontWeight.w700,
+                    color: _C.muted,
+                  ),
+                ),
+              ),
+            ...mappedComments.map(
+              (c) => _CommentCard(
+                name: c.name,
+                daysAgo: c.timeAgo,
+                text: c.comment.isEmpty ? "-" : c.comment,
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -823,7 +994,8 @@ class NicolasProfileScreen extends StatelessWidget {
             const SizedBox(height: 90),
             // space for bottom bar
           ],
-        ),
+        );
+        }),
       ),
 
       // Bottom sticky bar (price + button)
@@ -1607,6 +1779,22 @@ class _RatingRow extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CommentData {
+  final String name;
+  final String timeAgo;
+  final int rating;
+  final String comment;
+  final bool isVerified;
+
+  const _CommentData({
+    required this.name,
+    required this.timeAgo,
+    required this.rating,
+    required this.comment,
+    required this.isVerified,
+  });
 }
 
 class _CommentCard extends StatelessWidget {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:paschaloliver/feature/listing/view/add_screen.dart';
+import 'package:paschaloliver/feature/listing/view/list_home_category_screen.dart';
+import 'package:paschaloliver/feature/user/home/controllers/category_controller.dart';
+import 'package:paschaloliver/feature/user/home/models/category_model.dart';
 
 import '../../../core/constants/assets.dart';
 
@@ -25,6 +27,7 @@ class CreateListingScreen extends StatefulWidget {
 class _CreateListingScreenState extends State<CreateListingScreen> {
   final _searchCtrl = TextEditingController();
   final double _progress = 0.06;
+  String _query = '';
 
   @override
   void dispose() {
@@ -32,14 +35,28 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
     super.dispose();
   }
 
-  void _openCategory(String category) {
-    // ✅ You can pass category if you want
-    // Get.to(() => const ListingHomeCategoryScreen());
-    Get.to(() => const AddHanScreen());
+  void _openCategory(CategoryModel category) {
+    Get.to(
+      () => ListingHomeCategoryScreen(
+        categoryId: category.id,
+        categoryTitle: category.title,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<CategoryController>();
+    final positions = <Offset>[
+      const Offset(59.4, 59.4),
+      const Offset(282.3, 59.4),
+      const Offset(59.4, 216.6),
+      const Offset(170.9, 216.6),
+      const Offset(282.3, 216.6),
+      const Offset(59.4, 373.8),
+      const Offset(282.3, 373.8),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -98,7 +115,9 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
               _SearchField(
                 controller: _searchCtrl,
                 hint: "Handyman, cleaning, ironing...",
-                onChanged: (_) {},
+                onChanged: (value) {
+                  setState(() => _query = value.trim().toLowerCase());
+                },
               ),
 
               const SizedBox(height: 18),
@@ -106,15 +125,58 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
               // ✅ Cluster area (MUST be 342x432)
               Expanded(
                 child: Center(
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    alignment: Alignment.topCenter,
-                    child: SizedBox(
-                      width: 342,
-                      height: 432,
-                      child: _CategoryCluster(onTap: _openCategory),
-                    ),
-                  ),
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: CreateListingScreen.green,
+                        ),
+                      );
+                    }
+
+                    if (controller.error.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          controller.error.value,
+                          style: const TextStyle(color: Colors.black54),
+                        ),
+                      );
+                    }
+
+                    final filtered = _query.isEmpty
+                        ? controller.categories.toList()
+                        : controller.categories
+                            .where(
+                              (c) => c.title.toLowerCase().contains(_query),
+                            )
+                            .toList();
+
+                    if (filtered.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'No categories found',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      );
+                    }
+
+                    final items =
+                        filtered.take(positions.length).toList(growable: false);
+
+                    return FittedBox(
+                      fit: BoxFit.contain,
+                      alignment: Alignment.topCenter,
+                      child: SizedBox(
+                        width: 342,
+                        height: 432,
+                        child: _CategoryCluster(
+                          items: items,
+                          positions: positions,
+                          onTap: _openCategory,
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
 
@@ -230,8 +292,15 @@ class _SearchField extends StatelessWidget {
 /* ------------------------ Cluster (PNG + exact overlay) ------------------------ */
 
 class _CategoryCluster extends StatelessWidget {
-  const _CategoryCluster({required this.onTap});
-  final void Function(String category) onTap;
+  const _CategoryCluster({
+    required this.items,
+    required this.positions,
+    required this.onTap,
+  });
+
+  final List<CategoryModel> items;
+  final List<Offset> positions;
+  final void Function(CategoryModel category) onTap;
 
   static const double _w = 342;
   static const double _h = 432;
@@ -264,70 +333,16 @@ class _CategoryCluster extends StatelessWidget {
               fit: BoxFit.fill,
             ),
           ),
-
-          _pos(
-            59.4,
-            59.4,
-            _BubbleContent(
-              iconPath: Images.homeIcon,
-              label: "Home",
-              onTap: () => onTap("Home"),
+          for (int i = 0; i < items.length; i++)
+            _pos(
+              positions[i].dx,
+              positions[i].dy,
+              _BubbleNetworkContent(
+                imageUrl: items[i].image,
+                label: items[i].title,
+                onTap: () => onTap(items[i]),
+              ),
             ),
-          ),
-          _pos(
-            282.3,
-            59.4,
-            _BubbleContent(
-              iconPath: Images.techItIcon,
-              label: "Tech & IT\nSupport",
-              onTap: () => onTap("Tech & IT Support"),
-            ),
-          ),
-          _pos(
-            59.4,
-            216.6,
-            _BubbleContent(
-              iconPath: Images.beautyIcon,
-              label: "Beauty",
-              onTap: () => onTap("Beauty"),
-            ),
-          ),
-          _pos(
-            170.9,
-            216.6,
-            _BubbleContent(
-              iconPath: Images.maintanceIcon,
-              label: "Repair &\nMaintenance",
-              onTap: () => onTap("Repair & Maintenance"),
-            ),
-          ),
-          _pos(
-            282.3,
-            216.6,
-            _BubbleContent(
-              iconPath: Images.automactionIcon,
-              label: "Automobile",
-              onTap: () => onTap("Automobile"),
-            ),
-          ),
-          _pos(
-            59.4,
-            373.8,
-            _BubbleContent(
-              iconPath: Images.mediaIcon,
-              label: "Media &\nEvents",
-              onTap: () => onTap("Media & Events"),
-            ),
-          ),
-          _pos(
-            282.3,
-            373.8,
-            _BubbleContent(
-              iconPath: Images.othersIcon,
-              label: "Others",
-              onTap: () => onTap("Others"),
-            ),
-          ),
         ],
       ),
     );
@@ -335,14 +350,14 @@ class _CategoryCluster extends StatelessWidget {
 }
 
 /// ✅ ONLY content overlay (NO new white circle!)
-class _BubbleContent extends StatelessWidget {
-  const _BubbleContent({
-    required this.iconPath,
+class _BubbleNetworkContent extends StatelessWidget {
+  const _BubbleNetworkContent({
+    required this.imageUrl,
     required this.label,
     required this.onTap,
   });
 
-  final String iconPath;
+  final String imageUrl;
   final String label;
   final VoidCallback onTap;
 
@@ -359,11 +374,13 @@ class _BubbleContent extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(
-                  iconPath,
+                Image.network(
+                  imageUrl,
                   width: 34,
                   height: 34,
                   fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.image_not_supported, size: 28),
                 ),
                 const SizedBox(height: 6),
                 Text(

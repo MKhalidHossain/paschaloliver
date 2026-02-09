@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart';
 
 /// ✅ Pro Chat Details Screen (same UI)
 /// ✅ Now Camera / Photos / Files are WORKING:
@@ -27,11 +28,13 @@ class ChatDetailsScreen extends StatefulWidget {
     required this.name,
     required this.jobTitle,
     this.avatarUrl,
+    this.professionalId,
   });
 
   final String name;
   final String jobTitle;
   final String? avatarUrl;
+  final String? professionalId;
 
   @override
   State<ChatDetailsScreen> createState() => _ChatDetailsScreenState();
@@ -195,6 +198,20 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
+  void _openProfessionalProfile() {
+    final id = widget.professionalId;
+    if (id == null || id.isEmpty) {
+      _toast("Professional id missing");
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PersonalDetailsScreen(professionalId: id),
+      ),
+    );
+  }
+
   // =============================================================================
 
   @override
@@ -281,7 +298,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               title: "Service completed:",
               timeLine: "Thursday 09/10 - 12:25 - 15:15",
               onService: () {},
-              onShare: () {},
+              onShare: _openProfessionalProfile,
             ),
 
             const Divider(height: 1, thickness: 1, color: _C.divider),
@@ -466,8 +483,8 @@ class _ServiceMetaBar extends StatelessWidget {
                   height: 36,
                   child: _ActionChip(
                     icon: Icons.ios_share_rounded,
-                    label: "Share profile",
-                    onTap: () {},
+                    label: "View profile",
+                    onTap: onShare,
                   ),
                 ),
               ],

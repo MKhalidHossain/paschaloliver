@@ -5,6 +5,9 @@ import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
 import 'package:paschaloliver/feature/auth/services/auth_interface.dart';
 import 'package:paschaloliver/feature/auth/services/auth_interface_impl.dart';
 import 'package:paschaloliver/core/language/language_controller.dart';
+import 'package:paschaloliver/feature/listing/controller/listing_create_controller.dart';
+import 'package:paschaloliver/feature/listing/services/listing_interface.dart';
+import 'package:paschaloliver/feature/listing/services/listing_interface_impl.dart';
 import 'package:paschaloliver/feature/professional/controller/professional_registration_controller.dart';
 import 'package:paschaloliver/feature/professional/services/professional_interface.dart';
 import 'package:paschaloliver/feature/professional/services/professional_interface_impl.dart';
@@ -17,6 +20,15 @@ import 'package:paschaloliver/feature/user/home/services/category_interface.dart
 import 'package:paschaloliver/feature/user/home/services/category_interface_impl.dart';
 import 'package:paschaloliver/feature/user/home/services/subcategory_interface.dart';
 import 'package:paschaloliver/feature/user/home/services/subcategory_interface_impl.dart';
+import 'package:paschaloliver/feature/user/favourite/controller/favorite_controller.dart';
+import 'package:paschaloliver/feature/user/favourite/services/favorite_interface.dart';
+import 'package:paschaloliver/feature/user/favourite/services/favorite_interface_impl.dart';
+import 'package:paschaloliver/feature/user/favourite/controller/professional_detail_controller.dart';
+import 'package:paschaloliver/feature/user/favourite/services/professional_detail_interface.dart';
+import 'package:paschaloliver/feature/user/favourite/services/professional_detail_interface_impl.dart';
+import 'package:paschaloliver/feature/profile/controller/user_profile_controller.dart';
+import 'package:paschaloliver/feature/profile/services/user_profile_interface.dart';
+import 'package:paschaloliver/feature/profile/services/user_profile_interface_impl.dart';
 
 class AppBinding extends Bindings {
   @override
@@ -80,6 +92,48 @@ class AppBinding extends Bindings {
       () => RequestHistoryController(
         service: Get.find<RequestHistoryInterface>(),
       ),
+      fenix: true,
+    );
+
+    // ✅ Favorites
+    Get.lazyPut<FavoriteInterface>(
+      () => FavoriteInterfaceImpl(apiClient: Get.find<ApiClient>()),
+      fenix: true,
+    );
+    Get.lazyPut<FavoriteController>(
+      () => FavoriteController(service: Get.find<FavoriteInterface>()),
+      fenix: true,
+    );
+
+    // ✅ Professional detail (favorites)
+    Get.lazyPut<ProfessionalDetailInterface>(
+      () => ProfessionalDetailInterfaceImpl(apiClient: Get.find<ApiClient>()),
+      fenix: true,
+    );
+    Get.lazyPut<ProfessionalDetailController>(
+      () => ProfessionalDetailController(
+        service: Get.find<ProfessionalDetailInterface>(),
+      ),
+      fenix: true,
+    );
+
+    // ✅ Listing create API
+    Get.lazyPut<ListingInterface>(
+      () => ListingInterfaceImpl(apiClient: Get.find<ApiClient>()),
+      fenix: true,
+    );
+    Get.lazyPut<ListingCreateController>(
+      () => ListingCreateController(service: Get.find<ListingInterface>()),
+      fenix: true,
+    );
+
+    // ✅ User profile (me)
+    Get.lazyPut<UserProfileInterface>(
+      () => UserProfileInterfaceImpl(apiClient: Get.find<ApiClient>()),
+      fenix: true,
+    );
+    Get.lazyPut<UserProfileController>(
+      () => UserProfileController(service: Get.find<UserProfileInterface>()),
       fenix: true,
     );
   }

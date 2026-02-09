@@ -29,6 +29,7 @@ class InboxScreen extends StatelessWidget {
                   name: chat.name,
                   jobTitle: chat.jobTitle,
                   avatarUrl: chat.avatarUrl,
+                  professionalId: chat.professionalId,
                 ),
               ),
             );
@@ -617,6 +618,7 @@ class _ChatItem {
   final String lastMessage;
   final String timeLabel;
   final String? avatarUrl;
+  final String? professionalId;
 
   const _ChatItem({
     required this.name,
@@ -624,6 +626,7 @@ class _ChatItem {
     required this.lastMessage,
     required this.timeLabel,
     this.avatarUrl, // ✅ optional
+    this.professionalId,
   });
 }
 
@@ -635,24 +638,28 @@ const _demoChats = <_ChatItem>[
     jobTitle: "Cleaning",
     lastMessage: "Cleaning de ester misomo precio se podtuk...",
     timeLabel: "Thursday",
+    professionalId: "698466fc25898f4b503aa647",
   ),
   _ChatItem(
     name: "YERXON",
     jobTitle: "Handyman",
     lastMessage: "Cleaning de ester misomo precio se podtuk...",
     timeLabel: "15/6/25",
+    professionalId: "698466fc25898f4b503aa647",
   ),
   _ChatItem(
     name: "YERXON",
     jobTitle: "Cleaning",
     lastMessage: "Cleaning de ester misomo precio se podtuk...",
     timeLabel: "14/5/25",
+    professionalId: "698466fc25898f4b503aa647",
   ),
   _ChatItem(
     name: "YERXON",
     jobTitle: "Cleaning",
     lastMessage: "Cleaning de ester misomo precio se podtuk...",
     timeLabel: "25/4/24",
+    professionalId: "698466fc25898f4b503aa647",
   ),
 ];
 

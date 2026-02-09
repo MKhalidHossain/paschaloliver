@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:paschaloliver/feature/listing/controller/listing_create_controller.dart';
 import 'AboutMeDescriptionScreen.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -26,8 +28,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   // ✅ real picked images
   final List<File> _images = [];
+  late final ListingCreateController _listingController;
 
   Future<void> _onAddMore() async {
+    if (_images.length >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You can upload up to 5 images')),
+      );
+      return;
+    }
     final XFile? x = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 85,
@@ -41,6 +50,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   void _onContinue() {
+    if (_images.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add at least one image')),
+      );
+      return;
+    }
+
+    _listingController.setGallery(List<File>.from(_images));
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AboutMeScreen()),
@@ -154,7 +171,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       // ✅ RED PORTION behavior:
                       // - if no images => only Add more
                       // - if images exist => show images + Add more at end
-                      _GalleryTilesRow(images: _images, onAddMore: _onAddMore),
+                      _GalleryTilesRow(
+                        images: _images,
+                        onAddMore: _onAddMore,
+                        onRemove: (i) {
+                          setState(() {
+                            _images.removeAt(i);
+                          });
+                        },
+                      ),
 
                       const SizedBox(height: 18),
 
@@ -212,15 +237,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _listingController = Get.find<ListingCreateController>();
+  }
 }
 
 /* --------------------------- Widgets --------------------------- */
 
 class _GalleryTilesRow extends StatelessWidget {
-  const _GalleryTilesRow({required this.images, required this.onAddMore});
+  const _GalleryTilesRow({
+    required this.images,
+    required this.onAddMore,
+    required this.onRemove,
+  });
 
   final List<File> images;
   final VoidCallback onAddMore;
+  final ValueChanged<int> onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +271,10 @@ class _GalleryTilesRow extends StatelessWidget {
       child: Row(
         children: [
           for (int i = 0; i < images.length; i++) ...[
-            _PhotoTile(file: images[i]),
+            _PhotoTile(
+              file: images[i],
+              onRemove: () => onRemove(i),
+            ),
             const SizedBox(width: 14),
           ],
           _AddMoreTile(onTap: onAddMore), // ✅ always last
@@ -289,20 +328,57 @@ class _TopProgressBar extends StatelessWidget {
 }
 
 class _PhotoTile extends StatelessWidget {
-  const _PhotoTile({required this.file});
+  const _PhotoTile({required this.file, required this.onRemove});
   final File file;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 92,
       height: 92,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF2F2F2),
-        borderRadius: BorderRadius.circular(14),
+      child: Stack(
+        children: [
+          Container(
+            width: 92,
+            height: 92,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF2F2F2),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Image.file(file, fit: BoxFit.cover),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: InkWell(
+              onTap: onRemove,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.12),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.close,
+                  size: 14,
+                  color: Color(0xFF3A3A3A),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      clipBehavior: Clip.antiAlias,
-      child: Image.file(file, fit: BoxFit.cover),
     );
   }
 }

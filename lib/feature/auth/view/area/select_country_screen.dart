@@ -169,6 +169,13 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
             Expanded(
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
+                  : _filtered.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No request exists',
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        )
                   : ListView.separated(
                       itemCount: _filtered.length,
                       separatorBuilder: (_, __) =>

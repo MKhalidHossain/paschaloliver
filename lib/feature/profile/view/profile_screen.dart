@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,12 +7,12 @@ import 'package:paschaloliver/core/network/api_service/token_meneger.dart';
 import 'package:paschaloliver/feature/profile/view/my_balance_screen.dart';
 import 'package:paschaloliver/feature/profile/view/payment_and_refund_screen.dart';
 import 'package:paschaloliver/feature/profile/view/per_details_screen.dart';
-import 'package:paschaloliver/feature/profile/view/personal_details_screen.dart';
 import 'package:paschaloliver/feature/profile/view/privacy_policy_screen.dart';
 import 'package:paschaloliver/feature/profile/view/terms_and_condition_screen.dart';
 import 'package:paschaloliver/feature/user/app_ground_user.dart';
 import 'package:paschaloliver/feature/auth/controller/auth_controller.dart';
 import 'package:paschaloliver/app_ground.dart';
+import 'package:paschaloliver/feature/profile/controller/user_profile_controller.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../auth/view/sign_in_view.dart';
@@ -26,6 +28,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    final profile = Get.find<UserProfileController>();
 
     // your bottom bar height (you used 62 in AppGround)
     const bottomBarHeight = 62.0;
@@ -45,34 +48,58 @@ class ProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Color(0xFFD9D9D9),
-                    child: Icon(
-                      Icons.person,
-                      color: Color(0xFF666666),
-                      size: 28,
-                    ),
-                  ),
+                  Obx(() {
+                    final path = profile.avatarPath.value;
+                    final imageUrl = profile.imageUrl.value;
+                    if (path.isNotEmpty) {
+                      return CircleAvatar(
+                        radius: 28,
+                        backgroundColor: const Color(0xFFD9D9D9),
+                        backgroundImage: FileImage(File(path)),
+                      );
+                    }
+                    if (imageUrl.isNotEmpty) {
+                      return CircleAvatar(
+                        radius: 28,
+                        backgroundColor: const Color(0xFFD9D9D9),
+                        backgroundImage: NetworkImage(imageUrl),
+                        onBackgroundImageError: (_, __) {},
+                      );
+                    }
+                    return const CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Color(0xFFD9D9D9),
+                      child: Icon(
+                        Icons.person,
+                        color: Color(0xFF666666),
+                        size: 28,
+                      ),
+                    );
+                  }),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Paschaloliver",
-                          style: GoogleFonts.urbanist(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400, // Regular
-                            height: 1.1, // 110%
-                            letterSpacing: 0,
-                            color: const Color(0xFF181919),
-                          ),
-                        ),
+                        Obx(() {
+                          final name = profile.displayName.value.trim().isEmpty
+                              ? "Unknown"
+                              : profile.displayName.value.trim();
+                          return Text(
+                            name,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400, // Regular
+                              height: 1.1, // 110%
+                              letterSpacing: 0,
+                              color: const Color(0xFF181919),
+                            ),
+                          );
+                        }),
                         const SizedBox(height: 3),
                         InkWell(
                           onTap: () {
-                            Get.to(() => const PersonalDetailsScreen());
+                            Get.to(() => const PerDetailsScreen());
                           },
                           borderRadius: BorderRadius.circular(6),
                           child: Padding(
@@ -215,24 +242,24 @@ class ProfileScreen extends StatelessWidget {
             // =========================
             // Codes and Promotions
             // =========================
-            const _SectionTitle("Codes and Promotions"),
-            const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
-            _ShadowWrap(
-              child: _TileRow(
-                leading: _LeadingIcon(
-                  child: Image.asset(
-                    Images.couponIcon,
-                    width: 20,
-                    height: 20,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                title: "My Coupon codes",
-                onTap: () {
-                  Get.to(() => const MyCodesScreen());
-                },
-              ),
-            ),
+            // const _SectionTitle("Codes and Promotions"),
+            // const Divider(height: 1.5, thickness: 1.5, color: _C.divider),
+            // _ShadowWrap(
+            //   child: _TileRow(
+            //     leading: _LeadingIcon(
+            //       child: Image.asset(
+            //         Images.couponIcon,
+            //         width: 20,
+            //         height: 20,
+            //         fit: BoxFit.contain,
+            //       ),
+            //     ),
+            //     title: "My Coupon codes",
+            //     onTap: () {
+            //       Get.to(() => const MyCodesScreen());
+            //     },
+            //   ),
+            // ),
 
             // =========================
             // OFFER SERVICES
@@ -252,14 +279,29 @@ class ProfileScreen extends StatelessWidget {
                 onTap: () async {
                   final authC = Get.find<AuthController>();
 
-                  final newRole = await authC.switchRole(
-                    role: "client", // only if backend needs it
-                  );
+                  try {
+                    final newRole = await authC.switchRole(
+                      role: "client", // only if backend needs it
+                    );
 
-                  if (newRole == "client" || newRole == "user") {
-                    Get.offAll(() => const UserAppGround());
-                  } else {
-                    Get.offAll(() => const AppGround());
+                    if (newRole == "client" || newRole == "user") {
+                      Get.offAll(() => const UserAppGround());
+                      return;
+                    }
+
+                    Get.snackbar(
+                      "Switch role",
+                      newRole.isEmpty
+                          ? "Role switch failed. Please try again."
+                          : "Server returned role: $newRole",
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  } catch (e) {
+                    Get.snackbar(
+                      "Switch role",
+                      e.toString().replaceFirst("Exception: ", ""),
+                      snackPosition: SnackPosition.TOP,
+                    );
                   }
                 },
               ),

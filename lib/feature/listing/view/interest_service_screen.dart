@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:paschaloliver/feature/listing/controller/listing_create_controller.dart';
 import 'package:paschaloliver/feature/listing/view/portfolio_screen.dart';
 
 class InformationOfInterestScreen extends StatefulWidget {
@@ -79,9 +81,43 @@ class _InformationOfInterestScreenState
   ];
   int? _situationIndex;
 
+  late final ListingCreateController _listingController;
+
   // ---------------------------------------------
 
   void _onContinue() {
+    if (_experienceIndex == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Select your experience level')),
+      );
+      return;
+    }
+    if (_workProYes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Select your industry experience')),
+      );
+      return;
+    }
+    if (_employmentIndex == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Select your employment status')),
+      );
+      return;
+    }
+    if (_situationIndex == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Select your current situation')),
+      );
+      return;
+    }
+
+    _listingController.setProfileDetails(
+      experience: _experience[_experienceIndex!],
+      hasIndustryExp: _workProYes!,
+      employment: _employmentStatus[_employmentIndex!],
+      situation: _situation[_situationIndex!],
+    );
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const GalleryScreen()),
@@ -427,6 +463,12 @@ class _InformationOfInterestScreenState
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _listingController = Get.find<ListingCreateController>();
   }
 }
 
