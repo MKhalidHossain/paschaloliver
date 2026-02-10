@@ -167,7 +167,7 @@ class _PointTiersScreenState extends State<PointTiersScreen> {
       TierLevel.gold: TierData(
         level: TierLevel.gold,
         label: "Gold",
-        subtitle: "Top-tier professional - Maximum visibility",
+        subtitle: "Top-tier Professional - Maximum benefits",
         color: const Color(0xFFD9A12B),
         commissionPercent: 10,
         totalServicesRequired: 1000,
@@ -796,9 +796,13 @@ class _GoldTierCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0A024),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFF28C12), Color(0xFFF4B021)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFD4861B)),
+        border: Border.all(color: const Color(0xFFE08E1A)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(.08),
@@ -846,7 +850,7 @@ class _GoldTierCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "Top-tier Professional - Maximum visibility",
+                      tier.subtitle,
                       style: GoogleFonts.urbanist(
                         fontSize: 14,
                         color: const Color(0xFFFFE3B8),
@@ -861,9 +865,9 @@ class _GoldTierCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF6C25A),
+              color: const Color(0xFFF7C362),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE6B35C)),
+              border: Border.all(color: const Color(0xFFE2A94E)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -910,29 +914,39 @@ class _GoldTierCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      "4.9",
-                      style: GoogleFonts.urbanist(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          "4.9",
+                          style: GoogleFonts.urbanist(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.star,
+                          size: 14,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Container(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFEFA53B),
+              color: const Color(0xFFF6C25A),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFD48A2B)),
+              border: Border.all(color: const Color(0xFFE2A94E)),
             ),
             child: Text(
-              "Congratulations! You're among the top 5% of professionals",
+              "🎉 Congratulations! You're among the\n top 5% of professionals",
               style: GoogleFonts.urbanist(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w600,
@@ -1032,17 +1046,16 @@ class _EliteStatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFE6F6),
+        color: const Color(0xFFF7DDF0),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF3A3D6), width: 1.2),
+        border: Border.all(color: const Color(0xFFE27AC3), width: 1.2),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.workspace_premium_rounded,
-            size: 20,
-            color: Color(0xFFD81B60),
+          const Text(
+            "👑",
+            style: TextStyle(fontSize: 20),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -1054,7 +1067,7 @@ class _EliteStatusCard extends StatelessWidget {
                   style: GoogleFonts.urbanist(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFFB0004D),
+                    color: const Color(0xFF8F1F5C),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1062,7 +1075,7 @@ class _EliteStatusCard extends StatelessWidget {
                   "You've achieved the highest tier! Enjoy exclusive benefits, VIP support, and maximum earnings.",
                   style: GoogleFonts.urbanist(
                     fontSize: 13,
-                    color: const Color(0xFF8A3D64),
+                    color: const Color(0xFF7E3A60),
                   ),
                 ),
               ],
@@ -1082,19 +1095,19 @@ class _MaintainGoldStatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF6E3),
+        color: const Color(0xFFFFF4DE),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE7C688), width: 1.2),
+        border: Border.all(color: const Color(0xFFF2B14E), width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.verified, size: 18, color: Color(0xFFB5771E)),
+              const Text("👑", style: TextStyle(fontSize: 18)),
               const SizedBox(width: 8),
               Text(
-                "Maintain Gold Status",
+                "Maintain Your Gold Status",
                 style: GoogleFonts.urbanist(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -1105,54 +1118,79 @@ class _MaintainGoldStatusCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            "Keep providing exceptional service to maintain your Gold tier status. Continue with 4.8+ ratings and quality service.",
+            "Keep providing exceptional service to maintain your Gold tier benefits. Continue with 4.8+ ratings and quality service.",
             style: GoogleFonts.urbanist(
               fontSize: 13,
               color: const Color(0xFF7A6A4B),
             ),
           ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Text(
-                "Current Rating",
-                style: GoogleFonts.urbanist(
-                  fontSize: 12.5,
-                  color: const Color(0xFF7A6A4B),
-                ),
-              ),
-              Spacer(),
-              Text(
-                "4.9",
-                style: GoogleFonts.urbanist(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF7A4B0A),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: Container(
-              height: 8,
-              color: const Color(0xFFF1E1C2),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FractionallySizedBox(
-                  widthFactor: 0.9,
-                  child: Container(color: const Color(0xFF2FA86A)),
-                ),
-              ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            "Exceeding Gold tier requirements",
-            style: GoogleFonts.urbanist(
-              fontSize: 12,
-              color: const Color(0xFF2E7D5B),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Current Ratting",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF1F1F1F),
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      "4.9",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1F1F1F),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.star, size: 14, color: Color(0xFFF2B14E)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: Container(
+                    height: 12,
+                    color: const Color(0xFFEDF1FB),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FractionallySizedBox(
+                        widthFactor: 0.9,
+                        child: Container(color: const Color(0xFF3FA96B)),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
+                      size: 14,
+                      color: Color(0xFF2FA86A),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Exceeding Gold tier requirements",
+                      style: GoogleFonts.urbanist(
+                        fontSize: 12,
+                        color: const Color(0xFF2E7D5B),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
@@ -1278,6 +1316,7 @@ class _CurrentBenefitsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isGold = title.toLowerCase().contains("gold");
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
       decoration: BoxDecoration(
@@ -1288,13 +1327,25 @@ class _CurrentBenefitsList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: GoogleFonts.urbanist(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1F1F1F),
-            ),
+          Row(
+            children: [
+              Icon(
+                isGold ? Icons.auto_awesome : Icons.check_circle,
+                size: 18,
+                color: const Color(0xFF3FA96B),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.urbanist(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF1F1F1F),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           ...benefits.map(
