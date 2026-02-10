@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.urbanistTextTheme(ThemeData.light().textTheme),
         // optional (helps some widgets that rely on fontFamily)
         fontFamily: GoogleFonts.urbanist().fontFamily,
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const SplashScreen(),
