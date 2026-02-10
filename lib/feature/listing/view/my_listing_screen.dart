@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'create_listing_screen.dart';
+import 'listing_summary_screen.dart';
 import 'point_tiers_screen.dart';
 
 class MyListingScreen extends StatefulWidget {
@@ -17,9 +18,6 @@ class _MyListingScreenState extends State<MyListingScreen> {
   static const Color _green = Color(0xFF2FA86A);
   static const Color _text = Color(0xFF1F1F1F);
   static const Color _muted = Color(0xFF8B8B8B);
-  static const Color _line = Color(0xFFEDEDED);
-  static const Color _cardBorder = Color(0xFFE9E9E9);
-  static const Color _yellow = Color(0xFFF3B400);
 
   // ---- Demo data (replace with API/state) ----
   // If this list is empty => empty state screen
@@ -29,12 +27,20 @@ class _MyListingScreenState extends State<MyListingScreen> {
       subtitle: "Listing visible",
       tier: "Bronze",
     ),
-    ListingItem.inProgress(
+    ListingItem.published(
       title: "Cleaning",
-      subtitle: "Listing not visible yet",
-      progress: 0.70,
+      subtitle: "Listing visible",
+      tier: "Bronze",
     ),
   ];
+  final ListingSummary summary = const ListingSummary(
+    tierLabel: "Bronze",
+    subtitle: "Listing is visible",
+    completedServices: 120,
+    totalServices: 200,
+    nextTierLabel: "Silver",
+    progressOverride: 0.70,
+  );
   // ------------------------------------------
 
   bool get isEmpty => listings.isEmpty;
@@ -56,22 +62,22 @@ class _MyListingScreenState extends State<MyListingScreen> {
             children: [
               // Top header (title + icons)
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
                 child: Row(
                   children: [
-                    const Text(
+                    Text(
                       "My Listing",
-                      style: TextStyle(
+                      style: GoogleFonts.urbanist(
                         color: _text,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const Spacer(),
                     IconButton(
                       splashRadius: 22,
                       onPressed: () {},
-                      icon: const Icon(Icons.search, color: _text),
+                      icon: const Icon(Icons.search, color: _text, size: 26),
                     ),
                     Stack(
                       children: [
@@ -81,14 +87,15 @@ class _MyListingScreenState extends State<MyListingScreen> {
                           icon: const Icon(
                             Icons.notifications_none_rounded,
                             color: _text,
+                            size: 26,
                           ),
                         ),
                         Positioned(
-                          right: 14,
-                          top: 10,
+                          right: 16,
+                          top: 12,
                           child: Container(
-                            width: 7,
-                            height: 7,
+                            width: 8,
+                            height: 8,
                             decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
@@ -106,18 +113,19 @@ class _MyListingScreenState extends State<MyListingScreen> {
                     ? _EmptyState(onCreate: _onCreateListing)
                     : _ListingState(
                         items: listings,
+                        summary: summary,
+                        onOpenSummary: _openTierSummary,
                         onAddNewListing: _onCreateListing,
                         onOpenPublished: (it) {
-                          final tier = _parseTier(it.tier);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => PointTiersScreen(
-                                serviceTitle: it.title,
-                                currentTier: tier,
-                                completedServices: 140,
-                                currentRating: 4.6,
-                                hasViolations: false,
+                              builder: (_) => ListingSummaryScreen(
+                                title: it.title,
+                                subtitle: it.subtitle,
+                                tierLabel: it.tier ?? "Bronze",
+                                completedServices: summary.completedServices,
+                                rating: _ratingForListing(it.title),
                               ),
                             ),
                           );
@@ -149,6 +157,23 @@ class _MyListingScreenState extends State<MyListingScreen> {
     ).showSnackBar(const SnackBar(content: Text("Create listing tapped")));
   }
 
+  void _openTierSummary() {
+    final title = listings.isNotEmpty ? listings.first.title : "My Listing";
+    final tier = _parseTier(summary.tierLabel);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PointTiersScreen(
+          serviceTitle: title,
+          currentTier: tier,
+          completedServices: summary.completedServices,
+          currentRating: 4.6,
+          hasViolations: false,
+        ),
+      ),
+    );
+  }
+
   TierLevel _parseTier(String? tier) {
     switch ((tier ?? "").toLowerCase()) {
       case "silver":
@@ -159,6 +184,13 @@ class _MyListingScreenState extends State<MyListingScreen> {
       default:
         return TierLevel.bronze;
     }
+  }
+
+  double _ratingForListing(String title) {
+    final lower = title.toLowerCase();
+    if (lower.contains("iron")) return 4.2;
+    if (lower.contains("clean")) return 4.5;
+    return 4.4;
   }
 }
 
@@ -182,19 +214,19 @@ class _EmptyState extends StatelessWidget {
         const _MegaphoneIllustration(),
 
         const SizedBox(height: 18),
-        const Text(
+        Text(
           "No listing",
-          style: TextStyle(
+          style: GoogleFonts.urbanist(
             color: _text,
             fontSize: 14,
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
+        Text(
           "Create your first listing so clients\ncan find you",
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: GoogleFonts.urbanist(
             color: _muted,
             fontSize: 12.5,
             height: 1.35,
@@ -219,9 +251,9 @@ class _EmptyState extends StatelessWidget {
                 ),
               ),
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text(
+              label: Text(
                 "Create listing",
-                style: TextStyle(
+                style: GoogleFonts.urbanist(
                   color: Colors.white,
                   fontSize: 14.5,
                   fontWeight: FontWeight.w700,
@@ -305,17 +337,245 @@ class _MegaphonePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
+/* ====================== TIER SUMMARY CARD ====================== */
+
+class _TierSummaryCard extends StatelessWidget {
+  const _TierSummaryCard({required this.summary, required this.onTap});
+
+  final ListingSummary summary;
+  final VoidCallback onTap;
+
+  static const Color _bronze = Color(0xFFB35C00);
+  static const Color _bronzeLight = Color(0xFFC68948);
+  static const Color _bronzeBorder = Color(0xFFE1B684);
+  static const Color _progressGreen = Color(0xFF3FA96B);
+  static const Color _progressYellow = Color(0xFFFFC21A);
+  static const Color _note = Color(0xFFFFD08A);
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = (summary.progress * 100).round();
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: _bronze,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.08),
+              blurRadius: 18,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(
+                    "assets/images/star.png",
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.emoji_events_rounded,
+                      color: _bronze,
+                      size: 26,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        summary.levelLabel,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        summary.subtitle,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withOpacity(.9),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Container(
+              decoration: BoxDecoration(
+                color: _bronzeLight,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: _bronzeBorder.withOpacity(.7)),
+              ),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Complete ${summary.totalServices} services",
+                    style: GoogleFonts.urbanist(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _ServiceCompletedPill(
+                    progress: summary.progress,
+                    percent: percent,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "${summary.completedServices}/${summary.totalServices} services completed",
+                    style: GoogleFonts.urbanist(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.track_changes, color: _note, size: 16),
+                const SizedBox(width: 6),
+                Text(
+                  "${summary.remainingServices} more services to reach ${summary.nextTierLabel}",
+                  style: GoogleFonts.urbanist(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: _note,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ServiceCompletedPill extends StatelessWidget {
+  const _ServiceCompletedPill({
+    required this.progress,
+    required this.percent,
+  });
+
+  final double progress;
+  final int percent;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        height: 22,
+        color: const Color(0xFFEDEDED),
+        child: Stack(
+          children: [
+            // Green progress fill (top strip)
+            Align(
+              alignment: Alignment.topLeft,
+              child: FractionallySizedBox(
+                widthFactor: progress.clamp(0.0, 1.0),
+                child: Container(
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF2FA86A),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(999),
+                      topRight: Radius.circular(999),
+                      bottomRight: Radius.circular(99),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Yellow bar with text (bottom section)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 14,
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8CF4D),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        "Service completed",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          height: 1.0,
+                          color: Color(0xFF1F1F1F),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "$percent%",
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        height: 1.0,
+                        color: Color(0xFF1F1F1F),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /* ====================== LISTING STATE (3rd/4th/5th) ====================== */
 
 class _ListingState extends StatelessWidget {
   const _ListingState({
     required this.items,
+    required this.summary,
+    required this.onOpenSummary,
     required this.onAddNewListing,
     required this.onOpenPublished,
     required this.onOpenIncomplete,
   });
 
   final List<ListingItem> items;
+  final ListingSummary summary;
+  final VoidCallback onOpenSummary;
   final VoidCallback onAddNewListing;
   final ValueChanged<ListingItem> onOpenPublished;
   final ValueChanged<ListingItem> onOpenIncomplete;
@@ -332,21 +592,23 @@ class _ListingState extends StatelessWidget {
         .toList();
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 18),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
       children: [
+        _TierSummaryCard(summary: summary, onTap: onOpenSummary),
+        const SizedBox(height: 18),
         if (published.isNotEmpty) ...[
-          const Text(
+          Text(
             "Published",
-            style: TextStyle(
+            style: GoogleFonts.urbanist(
               color: _muted,
-              fontSize: 12.5,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...published.map(
             (it) => Padding(
-              padding: const EdgeInsets.only(bottom: 14),
+              padding: const EdgeInsets.only(bottom: 16),
               child: _PublishedCard(
                 item: it,
                 onBronzeTap: () => onOpenPublished(it),
@@ -359,18 +621,16 @@ class _ListingState extends StatelessWidget {
           Text(
             "In progress",
             style: GoogleFonts.urbanist(
-              fontSize: 16, // ✅ 16px
-              fontWeight: FontWeight.w500, // ✅ Medium
-              height: 1.2, // ✅ 120%
-              letterSpacing: 0, // ✅ 0%
-              color: const Color(0xFF727272), // ✅ #727272
+              fontSize: 12.5,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF8B8B8B),
             ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...progress.map(
             (it) => Padding(
-              padding: const EdgeInsets.only(bottom: 14),
+              padding: const EdgeInsets.only(bottom: 16),
               child: _InProgressCard(
                 item: it,
                 onTapIncomplete: () => onOpenIncomplete(it),
@@ -394,107 +654,57 @@ class _PublishedCard extends StatelessWidget {
   final ListingItem item;
   final VoidCallback onBronzeTap;
 
-  static const Color _cardBorder = Color(0xFFE9E9E9);
-  static const Color _text = Color(0xFF1F1F1F);
+  static const Color _cardBorder = Color(0xFFF1F1F1);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _cardBorder, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.04),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
-            child: Row(
-              children: [
-                _ServiceIcon(kind: item.title),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.title,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 18, // ✅ 18px
-                          fontWeight: FontWeight.w500, // ✅ Medium (500)
-                          height: 1.2, // ✅ 120%
-                          letterSpacing: 0, // ✅ 0%
-                          color: const Color(0xFF181919), // ✅ #181919
-                        ),
-                      ),
-
-                      const SizedBox(height: 2),
-                      Text(
-                        item.subtitle,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 14, // ✅ 14px
-                          fontWeight: FontWeight.w400, // ✅ Regular
-                          height: 1.2, // ✅ 120%
-                          letterSpacing: 0, // ✅ 0%
-                          color: const Color(0xFF181919), // ✅ #181919
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return InkWell(
+      onTap: onBronzeTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: _cardBorder, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.06),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
-          ),
-
-          // green bar "Bronze" with chevron (like screenshot)
-          InkWell(
-            onTap: onBronzeTap,
-            child: Container(
-              height: 44,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(12),
-                ),
-                gradient: LinearGradient(
-                  colors: [const Color(0xFF2FA86A), const Color(0xFF67DCA0)],
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
+          ],
+        ),
+        child: Row(
+          children: [
+            _ServiceIcon(kind: item.title),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.emoji_events_rounded,
-                    color: Colors.brown,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      item.tier ?? "Bronze",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  Text(
+                    item.title,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF181919),
                     ),
                   ),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    color: Colors.white,
-                    size: 22,
+                  const SizedBox(height: 2),
+                  Text(
+                    item.subtitle,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF6F6F6F),
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -509,7 +719,6 @@ class _InProgressCard extends StatelessWidget {
   final VoidCallback onTapIncomplete;
 
   static const Color _cardBorder = Color(0xFFE9E9E9);
-  static const Color _text = Color(0xFF1F1F1F);
   static const Color _green = Color(0xFF2FA86A);
   static const Color _yellow = Color(0xFFF3B400);
 
@@ -518,27 +727,30 @@ class _InProgressCard extends StatelessWidget {
     final p = (item.progress ?? 0).clamp(0.0, 1.0);
     final percent = (p * 100).round();
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _cardBorder, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.04),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-            child: Row(
+    return InkWell(
+      onTap: onTapIncomplete,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: _cardBorder, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.06),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
                 _ServiceIcon(kind: item.title),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,23 +758,18 @@ class _InProgressCard extends StatelessWidget {
                       Text(
                         item.title,
                         style: GoogleFonts.urbanist(
-                          fontSize: 18, // ✅ 18px
-                          fontWeight: FontWeight.w500, // ✅ Medium (500)
-                          height: 1.2, // ✅ 120%
-                          letterSpacing: 0, // ✅ 0%
-                          color: const Color(0xFF181919), // ✅ #181919
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF181919),
                         ),
                       ),
-
                       const SizedBox(height: 2),
                       Text(
                         item.subtitle,
                         style: GoogleFonts.urbanist(
-                          fontSize: 14, // ✅ 14px
-                          fontWeight: FontWeight.w400, // ✅ Regular (400)
-                          height: 1.2, // ✅ 120%
-                          letterSpacing: 0, // ✅ 0%
-                          color: const Color(0xFF181919), // ✅ #181919
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFF6F6F6F),
                         ),
                       ),
                     ],
@@ -570,75 +777,48 @@ class _InProgressCard extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Progress bar
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: Container(
-                    height: 12,
-                    color: const Color(0xFFEAEAEA),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: FractionallySizedBox(
-                        widthFactor: p,
-                        child: Container(color: _green),
-                      ),
-                    ),
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(99),
+              child: Container(
+                height: 10,
+                color: const Color(0xFFEAEAEA),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: FractionallySizedBox(
+                    widthFactor: p,
+                    child: Container(color: _green),
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  "$percent% Complete",
-                  style: const TextStyle(
-                    color: Color(0xFF7A7A7A),
-                    fontSize: 11.6,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-
-          // Yellow "Incomplete" bar with chevron
-          InkWell(
-            onTap: onTapIncomplete,
-            child: Container(
-              height: 44,
-              decoration: const BoxDecoration(
+            const SizedBox(height: 6),
+            Text(
+              "$percent% Complete",
+              style: GoogleFonts.urbanist(
+                color: const Color(0xFF7A7A7A),
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
                 color: _yellow,
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(12),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+                "Incomplete",
+                style: GoogleFonts.urbanist(
+                  color: Colors.black,
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: const Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Incomplete",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ],
-              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -655,22 +835,21 @@ class _AddNewListingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44,
+      height: 52,
       child: OutlinedButton.icon(
         onPressed: onTap,
         style: OutlinedButton.styleFrom(
           foregroundColor: _green,
-          side: const BorderSide(color: _green, width: 1.2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          side: const BorderSide(color: _green, width: 1.6),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        icon: const Icon(Icons.add, size: 18),
+        icon: const Icon(Icons.add, size: 20),
         label: Text(
           "Add new listing",
           style: GoogleFonts.urbanist(
-            fontSize: 16, // ✅ 16px
-            fontWeight: FontWeight.w500, // ✅ Medium (500)
-            height: 1.1, // ✅ 110%
-            letterSpacing: 0, // ✅ 0%
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            height: 1.1,
             color: const Color(0xFF3FA96B), // ✅ #3FA96B
           ),
         ),
@@ -687,22 +866,26 @@ class _ServiceIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = kind.toLowerCase().contains("iron")
-        ? Icons.local_laundry_service_rounded
-        : Icons.cleaning_services_rounded;
+    final asset = kind.toLowerCase().contains("iron")
+        ? "assets/calender/ironing.png"
+        : "assets/calender/cleaning.png";
 
-    final bg = kind.toLowerCase().contains("iron")
-        ? const Color(0xFFFFE6F1)
-        : const Color(0xFFE9F5FF);
-
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      width: 54,
+      height: 54,
+      child: Center(
+        child: Image.asset(
+          asset,
+          width: 46,
+          height: 46,
+          fit: BoxFit.contain,
+          errorBuilder: (_, __, ___) => const Icon(
+            Icons.cleaning_services_rounded,
+            size: 28,
+            color: Colors.black54,
+          ),
+        ),
       ),
-      child: Icon(icon, color: Colors.black87, size: 22),
     );
   }
 }
@@ -809,6 +992,47 @@ class _NavItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/* ====================== Summary Model ====================== */
+
+class ListingSummary {
+  final String tierLabel;
+  final String subtitle;
+  final int completedServices;
+  final int totalServices;
+  final String nextTierLabel;
+  final double? progressOverride;
+
+  const ListingSummary({
+    required this.tierLabel,
+    required this.subtitle,
+    required this.completedServices,
+    required this.totalServices,
+    required this.nextTierLabel,
+    this.progressOverride,
+  });
+
+  String get levelLabel => "$tierLabel Level";
+
+  int get remainingServices {
+    final remaining = totalServices - completedServices;
+    return remaining < 0 ? 0 : remaining;
+  }
+
+  double get progress {
+    if (progressOverride != null) {
+      final value = progressOverride!;
+      if (value < 0) return 0;
+      if (value > 1) return 1;
+      return value;
+    }
+    if (totalServices <= 0) return 0;
+    final raw = completedServices / totalServices;
+    if (raw < 0) return 0;
+    if (raw > 1) return 1;
+    return raw;
   }
 }
 
