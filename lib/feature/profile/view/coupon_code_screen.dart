@@ -50,6 +50,9 @@ class MyCodesController extends GetxController {
         margin: const EdgeInsets.all(12),
         backgroundColor: Colors.white,
         colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
       );
       return;
     }
@@ -61,6 +64,9 @@ class MyCodesController extends GetxController {
         margin: const EdgeInsets.all(12),
         backgroundColor: Colors.white,
         colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
       );
       return;
     }
@@ -74,6 +80,9 @@ class MyCodesController extends GetxController {
         margin: const EdgeInsets.all(12),
         backgroundColor: Colors.white,
         colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
       );
       return;
     }
@@ -100,6 +109,9 @@ class MyCodesController extends GetxController {
         margin: const EdgeInsets.all(12),
         backgroundColor: Colors.white,
         colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
       );
     } catch (e) {
       String msg = e.toString().replaceFirst("Exception: ", "");
@@ -122,6 +134,9 @@ class MyCodesController extends GetxController {
         margin: const EdgeInsets.all(12),
         backgroundColor: Colors.white,
         colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
       );
     } finally {
       isApplying.value = false;

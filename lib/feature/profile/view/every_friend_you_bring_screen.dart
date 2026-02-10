@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../../core/constants/api_endpoints.dart';
+import '../../../core/network/api_service/api_client.dart';
 
 /// ------------------------------------------------------------
 /// SHARE & EARN MONEY (UI LIKE YOUR SCREENSHOT) - GetX
@@ -16,11 +19,98 @@ import '../../../core/constants/assets.dart';
 /// Get.to(() => const ShareAndEarnMoneyScreen());
 /// ------------------------------------------------------------
 
+class ShareAndEarnController extends GetxController {
+  final isLoading = false.obs;
+  final code = "".obs;
+
+  late final ApiClient _api;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _api = Get.find<ApiClient>();
+  }
+
+  Future<void> discoverCode() async {
+    if (isLoading.value) return;
+    try {
+      isLoading.value = true;
+      final res = await _api.get(ApiEndpoints.myCoupons);
+      final body = res.data as Map<String, dynamic>? ?? {};
+      final ok = body["success"] == true;
+      if (!ok) {
+        final msg = (body["message"] ?? "Failed to load coupons").toString();
+        throw Exception(msg);
+      }
+
+      final data = body["data"];
+      if (data is List && data.isNotEmpty) {
+        final first = data.first as Map<String, dynamic>;
+        final c = (first["code"] ?? "").toString();
+        if (c.isEmpty) {
+          throw Exception("No coupon code found.");
+        }
+        code.value = c;
+        Get.snackbar(
+          "Discover code",
+          "Your code is $c",
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(12),
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          borderRadius: 12,
+          borderColor: const Color(0xFFE0E0E0),
+          borderWidth: 1,
+        );
+      } else {
+        throw Exception("No coupons available.");
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Discover code",
+        e.toString().replaceFirst("Exception: ", ""),
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> shareCode() async {
+    final c = code.value.trim();
+    if (c.isEmpty) {
+      Get.snackbar(
+        "Share code",
+        "Tap Discover code first.",
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(12),
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+        borderRadius: 12,
+        borderColor: const Color(0xFFE0E0E0),
+        borderWidth: 1,
+      );
+      return;
+    }
+
+    final msg =
+        "Use my Handynaija promo code $c to get a discount on your first booking!";
+    await Share.share(msg);
+  }
+}
+
 class ShareAndEarnMoneyScreen extends StatelessWidget {
   const ShareAndEarnMoneyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final c = Get.put(ShareAndEarnController());
     return Scaffold(
       backgroundColor: _C.bg,
       body: SafeArea(
@@ -152,31 +242,31 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                   const SizedBox(height: 18),
 
                   // Discover code button (grey like screenshot)
-                  SizedBox(
-                    height: 48,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // TODO: open discover / generate code
-                        // Example: Get.to(() => const MyCodesScreen());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE9E9E9),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  Obx(() {
+                    final loading = c.isLoading.value;
+                    return SizedBox(
+                      height: 48,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: loading ? null : c.discoverCode,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE9E9E9),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          loading ? "Loading..." : "Discover code",
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w900,
+                            color: _C.text,
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        "Discover code",
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w900,
-                          color: _C.text,
-                        ),
-                      ),
-                    ),
-                  ),
+                    );
+                  }),
 
                   const SizedBox(height: 16),
 
@@ -189,6 +279,20 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                       color: const Color(0xFF181919),
                     ),
                   ),
+
+                  const SizedBox(height: 6),
+                  Obx(() {
+                    final code = c.code.value;
+                    return Text(
+                      code.isEmpty ? "—" : code,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        height: 1.1,
+                        color: _C.text,
+                      ),
+                    );
+                  }),
 
                   const SizedBox(height: 10),
 
@@ -203,7 +307,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                           height: 48,
                           fit: BoxFit.contain,
                         ),
-                        onTap: () {},
+                        onTap: c.shareCode,
                       ),
                       const SizedBox(width: 40),
                       _ShareIcon(
@@ -214,7 +318,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                           height: 48,
                           fit: BoxFit.contain,
                         ),
-                        onTap: () {},
+                        onTap: c.shareCode,
                       ),
                       const SizedBox(width: 40),
                       _ShareIcon(
@@ -225,7 +329,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                           height: 48,
                           fit: BoxFit.contain,
                         ),
-                        onTap: () {},
+                        onTap: c.shareCode,
                       ),
                       const SizedBox(width: 40),
                       _ShareIcon(
@@ -235,7 +339,7 @@ class ShareAndEarnMoneyScreen extends StatelessWidget {
                           color: _C.text,
                           size: 24,
                         ),
-                        onTap: () {},
+                        onTap: c.shareCode,
                       ),
                     ],
                   ),

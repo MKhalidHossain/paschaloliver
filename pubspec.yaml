@@ -32,6 +32,7 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^3.0.0
   country_state_city_picker: ^1.2.8
+  share_plus: ^10.0.2
 
 dev_dependencies:
   flutter_test:
