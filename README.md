@@ -49,4 +49,4 @@ I'll help you create a README.md file for the paschaloliver project. First, let 
 - Author information
 - Support contact details
 
-The README is now professional, well-organized, and provides all the information developers need to understand, set up, and use the Paschal Oliver Flutter project! ✨
+The README is now professional, well-organized, and provides all the information developers need to understand, set up, and use the Paschal Oliver Flutter project! 
